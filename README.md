@@ -11,6 +11,21 @@ npm run build     # typecheck + production bundle → dist/
 npm run preview   # serve production build locally
 ```
 
+### GitHub Pages
+
+The repo includes [`.github/workflows/deploy-github-pages.yml`](.github/workflows/deploy-github-pages.yml). On each push to `master` or `main`, it typechecks, runs `vite build` with `base` set to `/<repository-name>/`, and deploys `dist/` to Pages.
+
+1. On GitHub: **Settings → Pages → Build and deployment**, set **Source** to **GitHub Actions** (not “Deploy from a branch”).
+2. Push these workflow files; the **Deploy to GitHub Pages** action should appear under **Actions**.
+3. The site URL will be `https://<user>.github.io/<repo>/` (for this fork, `never-three` in the path).
+
+To sanity-check a Pages build locally:
+
+```bash
+VITE_BASE_PATH=/never-three npm run build   # use your real repo name
+npm run preview
+```
+
 ## Docs
 
 - **[DESIGN.md](DESIGN.md)** — Full game design document
