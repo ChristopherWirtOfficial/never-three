@@ -1,5 +1,4 @@
-import React from "react";
-import { GLOBAL_CSS } from "./styles";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import { useGameState } from "./useGameState";
 import { RollTab } from "./RollTab";
 import { ShopTab } from "./ShopTab";
@@ -7,142 +6,121 @@ import { LogTab } from "./LogTab";
 import { ForgeTab } from "./ForgeTab";
 import { BottomDock } from "./BottomDock";
 
+function formatGold(gold: number): string {
+  if (gold < 1e3) return Math.floor(gold).toString();
+  if (gold >= 1e12) return (gold / 1e12).toFixed(1) + "T";
+  if (gold >= 1e9) return (gold / 1e9).toFixed(1) + "B";
+  if (gold >= 1e6) return (gold / 1e6).toFixed(1) + "M";
+  return (gold / 1e3).toFixed(1) + "K";
+}
+
 export default function NeverThree() {
   const g = useGameState();
 
   return (
     <>
-      <style>{GLOBAL_CSS}</style>
-
-      {/* Screen flash overlay */}
       {g.flash && (
-        <div
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: g.flash + "1a",
-            pointerEvents: "none",
-            zIndex: 100,
-          }}
+        <Box
+          position="fixed"
+          inset={0}
+          bg={`${g.flash}1a`}
+          pointerEvents="none"
+          zIndex={100}
         />
       )}
 
-      <div
-        style={{
-          height: "100dvh",
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          background: "#08080f",
-          color: "#ddd",
-          fontFamily: "monospace",
-          maxWidth: 480,
-          margin: "0 auto",
-          overflow: "hidden",
-          animation: g.shook ? "shake .3s ease" : "none",
-        }}
+      <Box
+        h="100dvh"
+        w="100%"
+        maxW="480px"
+        mx="auto"
+        display="flex"
+        flexDirection="column"
+        bg="never.bg"
+        color="never.text"
+        fontFamily="monospace"
+        overflow="hidden"
+        animation={g.shook ? "neverShake 0.3s ease" : undefined}
       >
-        {/* ── TOP BAR ── */}
-        <div
-          style={{
-            padding: "10px 18px",
-            flexShrink: 0,
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "baseline",
-            borderBottom: "1px solid #141428",
-          }}
+        <Flex
+          px="18px"
+          py="10px"
+          flexShrink={0}
+          justify="space-between"
+          align="baseline"
+          borderBottom="1px solid"
+          borderColor="never.border"
         >
-          <div>
-            <div style={{ display: "flex", gap: 16, alignItems: "baseline" }}>
-              <div>
-                <div
-                  style={{
-                    fontSize: 9,
-                    color: "#bb9900",
-                    letterSpacing: 2,
-                    fontWeight: 700,
-                  }}
-                >
-                  GOLD
-                </div>
-                <div
-                  style={{
-                    fontSize: 26,
-                    fontWeight: 900,
-                    color: "#ffdd33",
-                    textShadow: "0 0 16px #ffdd3344",
-                    lineHeight: 1.1,
-                  }}
-                >
-                  {g.gold >= 1e3
-                    ? g.gold >= 1e12
-                      ? (g.gold / 1e12).toFixed(1) + "T"
-                      : g.gold >= 1e9
-                        ? (g.gold / 1e9).toFixed(1) + "B"
-                        : g.gold >= 1e6
-                          ? (g.gold / 1e6).toFixed(1) + "M"
-                          : (g.gold / 1e3).toFixed(1) + "K"
-                    : Math.floor(g.gold).toString()}
-                </div>
-              </div>
-              <div>
-                <div
-                  style={{
-                    fontSize: 9,
-                    color: "#7744aa",
-                    letterSpacing: 2,
-                    fontWeight: 700,
-                  }}
-                >
-                  HEX
-                </div>
-                <div
-                  style={{
-                    fontSize: 20,
-                    fontWeight: 900,
-                    color: "#bb88ff",
-                    textShadow: "0 0 12px #bb88ff33",
-                    lineHeight: 1.1,
-                  }}
-                >
-                  {Math.floor(g.hex)}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div style={{ textAlign: "right", lineHeight: 1.5 }}>
-            <div style={{ fontSize: 12, color: "#aab" }}>
+          <Flex gap={4} align="baseline">
+            <Box>
+              <Text
+                fontSize="9px"
+                color="never.goldMuted"
+                letterSpacing="2px"
+                fontWeight={700}
+              >
+                GOLD
+              </Text>
+              <Text
+                fontSize="26px"
+                fontWeight={900}
+                color="never.gold"
+                textShadow="0 0 16px rgba(255, 221, 51, 0.27)"
+                lineHeight={1.1}
+              >
+                {formatGold(g.gold)}
+              </Text>
+            </Box>
+            <Box>
+              <Text
+                fontSize="9px"
+                color="never.hexMuted"
+                letterSpacing="2px"
+                fontWeight={700}
+              >
+                HEX
+              </Text>
+              <Text
+                fontSize="20px"
+                fontWeight={900}
+                color="never.hex"
+                textShadow="0 0 12px rgba(187, 136, 255, 0.2)"
+                lineHeight={1.1}
+              >
+                {Math.floor(g.hex)}
+              </Text>
+            </Box>
+          </Flex>
+          <Box textAlign="right" lineHeight={1.5}>
+            <Text fontSize="12px" color="never.muted">
               STREAK{" "}
-              <span
-                style={{
-                  color: g.streak > 0 ? "#44ffbb" : "#445",
-                  fontWeight: 900,
-                  fontSize: 16,
-                }}
+              <Text
+                as="span"
+                color={g.streak > 0 ? "never.streak" : "never.streakDim"}
+                fontWeight={900}
+                fontSize="16px"
               >
                 {g.streak}
-              </span>
-            </div>
+              </Text>
+            </Text>
             {g.hexStreak > 0 && (
-              <div style={{ fontSize: 11, color: "#9966cc" }}>
+              <Text fontSize="11px" color="never.hexStreak">
                 🔮 ×{g.hexStreak}
-              </div>
+              </Text>
             )}
-            <div style={{ fontSize: 10, color: "#667" }}>
+            <Text fontSize="10px" color="never.dim">
               BEST {g.best}
               {g.prestige > 0 && (
-                <span style={{ color: "#bb99ff" }}>
+                <Text as="span" color="never.prestige">
                   {" "}
                   · ★{g.prestige} ×{g.pMult.toFixed(1)}
-                </span>
+                </Text>
               )}
-            </div>
-          </div>
-        </div>
+            </Text>
+          </Box>
+        </Flex>
 
-        {/* ── MIDDLE (scrollable) ── */}
-        <div style={{ flex: 1, overflow: "auto", padding: "0 18px" }}>
+        <Box flex={1} overflow="auto" px="18px">
           {g.tab === "roll" && (
             <RollTab
               aLv={g.aLv}
@@ -190,9 +168,8 @@ export default function NeverThree() {
             />
           )}
           {g.tab === "log" && <LogTab log={g.log} />}
-        </div>
+        </Box>
 
-        {/* ── BOTTOM DOCK ── */}
         <BottomDock
           roll={g.roll}
           sides={g.currentDie.length}
@@ -210,7 +187,7 @@ export default function NeverThree() {
           }}
           onTabChange={g.setTab}
         />
-      </div>
+      </Box>
     </>
   );
 }

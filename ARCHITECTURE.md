@@ -5,7 +5,7 @@
 - **TypeScript** with strict mode
 - **React** (JSX, hooks only, no class components)
 - **Vite** for dev server and production builds
-- No external UI libraries — all inline styles
+- **Chakra UI v3** + **Emotion** for layout primitives, design tokens, and global styles (`src/theme/system.ts`)
 
 ## Build
 
@@ -21,12 +21,15 @@ npm run preview      # serve dist/ locally
 
 ```
 src/
-├── main.tsx           # Vite entry: mounts React root
+├── main.tsx           # Vite entry: mounts React root + Chakra provider
+├── providers/
+│   └── AppProviders.tsx   # ChakraProvider + system
+├── theme/
+│   └── system.ts      # createSystem: tokens, keyframes, global CSS
 ├── App.tsx            # Root component, layout shell, tab routing
 ├── useGameState.ts    # All game state + logic in one hook
 ├── constants.ts       # Upgrade tables, cost functions, helpers
 ├── types.ts           # Shared TypeScript interfaces
-├── styles.ts          # Global CSS keyframes
 │
 ├── RollTab.tsx        # Roll screen: feedback, auto-roll countdown, stats
 ├── ShopTab.tsx        # Gold upgrade shop
@@ -95,5 +98,5 @@ if escaping a multiple of 3: cost × 4
 1. **Mobile-first**: Die and tabs at bottom (thumb zone), content scrolls in middle
 2. **Always progressing**: Safe rolls earn gold, dangerous rolls earn hex. No dead time.
 3. **Readable at a glance**: Three visual states for everything (active/inactive/maxed)
-4. **Minimal dependencies**: No state management libraries, no CSS frameworks
+4. **Focused dependencies**: UI via Chakra only; no extra state libraries
 5. **Fast iteration**: TypeScript catches errors, Vite dev server + HMR

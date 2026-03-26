@@ -1,4 +1,4 @@
-import React from "react";
+import { Box, Flex, Text, chakra } from "@chakra-ui/react";
 import { DiceFace } from "./DiceFace";
 import type { TabId } from "./types";
 
@@ -26,49 +26,100 @@ const TABS: [TabId, string][] = [
 ];
 
 export function BottomDock({
-  roll, sides, saved, stunned, stunPct, stunMs, rolling, locked, aLv,
-  cdPct, tab, onRoll, onTabChange,
+  roll,
+  sides,
+  saved,
+  stunned,
+  stunPct,
+  stunMs,
+  rolling,
+  locked,
+  aLv,
+  cdPct,
+  tab,
+  onRoll,
+  onTabChange,
 }: BottomDockProps) {
   return (
-    <div style={{ flexShrink: 0, borderTop: "1px solid #141428", background: "#0a0a14" }}>
-      {/* Die row — entire area is tappable */}
-      <div
-        onClick={onRoll}
-        style={{
-          display: "flex", flexDirection: "column", alignItems: "center",
-          padding: "12px 18px 8px", gap: 6,
-          cursor: locked ? "default" : "pointer",
-          userSelect: "none",
-          WebkitTapHighlightColor: "transparent",
+    <Box
+      flexShrink={0}
+      borderTop="1px solid"
+      borderColor="never.border"
+      bg="never.dock"
+    >
+      <Flex
+        direction="column"
+        align="center"
+        py="12px"
+        px="18px"
+        pb="8px"
+        gap="6px"
+        cursor={locked ? "default" : "pointer"}
+        userSelect="none"
+        css={{ WebkitTapHighlightColor: "transparent" }}
+        onClick={() => {
+          if (!locked) onRoll();
         }}
+        onKeyDown={(e) => {
+          if (locked) return;
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onRoll();
+          }
+        }}
+        role="button"
+        tabIndex={locked ? -1 : 0}
+        aria-label="Roll die"
       >
-        <div
-          style={{
-            width: 148, height: 148, borderRadius: 24,
-            background: stunned
+        <Box
+          w="148px"
+          h="148px"
+          borderRadius="24px"
+          bg={
+            stunned
               ? "linear-gradient(145deg,#2a0a12,#18060a)"
               : saved
                 ? "linear-gradient(145deg,#2a2510,#181505)"
-                : "linear-gradient(145deg,#16162a,#0d0d18)",
-            border: stunned ? "2px solid #ff335566"
-              : saved ? "2px solid #ffaa0044"
-                : locked ? "2px solid #1a1a30" : "2px solid #44ffbb33",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            pointerEvents: "none",
-            animation: rolling
-              ? "spin .18s ease"
-              : !locked && !aLv ? "pulse 2.5s ease infinite" : "none",
-            opacity: locked && !rolling && !stunned ? 0.55 : 1,
-            transition: "border-color .3s, background .3s, opacity .3s",
-          }}
+                : "linear-gradient(145deg,#16162a,#0d0d18)"
+          }
+          border="2px solid"
+          borderColor={
+            stunned
+              ? "#ff335566"
+              : saved
+                ? "#ffaa0044"
+                : locked
+                  ? "never.dieBorderLocked"
+                  : "never.streakBorder"
+          }
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          pointerEvents="none"
+          animation={
+            rolling
+              ? "neverSpin 0.18s ease"
+              : !locked && !aLv
+                ? "neverPulse 2.5s ease infinite"
+                : undefined
+          }
+          opacity={locked && !rolling && !stunned ? 0.55 : 1}
+          transition="border-color 0.3s, background 0.3s, opacity 0.3s"
         >
           {roll === null ? (
-            <div style={{
-              color: "#889", fontSize: 15, textAlign: "center",
-              lineHeight: 1.7, letterSpacing: 1,
-            }}>
-              TAP<br />TO<br />ROLL
-            </div>
+            <Text
+              color="never.hint"
+              fontSize="15px"
+              textAlign="center"
+              lineHeight={1.7}
+              letterSpacing="1px"
+            >
+              TAP
+              <br />
+              TO
+              <br />
+              ROLL
+            </Text>
           ) : (
             <DiceFace
               value={roll}
@@ -77,63 +128,79 @@ export function BottomDock({
               rolling={rolling}
             />
           )}
-        </div>
+        </Box>
 
-        {/* Progress bar: stun or cooldown */}
         {stunned ? (
-          <div style={{ width: 160, textAlign: "center" }}>
-            <div style={{
-              width: "100%", height: 6, borderRadius: 3,
-              background: "#1a0a10", overflow: "hidden",
-            }}>
-              <div style={{
-                height: "100%", borderRadius: 3,
-                width: `${stunPct * 100}%`,
-                background: "linear-gradient(90deg,#ff335566,#ff3355cc)",
-              }} />
-            </div>
-            <div style={{
-              fontSize: 12, color: "#ff6677", marginTop: 6,
-              fontWeight: 700, animation: "stunPulse 1s ease infinite",
-            }}>
-              STUNNED {((1 - stunPct) * stunMs / 1000).toFixed(1)}s
-            </div>
-          </div>
+          <Box w="160px" textAlign="center">
+            <Box
+              w="100%"
+              h="6px"
+              borderRadius="3px"
+              bg="never.stunTrack"
+              overflow="hidden"
+            >
+              <Box
+                h="100%"
+                borderRadius="3px"
+                w={`${stunPct * 100}%`}
+                bg="linear-gradient(90deg,#ff335566,#ff3355cc)"
+              />
+            </Box>
+            <Text
+              fontSize="12px"
+              color="never.stun"
+              mt="6px"
+              fontWeight={700}
+              animation="neverStunPulse 1s ease infinite"
+            >
+              STUNNED {(((1 - stunPct) * stunMs) / 1000).toFixed(1)}s
+            </Text>
+          </Box>
         ) : (
-          <div style={{
-            width: 148, height: 4, borderRadius: 2,
-            background: "#14142a", overflow: "hidden",
-          }}>
-            <div style={{
-              height: "100%", borderRadius: 2,
-              width: `${cdPct * 100}%`,
-              background: cdPct < 1
-                ? "linear-gradient(90deg,#44ffbb55,#44ffbbbb)"
-                : "#44ffbb",
-            }} />
-          </div>
+          <Box
+            w="148px"
+            h="4px"
+            borderRadius="2px"
+            bg="never.cooldownTrack"
+            overflow="hidden"
+          >
+            <Box
+              h="100%"
+              borderRadius="2px"
+              w={`${cdPct * 100}%`}
+              bg={
+                cdPct < 1
+                  ? "linear-gradient(90deg,#44ffbb55,#44ffbbbb)"
+                  : "never.streak"
+              }
+            />
+          </Box>
         )}
-      </div>
+      </Flex>
 
-      {/* Tabs */}
-      <div style={{ display: "flex", borderTop: "1px solid #141428" }}>
+      <Flex borderTop="1px solid" borderColor="never.border">
         {TABS.map(([key, label]) => (
-          <button
+          <chakra.button
             key={key}
+            type="button"
+            flex={1}
+            py={3}
+            bg="transparent"
+            border="none"
+            borderTop="2px solid"
+            borderTopColor={tab === key ? "never.streak" : "transparent"}
+            color={tab === key ? "never.streak" : "never.tabInactive"}
+            fontFamily="monospace"
+            fontSize="12px"
+            fontWeight={700}
+            cursor="pointer"
+            letterSpacing="1px"
             onClick={() => onTabChange(key)}
-            style={{
-              flex: 1, padding: "12px 0", background: "transparent",
-              border: "none",
-              borderTop: tab === key ? "2px solid #44ffbb" : "2px solid transparent",
-              color: tab === key ? "#44ffbb" : "#667",
-              fontFamily: "monospace", fontSize: 12, fontWeight: 700,
-              cursor: "pointer", letterSpacing: 1,
-            }}
           >
             {label}
-          </button>
+          </chakra.button>
         ))}
-      </div>
-    </div>
+      </Flex>
+    </Box>
   );
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import { Box, Text, VStack } from "@chakra-ui/react";
 
 interface LogTabProps {
   log: string[];
@@ -7,25 +7,27 @@ interface LogTabProps {
 export function LogTab({ log }: LogTabProps) {
   if (log.length === 0) {
     return (
-      <div style={{ color: "#556", textAlign: "center", padding: 40, fontSize: 12 }}>
+      <Text color="never.stat" textAlign="center" py={10} fontSize="12px">
         Nothing yet.
-      </div>
+      </Text>
     );
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 1 }}>
+    <VStack align="stretch" gap="1px">
       {log.map((entry, i) => (
-        <div key={i} style={{
-          fontSize: 11,
-          color: i === 0 ? "#ccd" : "#556",
-          padding: "5px 0",
-          borderBottom: "1px solid #111118",
-          animation: i === 0 ? "fadeIn .2s ease" : "none",
-        }}>
+        <Box
+          key={`${i}-${entry.slice(0, 24)}`}
+          fontSize="11px"
+          color={i === 0 ? "never.logHead" : "never.stat"}
+          py="5px"
+          borderBottom="1px solid"
+          borderColor="never.logBorder"
+          animation={i === 0 ? "neverFadeIn 0.2s ease" : undefined}
+        >
           {entry}
-        </div>
+        </Box>
       ))}
-    </div>
+    </VStack>
   );
 }
