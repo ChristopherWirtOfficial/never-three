@@ -8,8 +8,8 @@ interface ForgeTabProps {
   totalReforges: number;
   reforgeCap: number;
   hex: number;
-  reforgeUp: (dieIndex: number, faceIndex: number) => void;
-  reforgeDown: (dieIndex: number, faceIndex: number) => void;
+  incrementDieFace: (dieIndex: number, faceIndex: number) => void;
+  decrementDieFace: (dieIndex: number, faceIndex: number) => void;
 }
 
 export function ForgeTab({
@@ -17,8 +17,8 @@ export function ForgeTab({
   totalReforges,
   reforgeCap,
   hex,
-  reforgeUp,
-  reforgeDown,
+  incrementDieFace,
+  decrementDieFace,
 }: ForgeTabProps) {
   const multiDie = dice.length > 1;
 
@@ -33,8 +33,8 @@ export function ForgeTab({
             totalReforges={totalReforges}
             reforgeCap={reforgeCap}
             hex={hex}
-            reforgeUp={reforgeUp}
-            reforgeDown={reforgeDown}
+            incrementDieFace={incrementDieFace}
+            decrementDieFace={decrementDieFace}
           />
           <ForgeFooter totalReforges={totalReforges} reforgeCap={reforgeCap} />
         </Box>

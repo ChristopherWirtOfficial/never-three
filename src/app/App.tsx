@@ -6,10 +6,10 @@ import { ForgeTab } from "../features/forge/ForgeTab";
 import { LogTab } from "../features/log/LogTab";
 import { RollTab } from "../features/roll/RollTab";
 import { ShopTab } from "../features/shop/ShopTab";
-import { useGameState } from "../game/useGameState";
+import { useGameSurface } from "../game/useGameSurface";
 
 export default function NeverThree() {
-  const g = useGameState();
+  const g = useGameSurface();
 
   return (
     <>
@@ -71,8 +71,8 @@ export default function NeverThree() {
               prestige={g.prestige}
               prestigeReq={g.prestigeReq}
               canPrestige={g.canPrestige}
-              buy={g.buy}
-              doPrestige={g.doPrestige}
+              purchaseUpgrade={g.purchaseUpgrade}
+              commitPrestige={g.commitPrestige}
             />
           )}
           {g.tab === "forge" && (
@@ -81,8 +81,8 @@ export default function NeverThree() {
               totalReforges={g.totalReforges}
               reforgeCap={g.reforgeCap}
               hex={g.hex}
-              reforgeUp={g.reforgeUp}
-              reforgeDown={g.reforgeDown}
+              incrementDieFace={g.incrementDieFace}
+              decrementDieFace={g.decrementDieFace}
             />
           )}
           {g.tab === "log" && <LogTab log={g.log} />}
@@ -101,7 +101,7 @@ export default function NeverThree() {
           cdPct={g.cdPct}
           tab={g.tab}
           onRoll={() => {
-            if (!g.locked) g.doRoll();
+            if (!g.locked) g.rollDice();
           }}
           onTabChange={g.setTab}
         />

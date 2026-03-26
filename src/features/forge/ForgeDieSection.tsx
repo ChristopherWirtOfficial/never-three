@@ -9,8 +9,8 @@ interface ForgeDieSectionProps {
   totalReforges: number;
   reforgeCap: number;
   hex: number;
-  reforgeUp: (dieIndex: number, faceIndex: number) => void;
-  reforgeDown: (dieIndex: number, faceIndex: number) => void;
+  incrementDieFace: (dieIndex: number, faceIndex: number) => void;
+  decrementDieFace: (dieIndex: number, faceIndex: number) => void;
 }
 
 export function ForgeDieSection({
@@ -20,8 +20,8 @@ export function ForgeDieSection({
   totalReforges,
   reforgeCap,
   hex,
-  reforgeUp,
-  reforgeDown,
+  incrementDieFace,
+  decrementDieFace,
 }: ForgeDieSectionProps) {
   return (
     <Box>
@@ -47,8 +47,8 @@ export function ForgeDieSection({
             reforgeCap={reforgeCap}
             totalReforges={totalReforges}
             hex={hex}
-            reforgeUp={reforgeUp}
-            reforgeDown={reforgeDown}
+            incrementDieFace={incrementDieFace}
+            decrementDieFace={decrementDieFace}
           />
         ))}
       </VStack>

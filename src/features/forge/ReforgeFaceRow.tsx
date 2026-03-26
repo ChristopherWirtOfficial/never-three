@@ -8,8 +8,8 @@ interface ReforgeFaceRowProps {
   reforgeCap: number;
   totalReforges: number;
   hex: number;
-  reforgeUp: (dieIndex: number, faceIndex: number) => void;
-  reforgeDown: (dieIndex: number, faceIndex: number) => void;
+  incrementDieFace: (dieIndex: number, faceIndex: number) => void;
+  decrementDieFace: (dieIndex: number, faceIndex: number) => void;
 }
 
 export function ReforgeFaceRow({
@@ -19,8 +19,8 @@ export function ReforgeFaceRow({
   reforgeCap,
   totalReforges,
   hex,
-  reforgeUp,
-  reforgeDown,
+  incrementDieFace,
+  decrementDieFace,
 }: ReforgeFaceRowProps) {
   const isDangerous = faceVal % 3 === 0;
   const atCap = faceVal >= reforgeCap;
@@ -120,7 +120,7 @@ export function ReforgeFaceRow({
         alignItems="center"
         justifyContent="center"
         gap="3px"
-        onClick={() => reforgeDown(dieIdx, faceIdx)}
+        onClick={() => decrementDieFace(dieIdx, faceIdx)}
         disabled={atFloor || !canAffordDown}
       >
         {atFloor ? (
@@ -183,7 +183,7 @@ export function ReforgeFaceRow({
         alignItems="center"
         justifyContent="center"
         gap="4px"
-        onClick={() => reforgeUp(dieIdx, faceIdx)}
+        onClick={() => incrementDieFace(dieIdx, faceIdx)}
         disabled={atCap || !canAffordUp}
       >
         {atCap ? (

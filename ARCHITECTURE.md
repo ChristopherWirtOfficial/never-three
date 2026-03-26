@@ -28,7 +28,11 @@ src/
 │   ├── types.ts          # Tab, die, upgrade, save-related types
 │   ├── constants.ts      # Upgrade tables, costs, fmt, reforge math
 │   ├── format-gold.ts    # Header gold abbreviation helper
-│   ├── useGameState.ts   # All game state + roll / shop / forge logic
+│   ├── atoms/            # Jotai primitive + derived atoms
+│   ├── useGameSurface.ts # Composes hooks → props + actions for App
+│   ├── useDiceRoll.ts    # Roll pipeline (atom hooks + ref for timeouts)
+│   ├── usePurchaseUpgrade.ts, usePrestige.ts, useIncrementDieFace.ts, …
+│   ├── useGameLoop.ts    # Auto-roll chain + cooldown/stun RAF progress
 │   └── saves.ts          # Save/load (artifact storage; optional UI later)
 ├── features/
 │   ├── roll/             # Roll screen
@@ -66,11 +70,11 @@ Feature folders own one screen each; shared chrome lives under `components/`. Do
 
 ## State Architecture
 
-All game state lives in `useGameState()` (`src/game/useGameState.ts`). It returns a flat object with:
+Game state lives in **Jotai atoms** (`src/game/atoms/`). `useGameSurface()` composes `useAtomValue` / `useSetAtom` with small action hooks and returns a flat object for `App.tsx`:
 
 - **State values**: gold, hex, streaks, levels, dice, UI flags
-- **Derived values**: computed costs, multipliers, lock states
-- **Actions**: doRoll, buy, reforgeUp, reforgeDown, doPrestige, setTab
+- **Derived atoms**: multipliers, `rollPhase` / `gameLocked`, prestige gates
+- **Actions**: `rollDice`, `purchaseUpgrade`, `commitPrestige`, `incrementDieFace`, `decrementDieFace`, `setTab`
 
 Components are pure renderers — they receive props and call actions.
 No component has its own game state.
@@ -85,7 +89,7 @@ No component has its own game state.
 
 ### Roll Flow
 
-1. `doRoll()` called (tap or auto-roll)
+1. `rollDice()` called (tap or auto-roll)
 2. Lock set, cooldown starts, rolling animation plays
 3. Random face picked from `currentDie`
 4. If dangerous (face % 3 === 0):
@@ -101,7 +105,7 @@ Auto-roll is NOT an interval. It's a chained timeout:
 
 - Cooldown/stun ends → `locked` becomes false
 - Effect detects `!locked && autoMs !== null` → starts setTimeout for autoMs
-- Timeout fires → calls doRoll() → new cooldown starts → cycle repeats
+- Timeout fires → calls `rollDice()` → new cooldown starts → cycle repeats
 
 This means auto-roll delay is ADDITIVE with cooldown. Total time between
 rolls = cooldown + auto delay. Both are independently upgradeable.

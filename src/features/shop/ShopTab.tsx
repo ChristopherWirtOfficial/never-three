@@ -14,8 +14,8 @@ interface ShopTabProps {
   prestige: number;
   prestigeReq: number;
   canPrestige: boolean;
-  buy: (type: UpgradeType) => void;
-  doPrestige: () => void;
+  purchaseUpgrade: (type: UpgradeType) => void;
+  commitPrestige: () => void;
 }
 
 interface UpgradeConfig {
@@ -44,8 +44,8 @@ export function ShopTab({
   prestige,
   prestigeReq,
   canPrestige,
-  buy,
-  doPrestige,
+  purchaseUpgrade,
+  commitPrestige,
 }: ShopTabProps) {
   const upgrades: UpgradeConfig[] = [
     {
@@ -104,7 +104,7 @@ export function ShopTab({
             cost={maxed ? 0 : u.arr[u.lv + 1].cost}
             maxed={maxed}
             gold={gold}
-            onBuy={() => buy(u.type)}
+            onBuy={() => purchaseUpgrade(u.type)}
           />
         );
       })}
@@ -136,7 +136,7 @@ export function ShopTab({
           fontWeight={700}
           cursor={canPrestige ? "pointer" : "default"}
           opacity={canPrestige ? 1 : 0.7}
-          onClick={doPrestige}
+          onClick={commitPrestige}
           disabled={!canPrestige}
         >
           {canPrestige ? (
