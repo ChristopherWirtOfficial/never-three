@@ -1,170 +1,152 @@
-# NEVER THREE — Design Document v2.1
+# NEVER THREE — Game Design Document
 
-## Core Loop
+## Elevator Pitch
 
-Roll dice. Earn **Gold** from safe rolls. Get **stunned** by dangerous rolls
-but earn **Hex** instead. Both resources have upgrade paths. You need a
-Hex threshold to unlock prestige.
-
----
-
-## Danger Rules
-
-A roll is **dangerous** if ANY of these are true:
-- Any **individual die** shows a multiple of 3
-- The **sum of all dice** is a multiple of 3
-
-A dangerous roll:
-- **Zero gold** — the entire roll awards nothing, even if some dice were safe
-- **Breaks gold streak** (resets to 0)
-- **Stuns** you (time penalty, upgradeable)
-- **Awards Hex** — scaled by a separate "hex streak" (consecutive dangerous rolls)
-
-A safe roll:
-- Awards gold = sum of ALL dice faces × gold streak multiplier × gold multi
-- Increments gold streak
-- **Breaks hex streak** (resets to 0)
+An incremental idle dice game where you roll dice and earn gold — unless you
+roll a multiple of 3, which stuns you. The twist: getting stunned earns you
+**Hex**, a second resource you spend to **reforge** your die faces. The entire
+game is about managing the tension between wanting safe rolls (gold) and
+needing dangerous rolls (hex).
 
 ---
 
-## Two Streaks
+## Core Mechanics
 
+### Rolling
+- You have dice with customizable faces (start: 1d6 with {1,2,3,4,5,6})
+- Each roll picks a random face from your die
+- Safe rolls (face NOT a multiple of 3): earn gold, build gold streak
+- Dangerous rolls (face IS a multiple of 3): earn hex, build hex streak, get stunned
+
+### Danger Rules (Current: Single Die)
+A roll is dangerous if the face value is a multiple of 3.
+
+### Danger Rules (Future: Multiple Dice)
+A roll is dangerous if ANY of:
+- Any individual die shows a multiple of 3
+- The SUM of all dice is a multiple of 3
+
+If dangerous: zero gold, entire roll is a loss. Stun applies.
+
+### Two Streaks
 | | Gold Streak | Hex Streak |
 |---|---|---|
-| Incremented by | Safe rolls | Dangerous rolls |
+| Built by | Safe rolls | Dangerous rolls |
 | Broken by | Dangerous rolls | Safe rolls |
 | Multiplies | Gold income | Hex income |
-| Scaling | √(streak) × 0.25 | Same formula TBD |
+| Scaling | 1 + √(streak) × 0.25 | 1 + √(streak) × 0.3 |
 
-A string of bad luck is GOOD for Hex farming. A string of good luck is
-GOOD for gold. There is no wasted roll.
-
----
-
-## Dice & Faces
-
-Start with **1d6**, faces {1, 2, 3, 4, 5, 6}.
-
-### Reforging
-
-- **+1**: Costs gold, escalating per step on that face
-- **-1**: Cheap or free (allows strategic repositioning)
-- Must pass through dangerous values:
-  - 2 → **3** → 4 → 5 → **6** → 7 (if cap allows)
-- **Reforge cap**: starts at 6, can be raised (Hex upgrade)
-  - Cap 6: faces can be 1–6
-  - Cap 7: faces can be 1–7 (first safe ceiling above 6)
-  - Cap 8+: further Hex upgrades
-
-### What makes this interesting
-- Pushing 2→7 means temporarily sitting on 3, then 6
-  (your die is MORE dangerous mid-reforge)
-- All-5s die: safe individually, but 5+5=10 (safe), 5+5+5=15 (DANGEROUS)
-- All-7s die: safe individually, but 7+7=14 (safe), 7+7+7=21 (DANGEROUS)
-- Reforging down is free/cheap: undo mistakes, adapt strategy
-- Can't escape sum danger with multiple dice — math always catches up
+There is no wasted roll. Bad luck farms Hex. Good luck farms Gold.
 
 ---
 
-## Multiple Dice
+## Resources
 
-Unlocked as late pre-prestige gold upgrade. Each new die is stock {1,2,3,4,5,6}.
+### Gold
+- Earned from safe rolls: face_value × streak_mult × gold_multi × prestige_mult
+- Spent in the **Shop** on speed, auto-roll, gold multi, armor, stun recovery
 
-### Gold calculation (safe rolls only)
-Sum of ALL dice × streak mult × gold multi.
-If ANY die is dangerous OR sum is multiple of 3: zero gold, full stun.
-
-### Risk scaling
-- 1 die: ~33% danger on stock d6
-- 2 dice: individual danger + sum danger compounds
-- More dice = higher gold ceiling but exponentially more danger
-- Reforging each new die is a whole new gold sink
-
-### First run: max 2-3 dice. More slots available via prestige.
+### Hex
+- Earned from dangerous rolls: HEX_BASE × hex_streak_mult
+- Spent in the **Forge** to reforge die faces
+- Future: also spent in a Hex Shop for meta-upgrades (reforge cap, etc.)
+- Future: threshold required to access Prestige
 
 ---
 
-## Hex — Secondary Resource
+## Reforging
 
-### Earned from
-Dangerous rolls only. Scaled by hex streak (consecutive fails).
+### How It Works
+- Each die face can be reforged +1 or -1
+- Both directions cost Hex
+- Cost = REFORGE_BASE × max(current, target) × (1 + totalReforges × 0.15)
+- **Escaping a multiple of 3 costs 4× the base price** (the "danger escape premium")
+- Face floor: 1. Face cap: 6 (raisable via future Hex upgrades)
 
-### Hex income formula (TBD balance)
-Base hex × hex streak mult × hex multi.
-Maybe bonus for number of individual dice that showed multiples of 3
-(incentivizes keeping dangerous faces across many dice).
+### The Danger Gauntlet
+To reforge a 2 up to a 5, you must pass through 3:
+- 2 → 3: normal cost (entering danger)
+- 3 → 4: **4× cost** (escaping danger)
+- 4 → 5: normal cost
 
-### Hex is spent on TWO things:
+To reach 7 (once cap is raised), you pass through 6:
+- 5 → 6: normal cost
+- 6 → 7: **4× cost**
 
-**1. Hex Shop (~4-5 upgrades, ~20% the size of Gold Shop)**
-- Reforge cap increase (6 → 7 → 8 → ...)
-- Hex multi (more hex per dangerous roll)
-- Permanent stun reduction (persists through prestige)
-- Maybe: starting reforge level for new dice
-- Maybe: hex streak armor
+This means reforging is a strategic commitment, not just "buy upgrade."
 
-**2. Prestige gate**
-- Need a Hex THRESHOLD to access prestige (not spent, just reached)
-- Once unlocked, prestiging awards prestige currency
-- More lifetime Hex = more prestige currency on reset
-
----
-
-## Upgrade Paths Summary
-
-### Gold Shop (resets on prestige)
-- Roll Speed (2s → 0.35s)
-- Stun Recovery (5s → 0.6s)
-- Gold Multi
-- Streak Armor (% to survive danger)
-- Reforge (per-face, +1/-1)
-- Extra Dice (late-game)
-
-### Hex Shop (persists through prestige)
-- Reforge Cap (6 → 7 → 8...)
-- Hex Multi
-- Permanent Stun Reduction
-- ~1-2 more TBD
-
-### Prestige
-- Requires Hex threshold to access
-- Resets: gold, gold upgrades, reforges, dice
-- Keeps: Hex shop upgrades
-- Awards: prestige currency (scaled by total Hex)
-- Prestige currency buys: TBD (phase 5+)
+### Strategic Implications
+- All-5s die: no individual danger, but with multiple dice 5+5+5=15 (dangerous!)
+- All-7s die: safe individually, but 7+7+7=21 (dangerous!)
+- You can reforge DOWN to reposition, but it costs hex too
+- Can never fully escape sum danger with multiple dice
 
 ---
 
 ## The Farming Inversion (Key Design Moment)
 
-Early game: 3s are terrifying. You reforge away from them ASAP.
-Mid game: You're safe, printing gold, but Hex-starved.
-Late game: You NEED Hex to prestige. You deliberately:
-  - Stop reforging new dice (keep them dangerous)
-  - Add MORE dice (more Hex sources)
-  - Reforge faces BACK to multiples of 3
-  - Accept stun cost as the price of progress
+This is the soul of the game:
 
-Fear → safety → voluntarily returning to danger. That's the hook.
+1. **Early game**: Multiples of 3 are terrifying. You reforge away from them ASAP.
+2. **Mid game**: You're safe, printing gold, but Hex-starved.
+3. **Late game**: You NEED Hex for more reforges / prestige. You deliberately:
+   - Stop reforging new dice (keep them dangerous)
+   - Add MORE dice (more hex sources)
+   - Maybe reforge faces BACK to multiples of 3
+   - Accept stun cost as the price of progress
 
----
-
-## Open Questions
-
-1. Hex streak scaling formula — same √ as gold? flatter? steeper?
-2. Hex income — base amount? proportional to how many 3-multiples hit?
-3. Prestige currency and what it buys (punt to phase 6)
-4. Reforge UI on mobile — tap face, +1/-1 buttons? face picker?
-5. Multi-dice visual display — grid? row? stack?
-6. Target first-run length: 15 min? 30 min? 1 hr?
+**Fear → safety → voluntarily returning to danger.**
 
 ---
 
-## Implementation Phases
+## Upgrade Paths
 
-**Phase 1**: Multiples-of-3 danger rule (replaces single-3 check)
-**Phase 2**: Reforging system (+1/-1, cap 6, per-face costs)
-**Phase 3**: Hex resource + hex streak + header display
-**Phase 4**: Hex shop (3-4 upgrades incl. reforge cap)
-**Phase 5**: Multiple dice + sum rule + visual display
-**Phase 6**: Prestige rework (Hex threshold gate)
+### Gold Shop (resets on prestige)
+| Upgrade | Tiers | Range | Notes |
+|---|---|---|---|
+| Gold Multi | 7 | ×1 → ×100 | First and cheapest buy |
+| Roll Speed | 6 | 2.0s → 0.35s | Manual tap cooldown |
+| Auto-Roll | 7 | Off → Instant | Chains after cooldown ends |
+| Stun Recovery | 6 | 3.0s → 0.3s | Time locked after danger |
+| Streak Armor | 6 | 0% → 50% | Chance to survive danger |
+
+### Forge (costs Hex)
+- Per-face reforging (+1/-1)
+- Costs scale with total reforges and face value
+- 4× premium to escape multiples of 3
+
+### Future: Hex Shop (persists through prestige)
+- Reforge cap increase (6 → 7 → 8...)
+- Hex multi
+- Permanent stun reduction
+- TBD
+
+### Future: Prestige
+- Requires Hex threshold to access
+- Resets: gold, gold upgrades, reforges, dice
+- Keeps: Hex shop upgrades
+- Awards: prestige currency (scaled by total Hex)
+
+---
+
+## Multiple Dice (Future — Phase 5)
+
+- Unlocked as late pre-prestige gold upgrade
+- Each new die starts as stock {1,2,3,4,5,6}
+- Gold = sum of ALL dice (if safe) × streak × multi
+- If ANY die is dangerous OR sum is multiple of 3: zero gold, full stun
+- More dice = higher gold ceiling but exponentially more danger
+- Each new die needs its own reforge investment
+- First run: max 2-3 dice. More via prestige.
+
+---
+
+## Open Design Questions
+
+1. Hex shop contents beyond reforge cap
+2. Prestige currency and what it buys
+3. Multiple dice visual display on mobile
+4. Target first-run length (currently feels like ~5-10 min to meaningful progress)
+5. Should bigger base dice (d8, d10) exist as prestige rewards?
+6. Hex streak armor (survive a safe roll without breaking hex streak)?
+7. Sum danger visual feedback with multiple dice
