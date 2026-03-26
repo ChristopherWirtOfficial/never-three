@@ -5,18 +5,18 @@ import { ForgeFooter } from "./ForgeFooter";
 
 interface ForgeTabProps {
   dice: Die[];
-  totalReforges: number;
-  reforgeCap: number;
-  hex: number;
+  totalDieReforgeCount: number;
+  maxReforgeFaceValue: number;
+  hexBalance: number;
   incrementDieFace: (dieIndex: number, faceIndex: number) => void;
   decrementDieFace: (dieIndex: number, faceIndex: number) => void;
 }
 
 export function ForgeTab({
   dice,
-  totalReforges,
-  reforgeCap,
-  hex,
+  totalDieReforgeCount,
+  maxReforgeFaceValue,
+  hexBalance,
   incrementDieFace,
   decrementDieFace,
 }: ForgeTabProps) {
@@ -30,13 +30,16 @@ export function ForgeTab({
             die={die}
             dieIdx={dieIdx}
             showDieLabel={multiDie}
-            totalReforges={totalReforges}
-            reforgeCap={reforgeCap}
-            hex={hex}
+            totalDieReforgeCount={totalDieReforgeCount}
+            maxReforgeFaceValue={maxReforgeFaceValue}
+            hexBalance={hexBalance}
             incrementDieFace={incrementDieFace}
             decrementDieFace={decrementDieFace}
           />
-          <ForgeFooter totalReforges={totalReforges} reforgeCap={reforgeCap} />
+          <ForgeFooter
+            totalDieReforgeCount={totalDieReforgeCount}
+            maxReforgeFaceValue={maxReforgeFaceValue}
+          />
         </Box>
       ))}
     </Box>

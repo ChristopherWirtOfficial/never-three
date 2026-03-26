@@ -3,43 +3,43 @@ import { DEFAULT_REFORGE_CAP, makeDefaultDie } from "../constants";
 import type { Die, TabId } from "../types";
 
 export const goldAtom = atom(0);
-export const earnedAtom = atom(0);
-export const streakAtom = atom(0);
-export const bestAtom = atom(0);
+export const lifetimeGoldEarnedAtom = atom(0);
+export const goldStreakAtom = atom(0);
+export const bestGoldStreakAtom = atom(0);
 
-export const hexAtom = atom(0);
-export const hexStreakAtom = atom(0);
-export const bestHexStreakAtom = atom(0);
+export const hexBalanceAtom = atom(0);
+export const hexRewardStreakAtom = atom(0);
+export const bestHexRewardStreakAtom = atom(0);
 
-export const rollAtom = atom<number | null>(null);
-export const rollingAtom = atom(false);
-export const cooldownAtom = atom(false);
-export const stunnedAtom = atom(false);
+export const lastRolledFaceAtom = atom<number | null>(null);
+export const isRollingAtom = atom(false);
+export const isRollCooldownActiveAtom = atom(false);
+export const isStunnedAtom = atom(false);
 /** Wall-clock span of the current stun (set with roll; not tied to live stun upgrade tier). */
-export const stunScheduleAtom = atom<{
+export const activeStunWindowAtom = atom<{
   startMs: number;
   durationMs: number;
 } | null>(null);
-export const stunPctAtom = atom(0);
-export const cdPctAtom = atom(0);
-export const autoPctAtom = atom(0);
+export const stunRecoveryProgressAtom = atom(0);
+export const rollCooldownProgressAtom = atom(0);
+export const autoRollProgressAtom = atom(0);
 
-export const sLvAtom = atom(0);
-export const aLvAtom = atom(0);
-export const mLvAtom = atom(0);
-export const rLvAtom = atom(0);
-export const tLvAtom = atom(0);
+export const speedUpgradeLevelAtom = atom(0);
+export const autoRollUpgradeLevelAtom = atom(0);
+export const multiplierUpgradeLevelAtom = atom(0);
+export const streakRetentionUpgradeLevelAtom = atom(0);
+export const stunUpgradeLevelAtom = atom(0);
 export const prestigeAtom = atom(0);
 
-export const rollsAtom = atom(0);
-export const threesAtom = atom(0);
-export const shookAtom = atom(false);
-export const flashAtom = atom<string | null>(null);
+export const totalRollCountAtom = atom(0);
+export const multipleOfThreeRollCountAtom = atom(0);
+export const dieShakeActiveAtom = atom(false);
+export const screenFlashColorAtom = atom<string | null>(null);
 
-export const tabAtom = atom<TabId>("roll");
-export const logAtom = atom<string[]>([]);
-export const startedAtom = atom(false);
+export const activeGameTabAtom = atom<TabId>("roll");
+export const gameEventLogAtom = atom<string[]>([]);
+export const runStartedAtom = atom(false);
 
 export const diceAtom = atom<Die[]>([makeDefaultDie()]);
-export const totalReforgesAtom = atom(0);
-export const reforgeCapAtom = atom(DEFAULT_REFORGE_CAP);
+export const totalDieReforgeCountAtom = atom(0);
+export const maxReforgeFaceValueAtom = atom(DEFAULT_REFORGE_CAP);

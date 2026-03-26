@@ -1,5 +1,4 @@
 import { useAtomValue, useSetAtom } from "jotai";
-import type { TabId } from "./types";
 import * as P from "./atoms/primitives";
 import * as D from "./atoms/derived";
 import { useGameLoop } from "./useGameLoop";
@@ -15,50 +14,52 @@ export function useGameSurface() {
   useGameLoop(rollDice);
 
   const gold = useAtomValue(P.goldAtom);
-  const earned = useAtomValue(P.earnedAtom);
-  const streak = useAtomValue(P.streakAtom);
-  const best = useAtomValue(P.bestAtom);
-  const hex = useAtomValue(P.hexAtom);
-  const hexStreak = useAtomValue(P.hexStreakAtom);
-  const bestHexStreak = useAtomValue(P.bestHexStreakAtom);
-  const roll = useAtomValue(P.rollAtom);
-  const rolling = useAtomValue(P.rollingAtom);
-  const cooldown = useAtomValue(P.cooldownAtom);
-  const stunned = useAtomValue(P.stunnedAtom);
-  const stunSchedule = useAtomValue(P.stunScheduleAtom);
-  const stunPct = useAtomValue(P.stunPctAtom);
-  const cdPct = useAtomValue(P.cdPctAtom);
-  const autoPct = useAtomValue(P.autoPctAtom);
-  const sLv = useAtomValue(P.sLvAtom);
-  const aLv = useAtomValue(P.aLvAtom);
-  const mLv = useAtomValue(P.mLvAtom);
-  const rLv = useAtomValue(P.rLvAtom);
-  const tLv = useAtomValue(P.tLvAtom);
+  const lifetimeGoldEarned = useAtomValue(P.lifetimeGoldEarnedAtom);
+  const goldStreak = useAtomValue(P.goldStreakAtom);
+  const bestGoldStreak = useAtomValue(P.bestGoldStreakAtom);
+  const hexBalance = useAtomValue(P.hexBalanceAtom);
+  const hexRewardStreak = useAtomValue(P.hexRewardStreakAtom);
+  const bestHexRewardStreak = useAtomValue(P.bestHexRewardStreakAtom);
+  const lastRolledFace = useAtomValue(P.lastRolledFaceAtom);
+  const isRolling = useAtomValue(P.isRollingAtom);
+  const isRollCooldownActive = useAtomValue(P.isRollCooldownActiveAtom);
+  const isStunned = useAtomValue(P.isStunnedAtom);
+  const activeStunWindow = useAtomValue(P.activeStunWindowAtom);
+  const stunRecoveryProgress = useAtomValue(P.stunRecoveryProgressAtom);
+  const rollCooldownProgress = useAtomValue(P.rollCooldownProgressAtom);
+  const autoRollProgress = useAtomValue(P.autoRollProgressAtom);
+  const speedUpgradeLevel = useAtomValue(P.speedUpgradeLevelAtom);
+  const autoRollUpgradeLevel = useAtomValue(P.autoRollUpgradeLevelAtom);
+  const multiplierUpgradeLevel = useAtomValue(P.multiplierUpgradeLevelAtom);
+  const streakRetentionUpgradeLevel = useAtomValue(
+    P.streakRetentionUpgradeLevelAtom,
+  );
+  const stunUpgradeLevel = useAtomValue(P.stunUpgradeLevelAtom);
   const prestige = useAtomValue(P.prestigeAtom);
-  const rolls = useAtomValue(P.rollsAtom);
-  const threes = useAtomValue(P.threesAtom);
-  const shook = useAtomValue(P.shookAtom);
-  const flash = useAtomValue(P.flashAtom);
-  const tab = useAtomValue(P.tabAtom);
-  const log = useAtomValue(P.logAtom);
-  const started = useAtomValue(P.startedAtom);
+  const totalRollCount = useAtomValue(P.totalRollCountAtom);
+  const multipleOfThreeRollCount = useAtomValue(P.multipleOfThreeRollCountAtom);
+  const dieShakeActive = useAtomValue(P.dieShakeActiveAtom);
+  const screenFlashColor = useAtomValue(P.screenFlashColorAtom);
+  const activeGameTab = useAtomValue(P.activeGameTabAtom);
+  const gameEventLog = useAtomValue(P.gameEventLogAtom);
+  const runStarted = useAtomValue(P.runStartedAtom);
   const dice = useAtomValue(P.diceAtom);
-  const totalReforges = useAtomValue(P.totalReforgesAtom);
-  const reforgeCap = useAtomValue(P.reforgeCapAtom);
+  const totalDieReforgeCount = useAtomValue(P.totalDieReforgeCountAtom);
+  const maxReforgeFaceValue = useAtomValue(P.maxReforgeFaceValueAtom);
 
   const currentDie = useAtomValue(D.currentDieAtom);
   const multi = useAtomValue(D.multiAtom);
   const streakRetentionPct = useAtomValue(D.streakRetentionPctAtom);
-  const pMult = useAtomValue(D.pMultAtom);
+  const prestigeGoldMultiplier = useAtomValue(D.prestigeGoldMultiplierAtom);
   const cdMs = useAtomValue(D.cdMsAtom);
   const stunMs = useAtomValue(D.stunMsAtom);
-  const stunActiveDurationMs = stunSchedule?.durationMs ?? stunMs;
+  const stunActiveDurationMs = activeStunWindow?.durationMs ?? stunMs;
   const autoMs = useAtomValue(D.autoMsAtom);
   const prestigeReq = useAtomValue(D.prestigeReqAtom);
   const canPrestige = useAtomValue(D.canPrestigeAtom);
   const locked = useAtomValue(D.gameLockedAtom);
 
-  const setTab = useSetAtom(P.tabAtom);
+  const setActiveGameTab = useSetAtom(P.activeGameTabAtom);
 
   const purchaseUpgrade = usePurchaseUpgrade();
   const commitPrestige = usePrestige();
@@ -67,47 +68,47 @@ export function useGameSurface() {
 
   return {
     gold,
-    earned,
-    streak,
-    best,
-    hex,
-    hexStreak,
-    bestHexStreak,
-    roll,
-    rolling,
-    cooldown,
-    stunned,
-    stunPct,
-    cdPct,
-    autoPct,
-    sLv,
-    aLv,
-    mLv,
-    rLv,
-    tLv,
+    lifetimeGoldEarned,
+    goldStreak,
+    bestGoldStreak,
+    hexBalance,
+    hexRewardStreak,
+    bestHexRewardStreak,
+    lastRolledFace,
+    isRolling,
+    isRollCooldownActive,
+    isStunned,
+    stunRecoveryProgress,
+    rollCooldownProgress,
+    autoRollProgress,
+    speedUpgradeLevel,
+    autoRollUpgradeLevel,
+    multiplierUpgradeLevel,
+    streakRetentionUpgradeLevel,
+    stunUpgradeLevel,
     prestige,
-    rolls,
-    threes,
-    shook,
-    flash,
-    tab,
-    log,
-    started,
-    locked,
+    totalRollCount,
+    multipleOfThreeRollCount,
+    dieShakeActive,
+    screenFlashColor,
+    activeGameTab,
+    gameEventLog,
+    runStarted,
     dice,
-    totalReforges,
-    reforgeCap,
+    totalDieReforgeCount,
+    maxReforgeFaceValue,
     currentDie,
     multi,
     streakRetentionPct,
-    pMult,
+    prestigeGoldMultiplier,
     cdMs,
     stunMs,
     stunActiveDurationMs,
     autoMs,
     prestigeReq,
     canPrestige,
-    setTab,
+    locked,
+    setActiveGameTab,
     rollDice,
     purchaseUpgrade,
     commitPrestige,

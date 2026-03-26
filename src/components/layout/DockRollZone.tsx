@@ -2,28 +2,28 @@ import { Box, Flex, Text } from "@chakra-ui/react";
 import { DiceFace } from "../dice/DiceFace";
 
 interface DockRollZoneProps {
-  roll: number | null;
+  lastRolledFace: number | null;
   sides: number;
-  stunned: boolean;
-  stunPct: number;
+  isStunned: boolean;
+  stunRecoveryProgress: number;
   stunActiveDurationMs: number;
-  rolling: boolean;
+  isRolling: boolean;
   locked: boolean;
-  aLv: number;
-  cdPct: number;
+  autoRollUpgradeLevel: number;
+  rollCooldownProgress: number;
   onRoll: () => void;
 }
 
 export function DockRollZone({
-  roll,
+  lastRolledFace,
   sides,
-  stunned,
-  stunPct,
+  isStunned,
+  stunRecoveryProgress,
   stunActiveDurationMs,
-  rolling,
+  isRolling,
   locked,
-  aLv,
-  cdPct,
+  autoRollUpgradeLevel,
+  rollCooldownProgress,
   onRoll,
 }: DockRollZoneProps) {
   return (
@@ -56,13 +56,13 @@ export function DockRollZone({
         h="148px"
         borderRadius="24px"
         bg={
-          stunned
+          isStunned
             ? "linear-gradient(145deg,#2a0a12,#18060a)"
             : "linear-gradient(145deg,#16162a,#0d0d18)"
         }
         border="2px solid"
         borderColor={
-          stunned
+          isStunned
             ? "#ff335566"
             : locked
               ? "never.dieBorderLocked"
@@ -73,16 +73,16 @@ export function DockRollZone({
         justifyContent="center"
         pointerEvents="none"
         animation={
-          rolling
+          isRolling
             ? "neverSpin 0.18s ease"
-            : !locked && !aLv
+            : !locked && !autoRollUpgradeLevel
               ? "neverPulse 2.5s ease infinite"
               : undefined
         }
-        opacity={locked && !rolling && !stunned ? 0.55 : 1}
+        opacity={locked && !isRolling && !isStunned ? 0.55 : 1}
         transition="border-color 0.3s, background 0.3s, opacity 0.3s"
       >
-        {roll === null ? (
+        {lastRolledFace === null ? (
           <Text
             color="never.hint"
             fontSize="15px"
@@ -98,15 +98,15 @@ export function DockRollZone({
           </Text>
         ) : (
           <DiceFace
-            value={roll}
+            value={lastRolledFace}
             sides={sides}
-            isThree={roll !== null && roll % 3 === 0}
-            rolling={rolling}
+            isThree={lastRolledFace !== null && lastRolledFace % 3 === 0}
+            rolling={isRolling}
           />
         )}
       </Box>
 
-      {stunned ? (
+      {isStunned ? (
         <Box w="160px" textAlign="center">
           <Box
             w="100%"
@@ -118,7 +118,7 @@ export function DockRollZone({
             <Box
               h="100%"
               borderRadius="3px"
-              w={`${stunPct * 100}%`}
+              w={`${stunRecoveryProgress * 100}%`}
               bg="linear-gradient(90deg,#ff335566,#ff3355cc)"
             />
           </Box>
@@ -129,7 +129,11 @@ export function DockRollZone({
             fontWeight={700}
             animation="neverStunPulse 1s ease infinite"
           >
-            STUNNED {(((1 - stunPct) * stunActiveDurationMs) / 1000).toFixed(1)}
+            STUNNED{" "}
+            {(
+              ((1 - stunRecoveryProgress) * stunActiveDurationMs) /
+              1000
+            ).toFixed(1)}
             s
           </Text>
         </Box>
@@ -144,9 +148,9 @@ export function DockRollZone({
           <Box
             h="100%"
             borderRadius="2px"
-            w={`${cdPct * 100}%`}
+            w={`${rollCooldownProgress * 100}%`}
             bg={
-              cdPct < 1
+              rollCooldownProgress < 1
                 ? "linear-gradient(90deg,#44ffbb55,#44ffbbbb)"
                 : "never.streak"
             }

@@ -51,7 +51,7 @@ export function DevSaveManager({
 
   const handleCreate = async () => {
     const name = newName.trim() || `Run ${profiles.length + 1}`;
-    const id = await createProfile(name);
+    const { id } = await createProfile(name.trim() || undefined);
     setNewName("");
     onNewProfile(id);
     await refresh();

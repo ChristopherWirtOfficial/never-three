@@ -48,8 +48,10 @@ src/
 │   │   ├── ForgeDieSection.tsx
 │   │   ├── ReforgeFaceRow.tsx
 │   │   └── ForgeFooter.tsx
-│   └── log/
-│       └── LogTab.tsx
+│   ├── log/
+│   │   └── LogTab.tsx
+│   └── saves/
+│       └── SaveManagerModal.tsx
 ├── components/
 │   ├── layout/
 │   │   ├── TopBar.tsx
@@ -60,8 +62,9 @@ src/
 │   └── dice/
 │       └── DiceFace.tsx
 ├── providers/
-│   ├── AppBootstrap.tsx    # boot() → Jotai store + hydrate + session/autosave
-│   └── GameSessionContext.tsx
+│   ├── AppBootstrap.tsx    # Session + Jotai store + SaveSlots
+│   ├── GameSessionContext.tsx
+│   └── SaveSlotsContext.tsx
 ├── theme/
 │   └── system.ts
 └── DevSaveManager.tsx    # Dev save UI (unused in main app)
@@ -73,20 +76,22 @@ Feature folders own one screen each; shared chrome lives under `components/`. Do
 
 Game state lives in **Jotai atoms** (`src/game/atoms/`). `useGameSurface()` composes `useAtomValue` / `useSetAtom` with small action hooks and returns a flat object for `App.tsx`:
 
-- **State values**: gold, hex, streaks, levels, dice, UI flags
+- **State values**: gold, hex balance, streaks, levels, dice, UI flags (see `SaveState` in `saves.ts`)
 - **Derived atoms**: multipliers, `rollPhase` / `gameLocked`, prestige gates
-- **Actions**: `rollDice`, `purchaseUpgrade`, `commitPrestige`, `incrementDieFace`, `decrementDieFace`, `setTab`
+- **Actions**: `rollDice`, `purchaseUpgrade`, `commitPrestige`, `incrementDieFace`, `decrementDieFace`, `setActiveGameTab`
 
 Components are pure renderers — they receive props and call actions.
 No component has its own game state.
 
 ### Key State Groups
 
-**Economy**: gold, earned, hex, streak, hexStreak, best, bestHexStreak
-**Upgrade levels**: sLv, aLv, mLv, rLv, tLv (speed, auto, multi, armor, stun)
-**Dice**: dice (Die[][]), totalReforges, reforgeCap, currentDie (derived)
-**UI/Animation**: roll, rolling, cooldown, stunned, stunPct, cdPct, autoPct, flash, shook, saved
-**Meta**: prestige, rolls, threes, tab, log, started
+**Economy (persisted)**: `gold`, `lifetimeGoldEarned`, `goldStreak`, `bestGoldStreak`, `hexBalance`, `hexRewardStreak`, `bestHexRewardStreak`
+**Upgrade levels**: `speedUpgradeLevel`, `autoRollUpgradeLevel`, `multiplierUpgradeLevel`, `streakRetentionUpgradeLevel`, `stunUpgradeLevel`
+**Dice (persisted)**: `dice`, `totalDieReforgeCount`, `maxReforgeFaceValue`; `currentDie` (derived)
+**Ephemeral UI**: `lastRolledFace`, `isRolling`, `isRollCooldownActive`, `isStunned`, `stunRecoveryProgress`, `rollCooldownProgress`, `autoRollProgress`, `screenFlashColor`, `dieShakeActive`, `activeGameTab`, `gameEventLog`, `runStarted`
+**Meta (persisted)**: `prestige`, `totalRollCount`, `multipleOfThreeRollCount`
+
+Save format version is `SAVE_VERSION` in `saves.ts`. `migrateRawToSaveState()` maps v2–v4 JSON keys into the current shape so older localStorage profiles keep working.
 
 ### Roll Flow
 

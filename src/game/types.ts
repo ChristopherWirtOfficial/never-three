@@ -36,33 +36,33 @@ export type Die = number[];
 
 // Full dice state
 export interface DiceState {
-  dice: Die[]; // array of dice, each is array of face values
-  totalReforges: number;
-  reforgeCap: number; // max value a face can be reforged to (starts 6)
+  dice: Die[];
+  totalDieReforgeCount: number;
+  maxReforgeFaceValue: number;
 }
 
 export interface GameState {
   gold: number;
-  earned: number;
-  streak: number;
-  best: number;
-  roll: number | null;
-  rolling: boolean;
-  cooldown: boolean;
-  stunned: boolean;
-  stunPct: number;
-  cdPct: number;
-  sLv: number;
-  aLv: number;
-  mLv: number;
-  rLv: number;
-  tLv: number;
+  lifetimeGoldEarned: number;
+  goldStreak: number;
+  bestGoldStreak: number;
+  lastRolledFace: number | null;
+  isRolling: boolean;
+  isRollCooldownActive: boolean;
+  isStunned: boolean;
+  stunRecoveryProgress: number;
+  rollCooldownProgress: number;
+  speedUpgradeLevel: number;
+  autoRollUpgradeLevel: number;
+  multiplierUpgradeLevel: number;
+  streakRetentionUpgradeLevel: number;
+  stunUpgradeLevel: number;
   prestige: number;
-  rolls: number;
-  threes: number;
-  shook: boolean;
-  flash: string | null;
+  totalRollCount: number;
+  multipleOfThreeRollCount: number;
+  dieShakeActive: boolean;
+  screenFlashColor: string | null;
   tab: TabId;
-  log: string[];
-  started: boolean;
+  gameEventLog: string[];
+  runStarted: boolean;
 }

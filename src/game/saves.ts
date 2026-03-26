@@ -1,6 +1,6 @@
 // Save/load via localStorage (keys prefixed nt-)
 
-export const SAVE_VERSION = 3;
+export const SAVE_VERSION = 5;
 
 export interface SaveProfile {
   name: string;
@@ -9,26 +9,27 @@ export interface SaveProfile {
   state: SaveState;
 }
 
+/** On-disk shape; field names are stable for future save/export features. */
 export interface SaveState {
-  _v: number; // save version
+  _v: number;
   gold: number;
-  earned: number;
-  streak: number;
-  best: number;
-  hex: number;
-  hexStreak: number;
-  bestHexStreak: number;
-  sLv: number;
-  aLv: number;
-  mLv: number;
-  rLv: number;
-  tLv: number;
+  lifetimeGoldEarned: number;
+  goldStreak: number;
+  bestGoldStreak: number;
+  hexBalance: number;
+  hexRewardStreak: number;
+  bestHexRewardStreak: number;
+  speedUpgradeLevel: number;
+  autoRollUpgradeLevel: number;
+  multiplierUpgradeLevel: number;
+  streakRetentionUpgradeLevel: number;
+  stunUpgradeLevel: number;
   prestige: number;
-  rolls: number;
-  threes: number;
+  totalRollCount: number;
+  multipleOfThreeRollCount: number;
   dice: number[][];
-  totalReforges: number;
-  reforgeCap: number;
+  totalDieReforgeCount: number;
+  maxReforgeFaceValue: number;
 }
 
 const PROFILES_KEY = "nt-profiles";
@@ -64,50 +65,85 @@ function makeId(): string {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 }
 
-export function extractSaveState(g: Record<string, unknown>): SaveState {
+function num(raw: Record<string, unknown>, ...keys: string[]): number {
+  for (const k of keys) {
+    const v = raw[k];
+    if (typeof v === "number" && !Number.isNaN(v)) return v;
+  }
+  return 0;
+}
+
+function numOpt(
+  raw: Record<string, unknown>,
+  fallback: number,
+  ...keys: string[]
+): number {
+  for (const k of keys) {
+    const v = raw[k];
+    if (typeof v === "number" && !Number.isNaN(v)) return v;
+  }
+  return fallback;
+}
+
+/**
+ * Normalize any supported save version (or pasted partial JSON) into the current `SaveState`.
+ * Unknown `_v` values are rejected by `loadProfile`; this function assumes a recognized legacy version.
+ */
+export function migrateRawToSaveState(raw: Record<string, unknown>): SaveState {
   return {
     _v: SAVE_VERSION,
-    gold: g.gold as number,
-    earned: g.earned as number,
-    streak: g.streak as number,
-    best: g.best as number,
-    hex: (g.hex as number | undefined) ?? 0,
-    hexStreak: (g.hexStreak as number | undefined) ?? 0,
-    bestHexStreak: (g.bestHexStreak as number | undefined) ?? 0,
-    sLv: g.sLv as number,
-    aLv: g.aLv as number,
-    mLv: g.mLv as number,
-    rLv: g.rLv as number,
-    tLv: g.tLv as number,
-    prestige: g.prestige as number,
-    rolls: g.rolls as number,
-    threes: g.threes as number,
-    dice: (g.dice as number[][] | undefined) ?? [[1, 2, 3, 4, 5, 6]],
-    totalReforges: (g.totalReforges as number | undefined) ?? 0,
-    reforgeCap: (g.reforgeCap as number | undefined) ?? 6,
+    gold: num(raw, "gold"),
+    lifetimeGoldEarned: num(raw, "lifetimeGoldEarned", "earned"),
+    goldStreak: num(raw, "goldStreak", "streak"),
+    bestGoldStreak: num(raw, "bestGoldStreak", "best"),
+    hexBalance: numOpt(raw, 0, "hexBalance", "hex"),
+    hexRewardStreak: numOpt(raw, 0, "hexRewardStreak", "hexStreak"),
+    bestHexRewardStreak: numOpt(raw, 0, "bestHexRewardStreak", "bestHexStreak"),
+    speedUpgradeLevel: num(raw, "speedUpgradeLevel", "sLv"),
+    autoRollUpgradeLevel: num(raw, "autoRollUpgradeLevel", "aLv"),
+    multiplierUpgradeLevel: num(raw, "multiplierUpgradeLevel", "mLv"),
+    streakRetentionUpgradeLevel: num(raw, "streakRetentionUpgradeLevel", "rLv"),
+    stunUpgradeLevel: num(raw, "stunUpgradeLevel", "tLv"),
+    prestige: num(raw, "prestige"),
+    totalRollCount: num(raw, "totalRollCount", "rolls"),
+    multipleOfThreeRollCount: num(raw, "multipleOfThreeRollCount", "threes"),
+    dice: (Array.isArray(raw.dice) ? (raw.dice as number[][]) : null) ?? [
+      [1, 2, 3, 4, 5, 6],
+    ],
+    totalDieReforgeCount: numOpt(
+      raw,
+      0,
+      "totalDieReforgeCount",
+      "totalReforges",
+    ),
+    maxReforgeFaceValue: numOpt(raw, 6, "maxReforgeFaceValue", "reforgeCap"),
   };
+}
+
+export function extractSaveState(g: Record<string, unknown>): SaveState {
+  return migrateRawToSaveState({ ...g, _v: SAVE_VERSION });
 }
 
 export const DEFAULT_STATE: SaveState = {
   _v: SAVE_VERSION,
   gold: 0,
-  earned: 0,
-  streak: 0,
-  best: 0,
-  hex: 0,
-  hexStreak: 0,
-  bestHexStreak: 0,
-  sLv: 0,
-  aLv: 0,
-  mLv: 0,
-  rLv: 0,
-  tLv: 0,
+  lifetimeGoldEarned: 0,
+  goldStreak: 0,
+  bestGoldStreak: 0,
+  hexBalance: 0,
+  hexRewardStreak: 0,
+  bestHexRewardStreak: 0,
+  speedUpgradeLevel: 0,
+  autoRollUpgradeLevel: 0,
+  multiplierUpgradeLevel: 0,
+  streakRetentionUpgradeLevel: 0,
+  stunUpgradeLevel: 0,
   prestige: 0,
-  rolls: 0,
-  threes: 0,
+  totalRollCount: 0,
+  multipleOfThreeRollCount: 0,
   dice: [[1, 2, 3, 4, 5, 6]],
-  totalReforges: 0,
-  reforgeCap: 6,
+  totalDieReforgeCount: 0,
+  maxReforgeFaceValue: 6,
 };
 
 // ── Profile index ──
@@ -149,25 +185,66 @@ export async function setActiveProfileId(id: string): Promise<void> {
   writeLocalStorageString(ACTIVE_KEY, id);
 }
 
+/** Label used when the player leaves the save name blank. */
+export function formatUnnamedSaveLabel(atMs: number = Date.now()): string {
+  return `Unnamed save · ${new Date(atMs).toLocaleString(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  })}`;
+}
+
+/** Display name for index rows (handles legacy empty names). */
+export function resolveProfileDisplayName(
+  name: string | undefined,
+  lastPlayed: number,
+): string {
+  const t = name?.trim();
+  if (t) return t;
+  return formatUnnamedSaveLabel(lastPlayed);
+}
+
 export async function loadProfile(id: string): Promise<SaveState | null> {
   const raw = readLocalStorageString(`nt-save-${id}`);
   if (!raw) return null;
   try {
-    const parsed = JSON.parse(raw) as Partial<SaveState> & { _v?: number };
-    if (parsed._v === 2) {
-      return {
-        ...DEFAULT_STATE,
+    const parsed = JSON.parse(raw) as Record<string, unknown> & { _v?: number };
+    const v = parsed._v;
+
+    if (v === 2) {
+      return migrateRawToSaveState({
         ...parsed,
-        _v: SAVE_VERSION,
-        hex: 0,
-        hexStreak: 0,
-        bestHexStreak: 0,
-      };
+        hexBalance: 0,
+        hexRewardStreak: 0,
+        bestHexRewardStreak: 0,
+      });
     }
-    if (parsed._v !== SAVE_VERSION) return null;
-    return { ...DEFAULT_STATE, ...parsed };
+
+    if (v === 3 || v === 4 || v === SAVE_VERSION) {
+      return migrateRawToSaveState(parsed);
+    }
+
+    return null;
   } catch {
     return null;
+  }
+}
+
+/** Write snapshot to disk. When `setActive` is false, active profile id is unchanged. */
+export async function persistProfileSnapshot(
+  id: string,
+  name: string,
+  state: SaveState,
+  setActive: boolean,
+): Promise<void> {
+  const index = await getProfileIndex();
+  index[id] = { name, lastPlayed: Date.now() };
+  await setProfileIndex(index);
+  writeLocalStorageString(
+    `nt-save-${id}`,
+    JSON.stringify({ ...state, _v: SAVE_VERSION }),
+  );
+  if (setActive) {
+    await setActiveProfileId(id);
   }
 }
 
@@ -176,20 +253,37 @@ export async function saveProfile(
   name: string,
   state: SaveState,
 ): Promise<void> {
-  const index = await getProfileIndex();
-  index[id] = { name, lastPlayed: Date.now() };
-  writeLocalStorageString(PROFILES_KEY, JSON.stringify(index));
-  writeLocalStorageString(
-    `nt-save-${id}`,
-    JSON.stringify({ ...state, _v: SAVE_VERSION }),
-  );
-  await setActiveProfileId(id);
+  await persistProfileSnapshot(id, name, state, true);
 }
 
-export async function createProfile(name: string): Promise<string> {
+export async function createProfile(
+  optionalDisplayName?: string,
+): Promise<{ id: string; name: string }> {
+  const trimmed = optionalDisplayName?.trim();
+  const name =
+    trimmed && trimmed.length > 0 ? trimmed : formatUnnamedSaveLabel();
   const id = makeId();
-  await saveProfile(id, name, DEFAULT_STATE);
-  return id;
+  await persistProfileSnapshot(id, name, DEFAULT_STATE, true);
+  return { id, name };
+}
+
+/** Clone disk state into a new slot without activating it (caller can switch). */
+export async function duplicateProfile(
+  sourceId: string,
+  optionalDisplayName?: string,
+): Promise<{ id: string; name: string; state: SaveState } | null> {
+  const state = await loadProfile(sourceId);
+  if (!state) return null;
+  const index = await getProfileIndex();
+  const sourceName = resolveProfileDisplayName(
+    index[sourceId]?.name,
+    index[sourceId]?.lastPlayed ?? Date.now(),
+  );
+  const trimmed = optionalDisplayName?.trim();
+  const name = trimmed && trimmed.length > 0 ? trimmed : `${sourceName} (copy)`;
+  const id = makeId();
+  await persistProfileSnapshot(id, name, state, false);
+  return { id, name, state };
 }
 
 export async function deleteProfile(id: string): Promise<void> {
@@ -235,28 +329,21 @@ export function boot(): Promise<BootResult> {
   return bootSingleFlight;
 }
 
-// Boot: find or create the active profile
-async function executeBoot(): Promise<BootResult> {
-  let activeId = await getActiveProfileId();
-
-  if (activeId) {
-    const state = await loadProfile(activeId);
-    const index = await getProfileIndex();
-    if (state && index[activeId]) {
-      return { id: activeId, name: index[activeId].name, state };
-    }
-  }
-
+/** Pick the most recently played loadable profile, or create a fresh unnamed save. */
+export async function resolvePlayableSession(): Promise<BootResult> {
   const profiles = await listProfiles();
-  if (profiles.length > 0) {
-    const top = profiles[0];
-    const state = await loadProfile(top.id);
+  for (const p of profiles) {
+    const state = await loadProfile(p.id);
     if (state) {
-      await setActiveProfileId(top.id);
-      return { id: top.id, name: top.name, state };
+      await setActiveProfileId(p.id);
+      return { id: p.id, name: p.name, state };
     }
   }
 
-  const id = await createProfile("Default");
-  return { id, name: "Default", state: DEFAULT_STATE };
+  const { id, name } = await createProfile();
+  return { id, name, state: DEFAULT_STATE };
+}
+
+async function executeBoot(): Promise<BootResult> {
+  return resolvePlayableSession();
 }

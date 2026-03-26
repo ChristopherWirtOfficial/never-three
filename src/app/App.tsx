@@ -7,13 +7,15 @@ import { LogTab } from "../features/log/LogTab";
 import { RollTab } from "../features/roll/RollTab";
 import { ShopTab } from "../features/shop/ShopTab";
 import { useGameSurface } from "../game/useGameSurface";
+import { useSaveSlots } from "../providers/SaveSlotsContext";
 
 export default function NeverThree() {
   const g = useGameSurface();
+  const { openSaveManager } = useSaveSlots();
 
   return (
     <>
-      {g.flash && <FlashOverlay color={g.flash} />}
+      {g.screenFlashColor && <FlashOverlay color={g.screenFlashColor} />}
 
       <Box
         h="100dvh"
@@ -26,47 +28,48 @@ export default function NeverThree() {
         color="never.text"
         fontFamily="monospace"
         overflow="hidden"
-        animation={g.shook ? "neverShake 0.3s ease" : undefined}
+        animation={g.dieShakeActive ? "neverShake 0.3s ease" : undefined}
       >
         <TopBar
           gold={g.gold}
-          hex={g.hex}
-          streak={g.streak}
-          hexStreak={g.hexStreak}
-          best={g.best}
+          hexBalance={g.hexBalance}
+          goldStreak={g.goldStreak}
+          hexRewardStreak={g.hexRewardStreak}
+          bestGoldStreak={g.bestGoldStreak}
           prestige={g.prestige}
-          pMult={g.pMult}
+          prestigeGoldMultiplier={g.prestigeGoldMultiplier}
+          onOpenSaves={openSaveManager}
         />
 
         <Box flex={1} overflow="auto" px="18px">
-          {g.tab === "roll" && (
+          {g.activeGameTab === "roll" && (
             <RollTab
-              aLv={g.aLv}
-              sLv={g.sLv}
+              autoRollUpgradeLevel={g.autoRollUpgradeLevel}
+              speedUpgradeLevel={g.speedUpgradeLevel}
               multi={g.multi}
               streakRetentionPct={g.streakRetentionPct}
-              pMult={g.pMult}
-              roll={g.roll}
-              rolling={g.rolling}
-              streak={g.streak}
-              stunned={g.stunned}
-              rolls={g.rolls}
-              threes={g.threes}
-              started={g.started}
-              autoPct={g.autoPct}
+              prestigeGoldMultiplier={g.prestigeGoldMultiplier}
+              lastRolledFace={g.lastRolledFace}
+              isRolling={g.isRolling}
+              goldStreak={g.goldStreak}
+              isStunned={g.isStunned}
+              totalRollCount={g.totalRollCount}
+              multipleOfThreeRollCount={g.multipleOfThreeRollCount}
+              runStarted={g.runStarted}
+              autoRollProgress={g.autoRollProgress}
               autoMs={g.autoMs}
               currentDie={g.currentDie}
             />
           )}
-          {g.tab === "shop" && (
+          {g.activeGameTab === "shop" && (
             <ShopTab
               gold={g.gold}
-              earned={g.earned}
-              sLv={g.sLv}
-              aLv={g.aLv}
-              mLv={g.mLv}
-              rLv={g.rLv}
-              tLv={g.tLv}
+              lifetimeGoldEarned={g.lifetimeGoldEarned}
+              speedUpgradeLevel={g.speedUpgradeLevel}
+              autoRollUpgradeLevel={g.autoRollUpgradeLevel}
+              multiplierUpgradeLevel={g.multiplierUpgradeLevel}
+              streakRetentionUpgradeLevel={g.streakRetentionUpgradeLevel}
+              stunUpgradeLevel={g.stunUpgradeLevel}
               prestige={g.prestige}
               prestigeReq={g.prestigeReq}
               canPrestige={g.canPrestige}
@@ -74,34 +77,36 @@ export default function NeverThree() {
               commitPrestige={g.commitPrestige}
             />
           )}
-          {g.tab === "forge" && (
+          {g.activeGameTab === "forge" && (
             <ForgeTab
               dice={g.dice}
-              totalReforges={g.totalReforges}
-              reforgeCap={g.reforgeCap}
-              hex={g.hex}
+              totalDieReforgeCount={g.totalDieReforgeCount}
+              maxReforgeFaceValue={g.maxReforgeFaceValue}
+              hexBalance={g.hexBalance}
               incrementDieFace={g.incrementDieFace}
               decrementDieFace={g.decrementDieFace}
             />
           )}
-          {g.tab === "log" && <LogTab log={g.log} />}
+          {g.activeGameTab === "log" && (
+            <LogTab gameEventLog={g.gameEventLog} />
+          )}
         </Box>
 
         <BottomDock
-          roll={g.roll}
+          lastRolledFace={g.lastRolledFace}
           sides={g.currentDie.length}
-          stunned={g.stunned}
-          stunPct={g.stunPct}
+          isStunned={g.isStunned}
+          stunRecoveryProgress={g.stunRecoveryProgress}
           stunActiveDurationMs={g.stunActiveDurationMs}
-          rolling={g.rolling}
+          isRolling={g.isRolling}
           locked={g.locked}
-          aLv={g.aLv}
-          cdPct={g.cdPct}
-          tab={g.tab}
+          autoRollUpgradeLevel={g.autoRollUpgradeLevel}
+          rollCooldownProgress={g.rollCooldownProgress}
+          activeGameTab={g.activeGameTab}
           onRoll={() => {
             if (!g.locked) g.rollDice();
           }}
-          onTabChange={g.setTab}
+          onTabChange={g.setActiveGameTab}
         />
       </Box>
     </>

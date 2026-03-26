@@ -16,55 +16,57 @@ export function usePrestige(): () => void {
 
   const setPrestige = useSetAtom(P.prestigeAtom);
   const setGold = useSetAtom(P.goldAtom);
-  const setEarned = useSetAtom(P.earnedAtom);
-  const setStreak = useSetAtom(P.streakAtom);
-  const setRoll = useSetAtom(P.rollAtom);
-  const setHex = useSetAtom(P.hexAtom);
-  const setHexStreak = useSetAtom(P.hexStreakAtom);
-  const setSLv = useSetAtom(P.sLvAtom);
-  const setALv = useSetAtom(P.aLvAtom);
-  const setMLv = useSetAtom(P.mLvAtom);
-  const setRLv = useSetAtom(P.rLvAtom);
-  const setTLv = useSetAtom(P.tLvAtom);
+  const setLifetimeGoldEarned = useSetAtom(P.lifetimeGoldEarnedAtom);
+  const setGoldStreak = useSetAtom(P.goldStreakAtom);
+  const setLastRolledFace = useSetAtom(P.lastRolledFaceAtom);
+  const setHexBalance = useSetAtom(P.hexBalanceAtom);
+  const setHexRewardStreak = useSetAtom(P.hexRewardStreakAtom);
+  const setSpeedUpgradeLevel = useSetAtom(P.speedUpgradeLevelAtom);
+  const setAutoRollUpgradeLevel = useSetAtom(P.autoRollUpgradeLevelAtom);
+  const setMultiplierUpgradeLevel = useSetAtom(P.multiplierUpgradeLevelAtom);
+  const setStreakRetentionUpgradeLevel = useSetAtom(
+    P.streakRetentionUpgradeLevelAtom,
+  );
+  const setStunUpgradeLevel = useSetAtom(P.stunUpgradeLevelAtom);
   const setDice = useSetAtom(P.diceAtom);
-  const setTotalReforges = useSetAtom(P.totalReforgesAtom);
-  const setLog = useSetAtom(P.logAtom);
+  const setTotalDieReforgeCount = useSetAtom(P.totalDieReforgeCountAtom);
+  const setGameEventLog = useSetAtom(P.gameEventLogAtom);
 
   return useCallback(() => {
     if (!snapRef.current.canPrestige) return;
     const p = snapRef.current.prestige;
     setPrestige((x: number) => x + 1);
     setGold(0);
-    setEarned(0);
-    setStreak(0);
-    setRoll(null);
-    setHex(0);
-    setHexStreak(0);
-    setSLv(0);
-    setALv(0);
-    setMLv(0);
-    setRLv(0);
-    setTLv(0);
+    setLifetimeGoldEarned(0);
+    setGoldStreak(0);
+    setLastRolledFace(null);
+    setHexBalance(0);
+    setHexRewardStreak(0);
+    setSpeedUpgradeLevel(0);
+    setAutoRollUpgradeLevel(0);
+    setMultiplierUpgradeLevel(0);
+    setStreakRetentionUpgradeLevel(0);
+    setStunUpgradeLevel(0);
     setDice([makeDefaultDie()]);
-    setTotalReforges(0);
-    setLog([
+    setTotalDieReforgeCount(0);
+    setGameEventLog([
       `✨ PRESTIGE ${p + 1}! ×${(1 + (p + 1) * 0.5).toFixed(1)} forever`,
     ]);
   }, [
     setPrestige,
     setGold,
-    setEarned,
-    setStreak,
-    setRoll,
-    setHex,
-    setHexStreak,
-    setSLv,
-    setALv,
-    setMLv,
-    setRLv,
-    setTLv,
+    setLifetimeGoldEarned,
+    setGoldStreak,
+    setLastRolledFace,
+    setHexBalance,
+    setHexRewardStreak,
+    setSpeedUpgradeLevel,
+    setAutoRollUpgradeLevel,
+    setMultiplierUpgradeLevel,
+    setStreakRetentionUpgradeLevel,
+    setStunUpgradeLevel,
     setDice,
-    setTotalReforges,
-    setLog,
+    setTotalDieReforgeCount,
+    setGameEventLog,
   ]);
 }

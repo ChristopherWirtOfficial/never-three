@@ -4,23 +4,23 @@ import { DockRollZone } from "./DockRollZone";
 import { DockTabBar } from "./DockTabBar";
 
 interface BottomDockProps {
-  roll: number | null;
+  lastRolledFace: number | null;
   sides: number;
-  stunned: boolean;
-  stunPct: number;
+  isStunned: boolean;
+  stunRecoveryProgress: number;
   /** Denominator for stunned countdown bar (locked at stun apply, not live shop tier). */
   stunActiveDurationMs: number;
-  rolling: boolean;
+  isRolling: boolean;
   locked: boolean;
-  aLv: number;
-  cdPct: number;
-  tab: TabId;
+  autoRollUpgradeLevel: number;
+  rollCooldownProgress: number;
+  activeGameTab: TabId;
   onRoll: () => void;
   onTabChange: (tab: TabId) => void;
 }
 
 export function BottomDock(props: BottomDockProps) {
-  const { tab, onTabChange, onRoll, ...rollZone } = props;
+  const { activeGameTab, onTabChange, onRoll, ...rollZone } = props;
   return (
     <Box
       flexShrink={0}
@@ -29,7 +29,7 @@ export function BottomDock(props: BottomDockProps) {
       bg="never.dock"
     >
       <DockRollZone {...rollZone} onRoll={onRoll} />
-      <DockTabBar tab={tab} onTabChange={onTabChange} />
+      <DockTabBar activeGameTab={activeGameTab} onTabChange={onTabChange} />
     </Box>
   );
 }

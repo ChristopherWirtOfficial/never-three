@@ -5,16 +5,16 @@ import type { Die } from "../../game/types";
 
 interface RollBadgesProps {
   currentDie: Die;
-  aLv: number;
-  sLv: number;
+  autoRollUpgradeLevel: number;
+  speedUpgradeLevel: number;
   multi: number;
   streakRetentionPct: number;
 }
 
 export function RollBadges({
   currentDie,
-  aLv,
-  sLv,
+  autoRollUpgradeLevel,
+  speedUpgradeLevel,
   multi,
   streakRetentionPct,
 }: RollBadgesProps) {
@@ -46,8 +46,12 @@ export function RollBadges({
         dangerCount > 0 ? "never.dangerBadge" : "never.streak",
       )}
       {badge(
-        <>{aLv > 0 ? `AUTO ${AUTO[aLv].name}` : `TAP ${SPEED[sLv].name}`}</>,
-        aLv > 0 ? "never.autoTeal" : "never.subtle",
+        <>
+          {autoRollUpgradeLevel > 0
+            ? `AUTO ${AUTO[autoRollUpgradeLevel].name}`
+            : `TAP ${SPEED[speedUpgradeLevel].name}`}
+        </>,
+        autoRollUpgradeLevel > 0 ? "never.autoTeal" : "never.subtle",
       )}
       {badge(<>×{multi}</>, "never.multi")}
       {streakRetentionPct > 0 &&

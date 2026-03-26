@@ -5,9 +5,9 @@ interface ReforgeFaceRowProps {
   faceIdx: number;
   dieIdx: number;
   faceVal: number;
-  reforgeCap: number;
-  totalReforges: number;
-  hex: number;
+  maxReforgeFaceValue: number;
+  totalDieReforgeCount: number;
+  hexBalance: number;
   incrementDieFace: (dieIndex: number, faceIndex: number) => void;
   decrementDieFace: (dieIndex: number, faceIndex: number) => void;
 }
@@ -16,21 +16,23 @@ export function ReforgeFaceRow({
   faceIdx,
   dieIdx,
   faceVal,
-  reforgeCap,
-  totalReforges,
-  hex,
+  maxReforgeFaceValue,
+  totalDieReforgeCount,
+  hexBalance,
   incrementDieFace,
   decrementDieFace,
 }: ReforgeFaceRowProps) {
   const isDangerous = faceVal % 3 === 0;
-  const atCap = faceVal >= reforgeCap;
+  const atCap = faceVal >= maxReforgeFaceValue;
   const atFloor = faceVal <= 1;
-  const upCost = atCap ? 0 : reforgeCost(faceVal, faceVal + 1, totalReforges);
+  const upCost = atCap
+    ? 0
+    : reforgeCost(faceVal, faceVal + 1, totalDieReforgeCount);
   const downCost = atFloor
     ? 0
-    : reforgeCost(faceVal, faceVal - 1, totalReforges);
-  const canAffordUp = hex >= upCost && !atCap;
-  const canAffordDown = hex >= downCost && !atFloor;
+    : reforgeCost(faceVal, faceVal - 1, totalDieReforgeCount);
+  const canAffordUp = hexBalance >= upCost && !atCap;
+  const canAffordDown = hexBalance >= downCost && !atFloor;
   const nextDangerous = !atCap && (faceVal + 1) % 3 === 0;
   const prevDangerous = !atFloor && (faceVal - 1) % 3 === 0;
 

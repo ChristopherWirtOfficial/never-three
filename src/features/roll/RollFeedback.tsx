@@ -2,28 +2,28 @@ import { Text, VStack } from "@chakra-ui/react";
 import { fmt, streakMultiplier } from "../../game/constants";
 
 interface RollFeedbackProps {
-  roll: number | null;
-  rolling: boolean;
-  stunned: boolean;
-  streak: number;
+  lastRolledFace: number | null;
+  isRolling: boolean;
+  isStunned: boolean;
+  goldStreak: number;
   multi: number;
-  pMult: number;
+  prestigeGoldMultiplier: number;
 }
 
 export function RollFeedback({
-  roll,
-  rolling,
-  stunned,
-  streak,
+  lastRolledFace,
+  isRolling,
+  isStunned,
+  goldStreak,
   multi,
-  pMult,
+  prestigeGoldMultiplier,
 }: RollFeedbackProps) {
-  const dangerous = roll !== null && roll % 3 === 0;
-  const safe = roll !== null && roll % 3 !== 0;
+  const dangerous = lastRolledFace !== null && lastRolledFace % 3 === 0;
+  const safe = lastRolledFace !== null && lastRolledFace % 3 !== 0;
 
   return (
     <VStack minH="60px" align="center" justify="center" gap={0}>
-      {dangerous && !rolling && !stunned && (
+      {dangerous && !isRolling && !isStunned && (
         <Text
           color="never.danger"
           fontSize="28px"
@@ -31,11 +31,11 @@ export function RollFeedback({
           textShadow="0 0 24px rgba(255, 51, 85, 0.4)"
           letterSpacing="6px"
         >
-          {roll === 3 ? "T H R E E" : `÷ 3`}
+          {lastRolledFace === 3 ? "T H R E E" : `÷ 3`}
         </Text>
       )}
 
-      {safe && !rolling && roll != null && (
+      {safe && !isRolling && lastRolledFace != null && (
         <Text
           color="never.streak"
           fontSize="28px"
@@ -45,16 +45,19 @@ export function RollFeedback({
           +
           {fmt(
             Math.floor(
-              roll * streakMultiplier(Math.max(0, streak - 1)) * multi * pMult,
+              lastRolledFace *
+                streakMultiplier(Math.max(0, goldStreak - 1)) *
+                multi *
+                prestigeGoldMultiplier,
             ),
           )}
           g
         </Text>
       )}
 
-      {safe && !rolling && streak > 2 && (
+      {safe && !isRolling && goldStreak > 2 && (
         <Text color="never.streakMuted" fontSize="12px" mt="2px">
-          streak ×{streakMultiplier(streak - 1).toFixed(2)}
+          streak ×{streakMultiplier(goldStreak - 1).toFixed(2)}
         </Text>
       )}
     </VStack>

@@ -5,37 +5,37 @@ import { RollBadges } from "./RollBadges";
 import { RollFeedback } from "./RollFeedback";
 
 interface RollTabProps {
-  aLv: number;
-  sLv: number;
+  autoRollUpgradeLevel: number;
+  speedUpgradeLevel: number;
   multi: number;
   streakRetentionPct: number;
-  pMult: number;
-  roll: number | null;
-  rolling: boolean;
-  streak: number;
-  stunned: boolean;
-  rolls: number;
-  threes: number;
-  started: boolean;
-  autoPct: number;
+  prestigeGoldMultiplier: number;
+  lastRolledFace: number | null;
+  isRolling: boolean;
+  goldStreak: number;
+  isStunned: boolean;
+  totalRollCount: number;
+  multipleOfThreeRollCount: number;
+  runStarted: boolean;
+  autoRollProgress: number;
   autoMs: number | null;
   currentDie: Die;
 }
 
 export function RollTab({
-  aLv,
-  sLv,
+  autoRollUpgradeLevel,
+  speedUpgradeLevel,
   multi,
   streakRetentionPct,
-  pMult,
-  roll,
-  rolling,
-  streak,
-  stunned,
-  rolls,
-  threes,
-  started,
-  autoPct,
+  prestigeGoldMultiplier,
+  lastRolledFace,
+  isRolling,
+  goldStreak,
+  isStunned,
+  totalRollCount,
+  multipleOfThreeRollCount,
+  runStarted,
+  autoRollProgress,
   autoMs,
   currentDie,
 }: RollTabProps) {
@@ -43,30 +43,30 @@ export function RollTab({
     <VStack align="center" justify="center" minH="100%" gap={3} pb="8px">
       <RollBadges
         currentDie={currentDie}
-        aLv={aLv}
-        sLv={sLv}
+        autoRollUpgradeLevel={autoRollUpgradeLevel}
+        speedUpgradeLevel={speedUpgradeLevel}
         multi={multi}
         streakRetentionPct={streakRetentionPct}
       />
 
       <RollFeedback
-        roll={roll}
-        rolling={rolling}
-        stunned={stunned}
-        streak={streak}
+        lastRolledFace={lastRolledFace}
+        isRolling={isRolling}
+        isStunned={isStunned}
+        goldStreak={goldStreak}
         multi={multi}
-        pMult={pMult}
+        prestigeGoldMultiplier={prestigeGoldMultiplier}
       />
 
-      {autoMs !== null && autoMs > 0 && started && (
+      {autoMs !== null && autoMs > 0 && runStarted && (
         <AutoRollCountdown
-          autoPct={autoPct}
+          autoRollProgress={autoRollProgress}
           autoMs={autoMs}
-          started={started}
+          runStarted={runStarted}
         />
       )}
 
-      {!started && (
+      {!runStarted && (
         <Text
           fontSize="13px"
           color="never.subtle"
@@ -85,10 +85,11 @@ export function RollTab({
         </Text>
       )}
 
-      {started && (
+      {runStarted && (
         <Text fontSize="10px" color="never.stat">
-          {rolls} rolls · {threes} threes
-          {rolls > 0 && ` · ${((1 - threes / rolls) * 100).toFixed(1)}% safe`}
+          {totalRollCount} rolls · {multipleOfThreeRollCount} threes
+          {totalRollCount > 0 &&
+            ` · ${((1 - multipleOfThreeRollCount / totalRollCount) * 100).toFixed(1)}% safe`}
         </Text>
       )}
     </VStack>

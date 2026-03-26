@@ -9,11 +9,11 @@ const TABS: [TabId, string][] = [
 ];
 
 interface DockTabBarProps {
-  tab: TabId;
+  activeGameTab: TabId;
   onTabChange: (tab: TabId) => void;
 }
 
-export function DockTabBar({ tab, onTabChange }: DockTabBarProps) {
+export function DockTabBar({ activeGameTab, onTabChange }: DockTabBarProps) {
   return (
     <Flex borderTop="1px solid" borderColor="never.border">
       {TABS.map(([key, label]) => (
@@ -25,8 +25,10 @@ export function DockTabBar({ tab, onTabChange }: DockTabBarProps) {
           bg="transparent"
           border="none"
           borderTop="2px solid"
-          borderTopColor={tab === key ? "never.streak" : "transparent"}
-          color={tab === key ? "never.streak" : "never.tabInactive"}
+          borderTopColor={
+            activeGameTab === key ? "never.streak" : "transparent"
+          }
+          color={activeGameTab === key ? "never.streak" : "never.tabInactive"}
           fontFamily="monospace"
           fontSize="12px"
           fontWeight={700}

@@ -6,9 +6,9 @@ interface ForgeDieSectionProps {
   die: Die;
   dieIdx: number;
   showDieLabel: boolean;
-  totalReforges: number;
-  reforgeCap: number;
-  hex: number;
+  totalDieReforgeCount: number;
+  maxReforgeFaceValue: number;
+  hexBalance: number;
   incrementDieFace: (dieIndex: number, faceIndex: number) => void;
   decrementDieFace: (dieIndex: number, faceIndex: number) => void;
 }
@@ -17,9 +17,9 @@ export function ForgeDieSection({
   die,
   dieIdx,
   showDieLabel,
-  totalReforges,
-  reforgeCap,
-  hex,
+  totalDieReforgeCount,
+  maxReforgeFaceValue,
+  hexBalance,
   incrementDieFace,
   decrementDieFace,
 }: ForgeDieSectionProps) {
@@ -44,9 +44,9 @@ export function ForgeDieSection({
             faceIdx={faceIdx}
             dieIdx={dieIdx}
             faceVal={faceVal}
-            reforgeCap={reforgeCap}
-            totalReforges={totalReforges}
-            hex={hex}
+            maxReforgeFaceValue={maxReforgeFaceValue}
+            totalDieReforgeCount={totalDieReforgeCount}
+            hexBalance={hexBalance}
             incrementDieFace={incrementDieFace}
             decrementDieFace={decrementDieFace}
           />

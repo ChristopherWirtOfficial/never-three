@@ -92,12 +92,12 @@ export const DANGER_ESCAPE_MULT = 4; // leaving a multiple of 3 costs 4x
 export function reforgeCost(
   currentValue: number,
   targetValue: number,
-  totalReforges: number,
+  totalDieReforgeCount: number,
 ): number {
   const base =
     REFORGE_BASE *
     Math.max(currentValue, targetValue) *
-    (1 + totalReforges * 0.15);
+    (1 + totalDieReforgeCount * 0.15);
   // Escaping a dangerous number costs a premium
   if (currentValue % 3 === 0) {
     return Math.floor(base * DANGER_ESCAPE_MULT);

@@ -11,20 +11,24 @@ export function useDecrementDieFace(): (
   faceIndex: number,
 ) => void {
   const dice = useAtomValue(P.diceAtom);
-  const totalReforges = useAtomValue(P.totalReforgesAtom);
-  const hex = useAtomValue(P.hexAtom);
+  const totalDieReforgeCount = useAtomValue(P.totalDieReforgeCountAtom);
+  const hexBalance = useAtomValue(P.hexBalanceAtom);
 
-  const snapRef = useRef({ dice, totalReforges, hex });
-  snapRef.current = { dice, totalReforges, hex };
+  const snapRef = useRef({ dice, totalDieReforgeCount, hexBalance });
+  snapRef.current = { dice, totalDieReforgeCount, hexBalance };
 
-  const setHex = useSetAtom(P.hexAtom);
-  const setTotalReforges = useSetAtom(P.totalReforgesAtom);
+  const setHexBalance = useSetAtom(P.hexBalanceAtom);
+  const setTotalDieReforgeCount = useSetAtom(P.totalDieReforgeCountAtom);
   const setDice = useSetAtom(P.diceAtom);
-  const setLog = useSetAtom(P.logAtom);
+  const setGameEventLog = useSetAtom(P.gameEventLogAtom);
 
   return useCallback(
     (dieIndex: number, faceIndex: number) => {
-      const { dice: d, totalReforges: tr, hex: h } = snapRef.current;
+      const {
+        dice: d,
+        totalDieReforgeCount: tr,
+        hexBalance: h,
+      } = snapRef.current;
       const die = d[dieIndex];
       if (!die) return;
       const currentVal = die[faceIndex];
@@ -32,20 +36,20 @@ export function useDecrementDieFace(): (
       const target = currentVal - 1;
       const cost = reforgeCost(currentVal, target, tr);
       if (h < cost) return;
-      setHex((x: number) => x - cost);
-      setTotalReforges((t: number) => t + 1);
+      setHexBalance((x: number) => x - cost);
+      setTotalDieReforgeCount((t: number) => t + 1);
       setDice((prev: number[][]) => {
         const next = prev.map((row: number[]) => [...row]);
         next[dieIndex][faceIndex] = target;
         return next;
       });
-      setLog((p: string[]) =>
+      setGameEventLog((p: string[]) =>
         [
           `🔥 Face ${faceIndex + 1}: ${currentVal} → ${target} (-${fmt(cost)} hex)`,
           ...p,
         ].slice(0, 60),
       );
     },
-    [setHex, setTotalReforges, setDice, setLog],
+    [setHexBalance, setTotalDieReforgeCount, setDice, setGameEventLog],
   );
 }

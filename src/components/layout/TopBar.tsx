@@ -1,24 +1,26 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text, chakra } from "@chakra-ui/react";
 import { formatGold } from "../../game/format-gold";
 
 interface TopBarProps {
   gold: number;
-  hex: number;
-  streak: number;
-  hexStreak: number;
-  best: number;
+  hexBalance: number;
+  goldStreak: number;
+  hexRewardStreak: number;
+  bestGoldStreak: number;
   prestige: number;
-  pMult: number;
+  prestigeGoldMultiplier: number;
+  onOpenSaves?: () => void;
 }
 
 export function TopBar({
   gold,
-  hex,
-  streak,
-  hexStreak,
-  best,
+  hexBalance,
+  goldStreak,
+  hexRewardStreak,
+  bestGoldStreak,
   prestige,
-  pMult,
+  prestigeGoldMultiplier,
+  onOpenSaves,
 }: TopBarProps) {
   return (
     <Flex
@@ -66,33 +68,56 @@ export function TopBar({
             textShadow="0 0 12px rgba(187, 136, 255, 0.2)"
             lineHeight={1.1}
           >
-            {Math.floor(hex)}
+            {Math.floor(hexBalance)}
           </Text>
         </Box>
       </Flex>
       <Box textAlign="right" lineHeight={1.5}>
+        {onOpenSaves && (
+          <chakra.button
+            type="button"
+            display="block"
+            ml="auto"
+            mb="4px"
+            px="8px"
+            py="2px"
+            borderRadius="4px"
+            border="1px solid"
+            borderColor="never.rowBorder"
+            bg="transparent"
+            color="never.dim"
+            fontSize="9px"
+            fontWeight={700}
+            letterSpacing="0.12em"
+            cursor="pointer"
+            fontFamily="monospace"
+            onClick={onOpenSaves}
+          >
+            SAVES
+          </chakra.button>
+        )}
         <Text fontSize="12px" color="never.muted">
           STREAK{" "}
           <Text
             as="span"
-            color={streak > 0 ? "never.streak" : "never.streakDim"}
+            color={goldStreak > 0 ? "never.streak" : "never.streakDim"}
             fontWeight={900}
             fontSize="16px"
           >
-            {streak}
+            {goldStreak}
           </Text>
         </Text>
-        {hexStreak > 0 && (
+        {hexRewardStreak > 0 && (
           <Text fontSize="11px" color="never.hexStreak">
-            🔮 ×{hexStreak}
+            🔮 ×{hexRewardStreak}
           </Text>
         )}
         <Text fontSize="10px" color="never.dim">
-          BEST {best}
+          BEST {bestGoldStreak}
           {prestige > 0 && (
             <Text as="span" color="never.prestige">
               {" "}
-              · ★{prestige} ×{pMult.toFixed(1)}
+              · ★{prestige} ×{prestigeGoldMultiplier.toFixed(1)}
             </Text>
           )}
         </Text>

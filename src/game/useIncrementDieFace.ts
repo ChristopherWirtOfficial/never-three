@@ -11,25 +11,35 @@ export function useIncrementDieFace(): (
   faceIndex: number,
 ) => void {
   const dice = useAtomValue(P.diceAtom);
-  const reforgeCap = useAtomValue(P.reforgeCapAtom);
-  const totalReforges = useAtomValue(P.totalReforgesAtom);
-  const hex = useAtomValue(P.hexAtom);
+  const maxReforgeFaceValue = useAtomValue(P.maxReforgeFaceValueAtom);
+  const totalDieReforgeCount = useAtomValue(P.totalDieReforgeCountAtom);
+  const hexBalance = useAtomValue(P.hexBalanceAtom);
 
-  const snapRef = useRef({ dice, reforgeCap, totalReforges, hex });
-  snapRef.current = { dice, reforgeCap, totalReforges, hex };
+  const snapRef = useRef({
+    dice,
+    maxReforgeFaceValue,
+    totalDieReforgeCount,
+    hexBalance,
+  });
+  snapRef.current = {
+    dice,
+    maxReforgeFaceValue,
+    totalDieReforgeCount,
+    hexBalance,
+  };
 
-  const setHex = useSetAtom(P.hexAtom);
-  const setTotalReforges = useSetAtom(P.totalReforgesAtom);
+  const setHexBalance = useSetAtom(P.hexBalanceAtom);
+  const setTotalDieReforgeCount = useSetAtom(P.totalDieReforgeCountAtom);
   const setDice = useSetAtom(P.diceAtom);
-  const setLog = useSetAtom(P.logAtom);
+  const setGameEventLog = useSetAtom(P.gameEventLogAtom);
 
   return useCallback(
     (dieIndex: number, faceIndex: number) => {
       const {
         dice: d,
-        reforgeCap: cap,
-        totalReforges: tr,
-        hex: h,
+        maxReforgeFaceValue: cap,
+        totalDieReforgeCount: tr,
+        hexBalance: h,
       } = snapRef.current;
       const die = d[dieIndex];
       if (!die) return;
@@ -38,20 +48,20 @@ export function useIncrementDieFace(): (
       const target = currentVal + 1;
       const cost = reforgeCost(currentVal, target, tr);
       if (h < cost) return;
-      setHex((x: number) => x - cost);
-      setTotalReforges((t: number) => t + 1);
+      setHexBalance((x: number) => x - cost);
+      setTotalDieReforgeCount((t: number) => t + 1);
       setDice((prev: number[][]) => {
         const next = prev.map((row: number[]) => [...row]);
         next[dieIndex][faceIndex] = target;
         return next;
       });
-      setLog((p: string[]) =>
+      setGameEventLog((p: string[]) =>
         [
           `🔥 Face ${faceIndex + 1}: ${currentVal} → ${target} (-${fmt(cost)} hex)`,
           ...p,
         ].slice(0, 60),
       );
     },
-    [setHex, setTotalReforges, setDice, setLog],
+    [setHexBalance, setTotalDieReforgeCount, setDice, setGameEventLog],
   );
 }

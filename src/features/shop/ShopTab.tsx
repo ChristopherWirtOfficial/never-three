@@ -12,12 +12,12 @@ import { UpgradeButton } from "./UpgradeButton";
 
 interface ShopTabProps {
   gold: number;
-  earned: number;
-  sLv: number;
-  aLv: number;
-  mLv: number;
-  rLv: number;
-  tLv: number;
+  lifetimeGoldEarned: number;
+  speedUpgradeLevel: number;
+  autoRollUpgradeLevel: number;
+  multiplierUpgradeLevel: number;
+  streakRetentionUpgradeLevel: number;
+  stunUpgradeLevel: number;
   prestige: number;
   prestigeReq: number;
   canPrestige: boolean;
@@ -42,12 +42,12 @@ interface UpgradeConfig {
 
 export function ShopTab({
   gold,
-  earned,
-  sLv,
-  aLv,
-  mLv,
-  rLv,
-  tLv,
+  lifetimeGoldEarned,
+  speedUpgradeLevel,
+  autoRollUpgradeLevel,
+  multiplierUpgradeLevel,
+  streakRetentionUpgradeLevel,
+  stunUpgradeLevel,
   prestige,
   prestigeReq,
   canPrestige,
@@ -59,7 +59,7 @@ export function ShopTab({
       type: "multi",
       icon: "💰",
       label: "GOLD MULTI",
-      lv: mLv,
+      lv: multiplierUpgradeLevel,
       arr: MULTI,
       display: (i) => `×${i.x}`,
     },
@@ -67,7 +67,7 @@ export function ShopTab({
       type: "speed",
       icon: "⚡",
       label: "ROLL SPEED",
-      lv: sLv,
+      lv: speedUpgradeLevel,
       arr: SPEED,
       display: (i) => i.name as string,
     },
@@ -75,7 +75,7 @@ export function ShopTab({
       type: "auto",
       icon: "🔄",
       label: "AUTO-ROLL",
-      lv: aLv,
+      lv: autoRollUpgradeLevel,
       arr: AUTO,
       display: (i) => i.name as string,
     },
@@ -83,7 +83,7 @@ export function ShopTab({
       type: "stun",
       icon: "💊",
       label: "STUN RECOVERY",
-      lv: tLv,
+      lv: stunUpgradeLevel,
       arr: STUN,
       display: (i) => i.name as string,
     },
@@ -91,7 +91,7 @@ export function ShopTab({
       type: "retention",
       icon: "🔒",
       label: "STREAK RETENTION",
-      lv: rLv,
+      lv: streakRetentionUpgradeLevel,
       arr: STREAK_RETENTION,
       display: (i) => `${i.pct}% kept`,
     },
@@ -154,7 +154,7 @@ export function ShopTab({
           ) : (
             <>
               <Text as="span" color="never.dim">
-                {fmt(earned)}
+                {fmt(lifetimeGoldEarned)}
               </Text>{" "}
               /{" "}
               <Text as="span" color="never.prestigeMuted">

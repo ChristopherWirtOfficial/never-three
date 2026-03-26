@@ -5,7 +5,6 @@ import {
   useEffect,
   useMemo,
   useRef,
-  useState,
   type ReactNode,
 } from "react";
 import { useStore } from "jotai";
@@ -18,7 +17,6 @@ import { saveProfile } from "../game/saves";
 type GameSessionValue = {
   profileId: string;
   profileName: string;
-  setSessionProfile: (profileId: string, profileName: string) => void;
 };
 
 const GameSessionContext = createContext<GameSessionValue | null>(null);
@@ -79,24 +77,16 @@ function PersistGameAutosave() {
 
 export function GameSessionProvider({
   children,
-  profileId: initialProfileId,
-  profileName: initialProfileName,
+  profileId,
+  profileName,
 }: {
   children: ReactNode;
   profileId: string;
   profileName: string;
 }) {
-  const [profileId, setProfileId] = useState(initialProfileId);
-  const [profileName, setProfileName] = useState(initialProfileName);
-
-  const setSessionProfile = useCallback((nextId: string, nextName: string) => {
-    setProfileId(nextId);
-    setProfileName(nextName);
-  }, []);
-
   const value = useMemo(
-    () => ({ profileId, profileName, setSessionProfile }),
-    [profileId, profileName, setSessionProfile],
+    () => ({ profileId, profileName }),
+    [profileId, profileName],
   );
 
   return (

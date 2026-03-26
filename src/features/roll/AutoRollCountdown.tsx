@@ -1,17 +1,17 @@
 import { Box, Text } from "@chakra-ui/react";
 
 interface AutoRollCountdownProps {
-  autoPct: number;
+  autoRollProgress: number;
   autoMs: number;
-  started: boolean;
+  runStarted: boolean;
 }
 
 export function AutoRollCountdown({
-  autoPct,
+  autoRollProgress,
   autoMs,
-  started,
+  runStarted,
 }: AutoRollCountdownProps) {
-  if (autoMs <= 0 || !started) return null;
+  if (autoMs <= 0 || !runStarted) return null;
 
   return (
     <Box w="80%" maxW="240px" textAlign="center">
@@ -28,13 +28,13 @@ export function AutoRollCountdown({
         <Box
           h="100%"
           borderRadius="4px"
-          w={`${autoPct * 100}%`}
+          w={`${autoRollProgress * 100}%`}
           bg="linear-gradient(90deg, #44ffbb33, #44ffbb99)"
-          transition={autoPct < 0.05 ? "none" : "width 0.05s linear"}
+          transition={autoRollProgress < 0.05 ? "none" : "width 0.05s linear"}
         />
       </Box>
       <Text fontSize="11px" color="never.stat" mt="4px">
-        {(((1 - autoPct) * autoMs) / 1000).toFixed(1)}s
+        {(((1 - autoRollProgress) * autoMs) / 1000).toFixed(1)}s
       </Text>
     </Box>
   );

@@ -1,11 +1,14 @@
 import { Box, Text } from "@chakra-ui/react";
 
 interface ForgeFooterProps {
-  totalReforges: number;
-  reforgeCap: number;
+  totalDieReforgeCount: number;
+  maxReforgeFaceValue: number;
 }
 
-export function ForgeFooter({ totalReforges, reforgeCap }: ForgeFooterProps) {
+export function ForgeFooter({
+  totalDieReforgeCount,
+  maxReforgeFaceValue,
+}: ForgeFooterProps) {
   return (
     <Box
       mt="10px"
@@ -17,12 +20,12 @@ export function ForgeFooter({ totalReforges, reforgeCap }: ForgeFooterProps) {
       color="never.stat"
       lineHeight={1.6}
     >
-      {totalReforges} total reforges · cap: {reforgeCap}
+      {totalDieReforgeCount} total reforges · cap: {maxReforgeFaceValue}
       <br />
       <Text as="span" color="#ff557766">
         💀 = multiple of 3 (dangerous)
       </Text>
-      {reforgeCap < 7 && (
+      {maxReforgeFaceValue < 7 && (
         <>
           <br />
           <Text as="span" color="#bb99ff66">

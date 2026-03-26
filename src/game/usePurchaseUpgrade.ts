@@ -9,21 +9,39 @@ import * as P from "./atoms/primitives";
  */
 export function usePurchaseUpgrade(): (type: UpgradeType) => void {
   const gold = useAtomValue(P.goldAtom);
-  const sLv = useAtomValue(P.sLvAtom);
-  const aLv = useAtomValue(P.aLvAtom);
-  const mLv = useAtomValue(P.mLvAtom);
-  const rLv = useAtomValue(P.rLvAtom);
-  const tLv = useAtomValue(P.tLvAtom);
+  const speedUpgradeLevel = useAtomValue(P.speedUpgradeLevelAtom);
+  const autoRollUpgradeLevel = useAtomValue(P.autoRollUpgradeLevelAtom);
+  const multiplierUpgradeLevel = useAtomValue(P.multiplierUpgradeLevelAtom);
+  const streakRetentionUpgradeLevel = useAtomValue(
+    P.streakRetentionUpgradeLevelAtom,
+  );
+  const stunUpgradeLevel = useAtomValue(P.stunUpgradeLevelAtom);
 
-  const snapRef = useRef({ gold, sLv, aLv, mLv, rLv, tLv });
-  snapRef.current = { gold, sLv, aLv, mLv, rLv, tLv };
+  const snapRef = useRef({
+    gold,
+    speedUpgradeLevel,
+    autoRollUpgradeLevel,
+    multiplierUpgradeLevel,
+    streakRetentionUpgradeLevel,
+    stunUpgradeLevel,
+  });
+  snapRef.current = {
+    gold,
+    speedUpgradeLevel,
+    autoRollUpgradeLevel,
+    multiplierUpgradeLevel,
+    streakRetentionUpgradeLevel,
+    stunUpgradeLevel,
+  };
 
   const setGold = useSetAtom(P.goldAtom);
-  const setSLv = useSetAtom(P.sLvAtom);
-  const setALv = useSetAtom(P.aLvAtom);
-  const setMLv = useSetAtom(P.mLvAtom);
-  const setRLv = useSetAtom(P.rLvAtom);
-  const setTLv = useSetAtom(P.tLvAtom);
+  const setSpeedUpgradeLevel = useSetAtom(P.speedUpgradeLevelAtom);
+  const setAutoRollUpgradeLevel = useSetAtom(P.autoRollUpgradeLevelAtom);
+  const setMultiplierUpgradeLevel = useSetAtom(P.multiplierUpgradeLevelAtom);
+  const setStreakRetentionUpgradeLevel = useSetAtom(
+    P.streakRetentionUpgradeLevelAtom,
+  );
+  const setStunUpgradeLevel = useSetAtom(P.stunUpgradeLevelAtom);
 
   return useCallback(
     (type: UpgradeType) => {
@@ -43,22 +61,33 @@ export function usePurchaseUpgrade(): (type: UpgradeType) => void {
 
       switch (type) {
         case "speed":
-          tryBuy(s.sLv, SPEED, setSLv);
+          tryBuy(s.speedUpgradeLevel, SPEED, setSpeedUpgradeLevel);
           break;
         case "auto":
-          tryBuy(s.aLv, AUTO, setALv);
+          tryBuy(s.autoRollUpgradeLevel, AUTO, setAutoRollUpgradeLevel);
           break;
         case "multi":
-          tryBuy(s.mLv, MULTI, setMLv);
+          tryBuy(s.multiplierUpgradeLevel, MULTI, setMultiplierUpgradeLevel);
           break;
         case "retention":
-          tryBuy(s.rLv, STREAK_RETENTION, setRLv);
+          tryBuy(
+            s.streakRetentionUpgradeLevel,
+            STREAK_RETENTION,
+            setStreakRetentionUpgradeLevel,
+          );
           break;
         case "stun":
-          tryBuy(s.tLv, STUN, setTLv);
+          tryBuy(s.stunUpgradeLevel, STUN, setStunUpgradeLevel);
           break;
       }
     },
-    [setGold, setSLv, setALv, setMLv, setRLv, setTLv],
+    [
+      setGold,
+      setSpeedUpgradeLevel,
+      setAutoRollUpgradeLevel,
+      setMultiplierUpgradeLevel,
+      setStreakRetentionUpgradeLevel,
+      setStunUpgradeLevel,
+    ],
   );
 }

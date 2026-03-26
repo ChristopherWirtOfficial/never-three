@@ -2,37 +2,38 @@ import { useEffect, useRef } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import { AUTO } from "./constants";
 import {
-  aLvAtom,
-  autoPctAtom,
-  cdPctAtom,
-  cooldownAtom,
-  sLvAtom,
-  startedAtom,
-  stunPctAtom,
-  stunScheduleAtom,
-  stunnedAtom,
+  autoRollProgressAtom,
+  autoRollUpgradeLevelAtom,
+  isRollCooldownActiveAtom,
+  isStunnedAtom,
+  rollCooldownProgressAtom,
+  runStartedAtom,
+  speedUpgradeLevelAtom,
+  stunRecoveryProgressAtom,
+  activeStunWindowAtom,
 } from "./atoms/primitives";
-import { autoMsAtom, cdMsAtom, gameLockedAtom } from "./atoms/derived";
+import { cdMsAtom, gameLockedAtom } from "./atoms/derived";
 import { clearRollTimeouts } from "./rollTimers";
 
 /**
  * Timers and RAF progress tied to roll phase atoms. Mount once under the Jotai provider.
  */
 export function useGameLoop(rollDice: () => void): void {
-  const aLv = useAtomValue(aLvAtom);
-  const started = useAtomValue(startedAtom);
+  const autoRollUpgradeLevel = useAtomValue(autoRollUpgradeLevelAtom);
+  const speedUpgradeLevel = useAtomValue(speedUpgradeLevelAtom);
+  const runStarted = useAtomValue(runStartedAtom);
   const locked = useAtomValue(gameLockedAtom);
-  const cooldown = useAtomValue(cooldownAtom);
-  const stunned = useAtomValue(stunnedAtom);
+  const isRollCooldownActive = useAtomValue(isRollCooldownActiveAtom);
+  const isStunned = useAtomValue(isStunnedAtom);
   const cdMs = useAtomValue(cdMsAtom);
-  const stunSchedule = useAtomValue(stunScheduleAtom);
+  const activeStunWindow = useAtomValue(activeStunWindowAtom);
 
-  const setCooldown = useSetAtom(cooldownAtom);
-  const setStunned = useSetAtom(stunnedAtom);
-  const setStunSchedule = useSetAtom(stunScheduleAtom);
-  const setAutoPct = useSetAtom(autoPctAtom);
-  const setCdPct = useSetAtom(cdPctAtom);
-  const setStunPct = useSetAtom(stunPctAtom);
+  const setRollCooldownActive = useSetAtom(isRollCooldownActiveAtom);
+  const setStunned = useSetAtom(isStunnedAtom);
+  const setActiveStunWindow = useSetAtom(activeStunWindowAtom);
+  const setAutoRollProgress = useSetAtom(autoRollProgressAtom);
+  const setRollCooldownProgress = useSetAtom(rollCooldownProgressAtom);
+  const setStunRecoveryProgress = useSetAtom(stunRecoveryProgressAtom);
 
   const autoTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const autoStartRef = useRef(0);
@@ -43,28 +44,32 @@ export function useGameLoop(rollDice: () => void): void {
   useEffect(
     () => () => {
       clearRollTimeouts();
-      setStunSchedule(null);
+      setActiveStunWindow(null);
     },
-    [setStunSchedule],
+    [setActiveStunWindow],
   );
 
-  const sLv = useAtomValue(sLvAtom);
   useEffect(() => {
     clearRollTimeouts();
-    setCooldown(false);
+    setRollCooldownActive(false);
     setStunned(false);
-    setStunSchedule(null);
-  }, [sLv, setCooldown, setStunned, setStunSchedule]);
+    setActiveStunWindow(null);
+  }, [
+    speedUpgradeLevel,
+    setRollCooldownActive,
+    setStunned,
+    setActiveStunWindow,
+  ]);
 
   useEffect(() => {
-    const ms = AUTO[aLv].ms;
+    const ms = AUTO[autoRollUpgradeLevel].ms;
     if (autoTimerRef.current) {
       clearTimeout(autoTimerRef.current);
       autoTimerRef.current = null;
     }
 
-    if (ms === null || !started) {
-      setAutoPct(0);
+    if (ms === null || !runStarted) {
+      setAutoRollProgress(0);
       return;
     }
 
@@ -83,54 +88,54 @@ export function useGameLoop(rollDice: () => void): void {
         autoTimerRef.current = null;
       }
     };
-  }, [aLv, locked, started, rollDice, setAutoPct]);
+  }, [autoRollUpgradeLevel, locked, runStarted, rollDice, setAutoRollProgress]);
 
   useEffect(() => {
-    const ms = AUTO[aLv].ms;
-    if (ms === null || ms <= 0 || !started || locked) {
-      setAutoPct(0);
+    const ms = AUTO[autoRollUpgradeLevel].ms;
+    if (ms === null || ms <= 0 || !runStarted || locked) {
+      setAutoRollProgress(0);
       cancelAnimationFrame(autoFrameRef.current);
       return;
     }
     const tick = () => {
       const p = Math.min((Date.now() - autoStartRef.current) / ms, 1);
-      setAutoPct(p);
+      setAutoRollProgress(p);
       if (p < 1) autoFrameRef.current = requestAnimationFrame(tick);
     };
     autoFrameRef.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(autoFrameRef.current);
-  }, [aLv, locked, started, setAutoPct]);
+  }, [autoRollUpgradeLevel, locked, runStarted, setAutoRollProgress]);
 
   useEffect(() => {
-    if (cooldown && !stunned) {
+    if (isRollCooldownActive && !isStunned) {
       const cdStart = Date.now();
       const tick = () => {
         const p = Math.min((Date.now() - cdStart) / cdMs, 1);
-        setCdPct(p);
+        setRollCooldownProgress(p);
         if (p < 1) cdFrameRef.current = requestAnimationFrame(tick);
       };
       cdFrameRef.current = requestAnimationFrame(tick);
-    } else if (!stunned) {
-      setCdPct(0);
+    } else if (!isStunned) {
+      setRollCooldownProgress(0);
       cancelAnimationFrame(cdFrameRef.current);
     }
     return () => cancelAnimationFrame(cdFrameRef.current);
-  }, [cooldown, stunned, cdMs, setCdPct]);
+  }, [isRollCooldownActive, isStunned, cdMs, setRollCooldownProgress]);
 
   useEffect(() => {
-    if (stunned && stunSchedule) {
-      const { startMs, durationMs } = stunSchedule;
+    if (isStunned && activeStunWindow) {
+      const { startMs, durationMs } = activeStunWindow;
       const tick = () => {
         const p = Math.min((Date.now() - startMs) / durationMs, 1);
-        setStunPct(p);
+        setStunRecoveryProgress(p);
         if (p < 1) stunFrameRef.current = requestAnimationFrame(tick);
-        else setStunPct(1);
+        else setStunRecoveryProgress(1);
       };
       stunFrameRef.current = requestAnimationFrame(tick);
-    } else if (!stunned) {
-      setStunPct(0);
+    } else if (!isStunned) {
+      setStunRecoveryProgress(0);
       cancelAnimationFrame(stunFrameRef.current);
     }
     return () => cancelAnimationFrame(stunFrameRef.current);
-  }, [stunned, stunSchedule, setStunPct]);
+  }, [isStunned, activeStunWindow, setStunRecoveryProgress]);
 }

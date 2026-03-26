@@ -18,7 +18,7 @@ type RollSnap = {
   currentDie: number[];
   multi: number;
   streakRetentionPct: number;
-  pMult: number;
+  prestigeGoldMultiplier: number;
   cdMs: number;
   stunMs: number;
   stunTier: (typeof STUN)[number];
@@ -31,65 +31,69 @@ type RollSnap = {
 export function useDiceRoll(): () => void {
   const locked = useAtomValue(gameLockedAtom);
   const currentDie = useAtomValue(currentDieAtom);
-  const mLv = useAtomValue(P.mLvAtom);
-  const rLv = useAtomValue(P.rLvAtom);
+  const multiplierUpgradeLevel = useAtomValue(P.multiplierUpgradeLevelAtom);
+  const streakRetentionUpgradeLevel = useAtomValue(
+    P.streakRetentionUpgradeLevelAtom,
+  );
   const prestige = useAtomValue(P.prestigeAtom);
-  const sLv = useAtomValue(P.sLvAtom);
-  const tLv = useAtomValue(P.tLvAtom);
+  const speedUpgradeLevel = useAtomValue(P.speedUpgradeLevelAtom);
+  const stunUpgradeLevel = useAtomValue(P.stunUpgradeLevelAtom);
 
   const snapRef = useRef<RollSnap>({
     locked,
     currentDie,
-    multi: MULTI[mLv].x,
-    streakRetentionPct: STREAK_RETENTION[rLv].pct,
-    pMult: 1 + prestige * 0.5,
-    cdMs: SPEED[sLv].ms,
-    stunMs: STUN[tLv].ms,
-    stunTier: STUN[tLv],
+    multi: MULTI[multiplierUpgradeLevel].x,
+    streakRetentionPct: STREAK_RETENTION[streakRetentionUpgradeLevel].pct,
+    prestigeGoldMultiplier: 1 + prestige * 0.5,
+    cdMs: SPEED[speedUpgradeLevel].ms,
+    stunMs: STUN[stunUpgradeLevel].ms,
+    stunTier: STUN[stunUpgradeLevel],
   });
   snapRef.current = {
     locked,
     currentDie,
-    multi: MULTI[mLv].x,
-    streakRetentionPct: STREAK_RETENTION[rLv].pct,
-    pMult: 1 + prestige * 0.5,
-    cdMs: SPEED[sLv].ms,
-    stunMs: STUN[tLv].ms,
-    stunTier: STUN[tLv],
+    multi: MULTI[multiplierUpgradeLevel].x,
+    streakRetentionPct: STREAK_RETENTION[streakRetentionUpgradeLevel].pct,
+    prestigeGoldMultiplier: 1 + prestige * 0.5,
+    cdMs: SPEED[speedUpgradeLevel].ms,
+    stunMs: STUN[stunUpgradeLevel].ms,
+    stunTier: STUN[stunUpgradeLevel],
   };
 
-  const setCooldown = useSetAtom(P.cooldownAtom);
-  const setRolling = useSetAtom(P.rollingAtom);
-  const setStarted = useSetAtom(P.startedAtom);
-  const setRoll = useSetAtom(P.rollAtom);
-  const setRolls = useSetAtom(P.rollsAtom);
-  const setFlash = useSetAtom(P.flashAtom);
-  const setHexStreak = useSetAtom(P.hexStreakAtom);
-  const setStreak = useSetAtom(P.streakAtom);
+  const setRollCooldownActive = useSetAtom(P.isRollCooldownActiveAtom);
+  const setRolling = useSetAtom(P.isRollingAtom);
+  const setRunStarted = useSetAtom(P.runStartedAtom);
+  const setLastRolledFace = useSetAtom(P.lastRolledFaceAtom);
+  const setTotalRollCount = useSetAtom(P.totalRollCountAtom);
+  const setScreenFlashColor = useSetAtom(P.screenFlashColorAtom);
+  const setHexRewardStreak = useSetAtom(P.hexRewardStreakAtom);
+  const setGoldStreak = useSetAtom(P.goldStreakAtom);
   const setGold = useSetAtom(P.goldAtom);
-  const setEarned = useSetAtom(P.earnedAtom);
-  const setShook = useSetAtom(P.shookAtom);
-  const setThrees = useSetAtom(P.threesAtom);
-  const setHex = useSetAtom(P.hexAtom);
-  const setBestHexStreak = useSetAtom(P.bestHexStreakAtom);
-  const setBest = useSetAtom(P.bestAtom);
-  const setStunned = useSetAtom(P.stunnedAtom);
-  const setStunSchedule = useSetAtom(P.stunScheduleAtom);
-  const setLog = useSetAtom(P.logAtom);
+  const setLifetimeGoldEarned = useSetAtom(P.lifetimeGoldEarnedAtom);
+  const setDieShakeActive = useSetAtom(P.dieShakeActiveAtom);
+  const setMultipleOfThreeRollCount = useSetAtom(
+    P.multipleOfThreeRollCountAtom,
+  );
+  const setHexBalance = useSetAtom(P.hexBalanceAtom);
+  const setBestHexRewardStreak = useSetAtom(P.bestHexRewardStreakAtom);
+  const setBestGoldStreak = useSetAtom(P.bestGoldStreakAtom);
+  const setStunned = useSetAtom(P.isStunnedAtom);
+  const setActiveStunWindow = useSetAtom(P.activeStunWindowAtom);
+  const setGameEventLog = useSetAtom(P.gameEventLogAtom);
 
   return useCallback(() => {
     if (snapRef.current.locked) return;
 
-    setCooldown(true);
+    setRollCooldownActive(true);
     setRolling(true);
-    setStarted((s) => (s ? s : true));
+    setRunStarted((s) => (s ? s : true));
 
     setTimeout(() => {
       const {
         currentDie: die,
         multi,
         streakRetentionPct,
-        pMult,
+        prestigeGoldMultiplier,
         cdMs,
         stunMs,
         stunTier,
@@ -97,17 +101,17 @@ export function useDiceRoll(): () => void {
 
       const faceIndex = Math.floor(Math.random() * die.length);
       const v = die[faceIndex];
-      setRoll(v);
+      setLastRolledFace(v);
       setRolling(false);
-      setRolls((p: number) => p + 1);
+      setTotalRollCount((p: number) => p + 1);
 
       const dangerous = v % 3 === 0;
 
       if (dangerous) {
-        setShook(true);
-        setFlash("#ff3355");
-        setThrees((p: number) => p + 1);
-        setStreak((s: number) => {
+        setDieShakeActive(true);
+        setScreenFlashColor("#ff3355");
+        setMultipleOfThreeRollCount((p: number) => p + 1);
+        setGoldStreak((s: number) => {
           const kept = Math.floor((s * streakRetentionPct) / 100);
           let line: string;
           if (s === 0) {
@@ -119,16 +123,16 @@ export function useDiceRoll(): () => void {
           } else {
             line = `💀 Rolled ${v}! Streak gone. Stunned ${stunTier.name}`;
           }
-          setLog((p: string[]) => [line, ...p].slice(0, 60));
+          setGameEventLog((p: string[]) => [line, ...p].slice(0, 60));
           return kept;
         });
-        setHexStreak((hs: number) => {
+        setHexRewardStreak((hs: number) => {
           const hm = hexStreakMultiplier(hs);
           const earnedHex = Math.max(1, Math.floor(hm));
-          setHex((h: number) => h + earnedHex);
+          setHexBalance((h: number) => h + earnedHex);
           const nhs = hs + 1;
-          setBestHexStreak((b: number) => Math.max(b, nhs));
-          setLog((p: string[]) =>
+          setBestHexRewardStreak((b: number) => Math.max(b, nhs));
+          setGameEventLog((p: string[]) =>
             [
               `🔮 +${earnedHex} hex${hs > 1 ? ` (×${hm.toFixed(1)} streak)` : ""}`,
               ...p,
@@ -137,28 +141,28 @@ export function useDiceRoll(): () => void {
           return nhs;
         });
         setTimeout(() => {
-          setShook(false);
-          setFlash(null);
+          setDieShakeActive(false);
+          setScreenFlashColor(null);
         }, 400);
-        setCooldown(false);
-        setStunSchedule({ startMs: Date.now(), durationMs: stunMs });
+        setRollCooldownActive(false);
+        setActiveStunWindow({ startMs: Date.now(), durationMs: stunMs });
         setStunned(true);
         if (rollTimers.stun) clearTimeout(rollTimers.stun);
         rollTimers.stun = setTimeout(() => {
           rollTimers.stun = null;
-          setStunSchedule(null);
+          setActiveStunWindow(null);
           setStunned(false);
         }, stunMs);
       } else {
-        setHexStreak(0);
-        setStreak((s: number) => {
+        setHexRewardStreak(0);
+        setGoldStreak((s: number) => {
           const sm = streakMultiplier(s);
-          const e = Math.floor(v * sm * multi * pMult);
+          const e = Math.floor(v * sm * multi * prestigeGoldMultiplier);
           setGold((g: number) => g + e);
-          setEarned((er: number) => er + e);
+          setLifetimeGoldEarned((er: number) => er + e);
           const ns = s + 1;
-          setBest((b: number) => Math.max(b, ns));
-          setLog((p: string[]) =>
+          setBestGoldStreak((b: number) => Math.max(b, ns));
+          setGameEventLog((p: string[]) =>
             [
               `🎲 ${v} → +${fmt(e)}g${s > 2 ? ` (×${sm.toFixed(1)})` : ""}`,
               ...p,
@@ -166,33 +170,33 @@ export function useDiceRoll(): () => void {
           );
           return ns;
         });
-        setFlash("#44ffbb");
-        setTimeout(() => setFlash(null), 200);
+        setScreenFlashColor("#44ffbb");
+        setTimeout(() => setScreenFlashColor(null), 200);
         if (rollTimers.cool) clearTimeout(rollTimers.cool);
         rollTimers.cool = setTimeout(() => {
           rollTimers.cool = null;
-          setCooldown(false);
+          setRollCooldownActive(false);
         }, cdMs);
       }
     }, 160);
   }, [
-    setCooldown,
+    setRollCooldownActive,
     setRolling,
-    setStarted,
-    setRoll,
-    setRolls,
-    setFlash,
-    setHexStreak,
-    setStreak,
+    setRunStarted,
+    setLastRolledFace,
+    setTotalRollCount,
+    setScreenFlashColor,
+    setHexRewardStreak,
+    setGoldStreak,
     setGold,
-    setEarned,
-    setShook,
-    setThrees,
-    setHex,
-    setBestHexStreak,
-    setBest,
+    setLifetimeGoldEarned,
+    setDieShakeActive,
+    setMultipleOfThreeRollCount,
+    setHexBalance,
+    setBestHexRewardStreak,
+    setBestGoldStreak,
     setStunned,
-    setStunSchedule,
-    setLog,
+    setActiveStunWindow,
+    setGameEventLog,
   ]);
 }

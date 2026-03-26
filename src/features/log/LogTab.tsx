@@ -1,11 +1,11 @@
 import { Box, Text, VStack } from "@chakra-ui/react";
 
 interface LogTabProps {
-  log: string[];
+  gameEventLog: string[];
 }
 
-export function LogTab({ log }: LogTabProps) {
-  if (log.length === 0) {
+export function LogTab({ gameEventLog }: LogTabProps) {
+  if (gameEventLog.length === 0) {
     return (
       <Text color="never.stat" textAlign="center" py={10} fontSize="12px">
         Nothing yet.
@@ -15,7 +15,7 @@ export function LogTab({ log }: LogTabProps) {
 
   return (
     <VStack align="stretch" gap="1px">
-      {log.map((entry, i) => (
+      {gameEventLog.map((entry, i) => (
         <Box
           key={`${i}-${entry.slice(0, 24)}`}
           fontSize="11px"

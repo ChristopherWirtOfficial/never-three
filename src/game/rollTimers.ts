@@ -1,4 +1,4 @@
-/** Cooldown / stun timeouts started from roll resolution (clear on unmount & sLv reset). */
+/** Cooldown / stun timeouts started from roll resolution (clear on unmount & tap-speed upgrade reset). */
 export const rollTimers = {
   cool: null as ReturnType<typeof setTimeout> | null,
   stun: null as ReturnType<typeof setTimeout> | null,
