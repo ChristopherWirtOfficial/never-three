@@ -1,5 +1,7 @@
 import { Box, Flex, Text, chakra } from '@chakra-ui/react'
-import { formatCompactNumber, reforgeCost } from '../../game/constants'
+import { reforgeCost } from '../../game/balanceConfig'
+import { formatCompactNumber } from '../../game/constants'
+import { useBalanceConfig } from '../../game/useBalanceConfig'
 
 interface ReforgeFaceRowProps {
 	faceIndex: number
@@ -22,11 +24,14 @@ export function ReforgeFaceRow({
 	incrementDieFace,
 	decrementDieFace,
 }: ReforgeFaceRowProps) {
+	const balance = useBalanceConfig()
 	const isDangerous = faceValue % 3 === 0
 	const atCap = faceValue >= maxReforgeFaceValue
 	const atFloor = faceValue <= 1
-	const upCost = atCap ? 0 : reforgeCost(faceValue, faceValue + 1, totalDieReforgeCount)
-	const downCost = atFloor ? 0 : reforgeCost(faceValue, faceValue - 1, totalDieReforgeCount)
+	const upCost = atCap ? 0 : reforgeCost(faceValue, faceValue + 1, totalDieReforgeCount, balance)
+	const downCost = atFloor
+		? 0
+		: reforgeCost(faceValue, faceValue - 1, totalDieReforgeCount, balance)
 	const canAffordUp = hexBalance >= upCost && !atCap
 	const canAffordDown = hexBalance >= downCost && !atFloor
 	const nextDangerous = !atCap && (faceValue + 1) % 3 === 0

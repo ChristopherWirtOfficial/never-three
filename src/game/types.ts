@@ -1,8 +1,3 @@
-export interface DiceTier {
-	sides: number
-	name: string
-	cost: number
-}
 export interface SpeedTier {
 	ms: number
 	name: string
@@ -29,7 +24,7 @@ export interface StunTier {
 }
 
 export type UpgradeType = 'speed' | 'auto' | 'multi' | 'retention' | 'stun'
-export type TabId = 'roll' | 'shop' | 'forge' | 'log'
+export type TabId = 'roll' | 'shop' | 'forge' | 'log' | 'balance'
 
 // Each die is an array of face values
 export type Die = number[]

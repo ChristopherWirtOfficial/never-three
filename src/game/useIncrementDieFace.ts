@@ -1,6 +1,7 @@
 import { useCallback, useRef } from 'react'
 import { useAtomValue, useSetAtom } from 'jotai'
-import { formatCompactNumber, reforgeCost } from './constants'
+import { reforgeCost } from './balanceConfig'
+import { formatCompactNumber } from './constants'
 import * as P from './atoms/primitives'
 
 /**
@@ -11,18 +12,21 @@ export function useIncrementDieFace(): (dieIndex: number, faceIndex: number) => 
 	const maxReforgeFaceValue = useAtomValue(P.maxReforgeFaceValueAtom)
 	const totalDieReforgeCount = useAtomValue(P.totalDieReforgeCountAtom)
 	const hexBalance = useAtomValue(P.hexBalanceAtom)
+	const balance = useAtomValue(P.balanceConfigAtom)
 
 	const snapRef = useRef({
 		dice,
 		maxReforgeFaceValue,
 		totalDieReforgeCount,
 		hexBalance,
+		balance,
 	})
 	snapRef.current = {
 		dice,
 		maxReforgeFaceValue,
 		totalDieReforgeCount,
 		hexBalance,
+		balance,
 	}
 
 	const setHexBalance = useSetAtom(P.hexBalanceAtom)
@@ -37,13 +41,14 @@ export function useIncrementDieFace(): (dieIndex: number, faceIndex: number) => 
 				maxReforgeFaceValue: reforgeCap,
 				totalDieReforgeCount: reforgeCount,
 				hexBalance: currentHex,
+				balance: cfg,
 			} = snapRef.current
 			const die = diceSnapshot[dieIndex]
 			if (!die) return
 			const currentVal = die[faceIndex]
 			if (currentVal >= reforgeCap) return
 			const target = currentVal + 1
-			const cost = reforgeCost(currentVal, target, reforgeCount)
+			const cost = reforgeCost(currentVal, target, reforgeCount, cfg)
 			if (currentHex < cost) return
 			setHexBalance((hex: number) => hex - cost)
 			setTotalDieReforgeCount((count: number) => count + 1)

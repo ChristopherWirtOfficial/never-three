@@ -47,6 +47,8 @@ export function useGameSurface() {
 
 	const currentDie = useAtomValue(D.currentDieAtom)
 	const goldMultiplier = useAtomValue(D.goldMultiplierAtom)
+	const goldStreakMult = useAtomValue(D.goldStreakMultAtom)
+	const hexStreakMult = useAtomValue(D.hexStreakMultAtom)
 	const streakRetentionPct = useAtomValue(D.streakRetentionPctAtom)
 	const prestigeGoldMultiplier = useAtomValue(D.prestigeGoldMultiplierAtom)
 	const cdMs = useAtomValue(D.cdMsAtom)
@@ -97,6 +99,8 @@ export function useGameSurface() {
 		maxReforgeFaceValue,
 		currentDie,
 		goldMultiplier,
+		goldStreakMult,
+		hexStreakMult,
 		streakRetentionPct,
 		prestigeGoldMultiplier,
 		cdMs,

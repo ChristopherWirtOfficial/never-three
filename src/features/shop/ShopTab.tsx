@@ -1,13 +1,8 @@
 import { Box, Text, VStack, chakra } from '@chakra-ui/react'
-import {
-	SPEED,
-	AUTO,
-	MULTI,
-	STREAK_RETENTION,
-	STUN,
-	formatCompactNumber,
-} from '../../game/constants'
+import { clampUpgradeLevel } from '../../game/balanceConfig'
+import { formatCompactNumber } from '../../game/constants'
 import type { UpgradeType } from '../../game/types'
+import { useBalanceConfig } from '../../game/useBalanceConfig'
 import { UpgradeButton } from './UpgradeButton'
 
 interface ShopTabProps {
@@ -54,48 +49,53 @@ export function ShopTab({
 	purchaseUpgrade,
 	commitPrestige,
 }: ShopTabProps) {
+	const balance = useBalanceConfig()
+
+	// Upgrade order is mirrored in BalanceTab tier sections — keep both in sync when reordering.
 	const upgrades: UpgradeConfig[] = [
 		{
 			type: 'multi',
 			icon: '💰',
 			label: 'GOLD MULTI',
-			lv: multiplierUpgradeLevel,
-			arr: MULTI,
+			lv: clampUpgradeLevel(multiplierUpgradeLevel, balance.multi.length),
+			arr: balance.multi,
 			display: tier => `×${tier.x}`,
 		},
 		{
 			type: 'speed',
 			icon: '⚡',
 			label: 'ROLL SPEED',
-			lv: speedUpgradeLevel,
-			arr: SPEED,
+			lv: clampUpgradeLevel(speedUpgradeLevel, balance.speed.length),
+			arr: balance.speed,
 			display: tier => tier.name as string,
 		},
 		{
 			type: 'auto',
 			icon: '🔄',
 			label: 'AUTO-ROLL',
-			lv: autoRollUpgradeLevel,
-			arr: AUTO,
+			lv: clampUpgradeLevel(autoRollUpgradeLevel, balance.auto.length),
+			arr: balance.auto,
 			display: tier => tier.name as string,
 		},
 		{
 			type: 'stun',
 			icon: '💊',
 			label: 'STUN RECOVERY',
-			lv: stunUpgradeLevel,
-			arr: STUN,
+			lv: clampUpgradeLevel(stunUpgradeLevel, balance.stun.length),
+			arr: balance.stun,
 			display: tier => tier.name as string,
 		},
 		{
 			type: 'retention',
 			icon: '🔒',
 			label: 'STREAK RETENTION',
-			lv: streakRetentionUpgradeLevel,
-			arr: STREAK_RETENTION,
+			lv: clampUpgradeLevel(streakRetentionUpgradeLevel, balance.streakRetention.length),
+			arr: balance.streakRetention,
 			display: tier => `${tier.pct}% kept`,
 		},
 	]
+
+	const prestigeMultNext = 1 + (prestige + 1) * balance.prestigeGoldMultPerLevel
 
 	return (
 		<VStack
@@ -148,8 +148,7 @@ export function ShopTab({
 				>
 					{canPrestige ? (
 						<>
-							PRESTIGE → ★{prestige + 1} (×
-							{(1 + (prestige + 1) * 0.5).toFixed(1)})
+							PRESTIGE → ★{prestige + 1} (×{prestigeMultNext.toFixed(1)})
 						</>
 					) : (
 						<>

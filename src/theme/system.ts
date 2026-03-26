@@ -114,6 +114,34 @@ const theme = defineConfig({
 			backgroundColor: '#444444',
 			borderRadius: '3px',
 		},
+		'[data-balance-editor] button[type="button"]': {
+			WebkitTapHighlightColor: 'transparent',
+			appearance: 'none',
+			cursor: 'pointer',
+			fontFamily: 'monospace',
+			touchAction: 'manipulation',
+			transitionProperty: 'filter, transform, opacity',
+			transitionDuration: '0.1s',
+			transitionTimingFunction: 'ease',
+			userSelect: 'none',
+			'&:hover:not(:disabled)': {
+				filter: 'brightness(1.14)',
+			},
+			'&:active:not(:disabled)': {
+				filter: 'brightness(0.92)',
+				transform: 'scale(0.98)',
+			},
+			'&:disabled': {
+				cursor: 'not-allowed',
+				opacity: 0.5,
+				filter: 'none',
+				transform: 'none',
+			},
+			'&:focus-visible': {
+				outline: '2px solid #44ffbb',
+				outlineOffset: '2px',
+			},
+		},
 	}),
 })
 

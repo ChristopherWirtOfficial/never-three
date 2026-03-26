@@ -1,16 +1,12 @@
 import { useCallback, useRef } from 'react'
 import { useAtomValue, useSetAtom } from 'jotai'
 import {
-	MULTI,
-	SPEED,
-	STREAK_RETENTION,
-	STUN,
-	dangerousFaceHexUnits,
-	formatCompactNumber,
-	HEX_BASE,
+	clampUpgradeLevel,
 	hexStreakMultiplier,
 	streakMultiplier,
-} from './constants'
+	type BalanceConfig,
+} from './balanceConfig'
+import { dangerousFaceHexUnits, formatCompactNumber } from './constants'
 import { currentDieAtom, gameLockedAtom } from './atoms/derived'
 import { rollTimers } from './rollTimers'
 import * as P from './atoms/primitives'
@@ -18,12 +14,22 @@ import * as P from './atoms/primitives'
 type RollSnap = {
 	locked: boolean
 	currentDie: number[]
+	totalRollCount: number
+	pendingSafeFirstRoll: boolean
 	goldMultiplier: number
 	streakRetentionPct: number
 	prestigeGoldMultiplier: number
 	rollCooldownMs: number
 	stunMs: number
-	stunTier: (typeof STUN)[number]
+	stunTierName: string
+	hexBase: number
+	balance: BalanceConfig
+}
+
+function randomFaceIndexAvoidingMultiplesOfThree(faces: number[]): number | null {
+	const safe = faces.map((v, i) => (v % 3 !== 0 ? i : -1)).filter((i): i is number => i >= 0)
+	if (safe.length === 0) return null
+	return safe[Math.floor(Math.random() * safe.length)]
 }
 
 /**
@@ -33,31 +39,47 @@ type RollSnap = {
 export function useDiceRoll(): () => void {
 	const locked = useAtomValue(gameLockedAtom)
 	const currentDie = useAtomValue(currentDieAtom)
+	const balance = useAtomValue(P.balanceConfigAtom)
 	const multiplierUpgradeLevel = useAtomValue(P.multiplierUpgradeLevelAtom)
 	const streakRetentionUpgradeLevel = useAtomValue(P.streakRetentionUpgradeLevelAtom)
 	const prestige = useAtomValue(P.prestigeAtom)
+	const totalRollCount = useAtomValue(P.totalRollCountAtom)
+	const pendingSafeFirstRoll = useAtomValue(P.pendingSafeFirstRollAtom)
 	const speedUpgradeLevel = useAtomValue(P.speedUpgradeLevelAtom)
 	const stunUpgradeLevel = useAtomValue(P.stunUpgradeLevelAtom)
+
+	const mLv = clampUpgradeLevel(multiplierUpgradeLevel, balance.multi.length)
+	const rLv = clampUpgradeLevel(streakRetentionUpgradeLevel, balance.streakRetention.length)
+	const sLv = clampUpgradeLevel(speedUpgradeLevel, balance.speed.length)
+	const tLv = clampUpgradeLevel(stunUpgradeLevel, balance.stun.length)
 
 	const snapRef = useRef<RollSnap>({
 		locked,
 		currentDie,
-		goldMultiplier: MULTI[multiplierUpgradeLevel].x,
-		streakRetentionPct: STREAK_RETENTION[streakRetentionUpgradeLevel].pct,
-		prestigeGoldMultiplier: 1 + prestige * 0.5,
-		rollCooldownMs: SPEED[speedUpgradeLevel].ms,
-		stunMs: STUN[stunUpgradeLevel].ms,
-		stunTier: STUN[stunUpgradeLevel],
+		totalRollCount,
+		pendingSafeFirstRoll,
+		goldMultiplier: balance.multi[mLv].x,
+		streakRetentionPct: balance.streakRetention[rLv].pct,
+		prestigeGoldMultiplier: 1 + prestige * balance.prestigeGoldMultPerLevel,
+		rollCooldownMs: balance.speed[sLv].ms,
+		stunMs: balance.stun[tLv].ms,
+		stunTierName: balance.stun[tLv].name,
+		hexBase: balance.hexBase,
+		balance,
 	})
 	snapRef.current = {
 		locked,
 		currentDie,
-		goldMultiplier: MULTI[multiplierUpgradeLevel].x,
-		streakRetentionPct: STREAK_RETENTION[streakRetentionUpgradeLevel].pct,
-		prestigeGoldMultiplier: 1 + prestige * 0.5,
-		rollCooldownMs: SPEED[speedUpgradeLevel].ms,
-		stunMs: STUN[stunUpgradeLevel].ms,
-		stunTier: STUN[stunUpgradeLevel],
+		totalRollCount,
+		pendingSafeFirstRoll,
+		goldMultiplier: balance.multi[mLv].x,
+		streakRetentionPct: balance.streakRetention[rLv].pct,
+		prestigeGoldMultiplier: 1 + prestige * balance.prestigeGoldMultPerLevel,
+		rollCooldownMs: balance.speed[sLv].ms,
+		stunMs: balance.stun[tLv].ms,
+		stunTierName: balance.stun[tLv].name,
+		hexBase: balance.hexBase,
+		balance,
 	}
 
 	const setRollCooldownActive = useSetAtom(P.isRollCooldownActiveAtom)
@@ -78,6 +100,7 @@ export function useDiceRoll(): () => void {
 	const setStunned = useSetAtom(P.isStunnedAtom)
 	const setActiveStunWindow = useSetAtom(P.activeStunWindowAtom)
 	const setGameEventLog = useSetAtom(P.gameEventLogAtom)
+	const setPendingSafeFirstRoll = useSetAtom(P.pendingSafeFirstRollAtom)
 
 	return useCallback(() => {
 		if (snapRef.current.locked) return
@@ -89,19 +112,26 @@ export function useDiceRoll(): () => void {
 		setTimeout(() => {
 			const {
 				currentDie: dieFaces,
+				totalRollCount: rollsSoFar,
+				pendingSafeFirstRoll: prestigeSafePending,
 				goldMultiplier,
 				streakRetentionPct,
 				prestigeGoldMultiplier,
 				rollCooldownMs,
 				stunMs,
-				stunTier,
+				stunTierName,
+				hexBase,
+				balance,
 			} = snapRef.current
 
-			const faceIndex = Math.floor(Math.random() * dieFaces.length)
+			const guaranteeSafe = rollsSoFar === 0 || prestigeSafePending
+			const safeIndex = guaranteeSafe ? randomFaceIndexAvoidingMultiplesOfThree(dieFaces) : null
+			const faceIndex = safeIndex !== null ? safeIndex : Math.floor(Math.random() * dieFaces.length)
 			const rolledValue = dieFaces[faceIndex]
 			setLastRolledFace(rolledValue)
 			setRolling(false)
 			setTotalRollCount((count: number) => count + 1)
+			if (prestigeSafePending) setPendingSafeFirstRoll(false)
 
 			const dangerous = rolledValue % 3 === 0
 
@@ -113,21 +143,21 @@ export function useDiceRoll(): () => void {
 					const kept = Math.floor((priorGoldStreak * streakRetentionPct) / 100)
 					let line: string
 					if (priorGoldStreak === 0) {
-						line = `💀 Rolled ${rolledValue}! Stunned ${stunTier.name}`
+						line = `💀 Rolled ${rolledValue}! Stunned ${stunTierName}`
 					} else if (kept >= priorGoldStreak) {
-						line = `💀 Rolled ${rolledValue}! Streak ${priorGoldStreak} held. Stunned ${stunTier.name}`
+						line = `💀 Rolled ${rolledValue}! Streak ${priorGoldStreak} held. Stunned ${stunTierName}`
 					} else if (streakRetentionPct > 0) {
-						line = `💀 Rolled ${rolledValue}! Streak ${priorGoldStreak} → ${kept} (${streakRetentionPct}% kept). Stunned ${stunTier.name}`
+						line = `💀 Rolled ${rolledValue}! Streak ${priorGoldStreak} → ${kept} (${streakRetentionPct}% kept). Stunned ${stunTierName}`
 					} else {
-						line = `💀 Rolled ${rolledValue}! Streak gone. Stunned ${stunTier.name}`
+						line = `💀 Rolled ${rolledValue}! Streak gone. Stunned ${stunTierName}`
 					}
 					setGameEventLog((prevLog: string[]) => [line, ...prevLog].slice(0, 60))
 					return kept
 				})
 				setHexRewardStreak((priorHexStreak: number) => {
 					const dangerUnits = Math.max(1, dangerousFaceHexUnits(rolledValue))
-					const hexStreakMult = hexStreakMultiplier(priorHexStreak)
-					const earnedHex = Math.floor(HEX_BASE * dangerUnits * hexStreakMult)
+					const hexStreakMult = hexStreakMultiplier(priorHexStreak, balance)
+					const earnedHex = Math.floor(hexBase * dangerUnits * hexStreakMult)
 					setHexBalance((hex: number) => hex + earnedHex)
 					const nextHexStreak = priorHexStreak + dangerUnits
 					setBestHexRewardStreak((previousBest: number) => Math.max(previousBest, nextHexStreak))
@@ -156,7 +186,7 @@ export function useDiceRoll(): () => void {
 			} else {
 				setHexRewardStreak(0)
 				setGoldStreak((priorGoldStreak: number) => {
-					const goldStreakMult = streakMultiplier(priorGoldStreak)
+					const goldStreakMult = streakMultiplier(priorGoldStreak, balance)
 					const earnedGold = Math.floor(
 						rolledValue * goldStreakMult * goldMultiplier * prestigeGoldMultiplier
 					)
@@ -202,5 +232,6 @@ export function useDiceRoll(): () => void {
 		setStunned,
 		setActiveStunWindow,
 		setGameEventLog,
+		setPendingSafeFirstRoll,
 	])
 }

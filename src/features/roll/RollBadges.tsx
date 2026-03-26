@@ -1,6 +1,7 @@
 import { Flex, Text } from '@chakra-ui/react'
 import type { ReactNode } from 'react'
-import { AUTO, SPEED } from '../../game/constants'
+import { clampUpgradeLevel } from '../../game/balanceConfig'
+import { useBalanceConfig } from '../../game/useBalanceConfig'
 import type { Die } from '../../game/types'
 
 interface RollBadgesProps {
@@ -18,7 +19,13 @@ export function RollBadges({
 	goldMultiplier,
 	streakRetentionPct,
 }: RollBadgesProps) {
+	const balance = useBalanceConfig()
 	const dangerCount = currentDie.filter(face => face % 3 === 0).length
+
+	const autoLv = clampUpgradeLevel(autoRollUpgradeLevel, balance.auto.length)
+	const speedLv = clampUpgradeLevel(speedUpgradeLevel, balance.speed.length)
+	const autoName = balance.auto[autoLv].name
+	const speedName = balance.speed[speedLv].name
 
 	const badge = (child: ReactNode, colorToken: string) => (
 		<Text
@@ -50,11 +57,7 @@ export function RollBadges({
 				dangerCount > 0 ? 'never.dangerBadge' : 'never.streak'
 			)}
 			{badge(
-				<>
-					{autoRollUpgradeLevel > 0
-						? `AUTO ${AUTO[autoRollUpgradeLevel].name}`
-						: `TAP ${SPEED[speedUpgradeLevel].name}`}
-				</>,
+				<>{autoRollUpgradeLevel > 0 ? `AUTO ${autoName}` : `TAP ${speedName}`}</>,
 				autoRollUpgradeLevel > 0 ? 'never.autoTeal' : 'never.subtle'
 			)}
 			{badge(<>×{goldMultiplier}</>, 'never.multi')}

@@ -6,6 +6,7 @@ const TABS: [TabId, string][] = [
 	['shop', '⬆ SHOP'],
 	['forge', '🔥 FORGE'],
 	['log', '📜 LOG'],
+	['balance', '⚖ BAL'],
 ]
 
 interface DockTabBarProps {

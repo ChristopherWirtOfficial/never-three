@@ -1,6 +1,7 @@
 import { useCallback, useRef } from 'react'
 import { useAtomValue, useSetAtom } from 'jotai'
-import { formatCompactNumber, reforgeCost } from './constants'
+import { reforgeCost } from './balanceConfig'
+import { formatCompactNumber } from './constants'
 import * as P from './atoms/primitives'
 
 /**
@@ -10,9 +11,10 @@ export function useDecrementDieFace(): (dieIndex: number, faceIndex: number) => 
 	const dice = useAtomValue(P.diceAtom)
 	const totalDieReforgeCount = useAtomValue(P.totalDieReforgeCountAtom)
 	const hexBalance = useAtomValue(P.hexBalanceAtom)
+	const balance = useAtomValue(P.balanceConfigAtom)
 
-	const snapRef = useRef({ dice, totalDieReforgeCount, hexBalance })
-	snapRef.current = { dice, totalDieReforgeCount, hexBalance }
+	const snapRef = useRef({ dice, totalDieReforgeCount, hexBalance, balance })
+	snapRef.current = { dice, totalDieReforgeCount, hexBalance, balance }
 
 	const setHexBalance = useSetAtom(P.hexBalanceAtom)
 	const setTotalDieReforgeCount = useSetAtom(P.totalDieReforgeCountAtom)
@@ -25,13 +27,14 @@ export function useDecrementDieFace(): (dieIndex: number, faceIndex: number) => 
 				dice: diceSnapshot,
 				totalDieReforgeCount: reforgeCount,
 				hexBalance: currentHex,
+				balance: cfg,
 			} = snapRef.current
 			const die = diceSnapshot[dieIndex]
 			if (!die) return
 			const currentVal = die[faceIndex]
 			if (currentVal <= 1) return
 			const target = currentVal - 1
-			const cost = reforgeCost(currentVal, target, reforgeCount)
+			const cost = reforgeCost(currentVal, target, reforgeCount, cfg)
 			if (currentHex < cost) return
 			setHexBalance((hex: number) => hex - cost)
 			setTotalDieReforgeCount((count: number) => count + 1)

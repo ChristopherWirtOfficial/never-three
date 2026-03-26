@@ -10,9 +10,10 @@ import * as P from './atoms/primitives'
 export function usePrestige(): () => void {
 	const canPrestige = useAtomValue(canPrestigeAtom)
 	const prestige = useAtomValue(P.prestigeAtom)
+	const balance = useAtomValue(P.balanceConfigAtom)
 
-	const snapRef = useRef({ canPrestige, prestige })
-	snapRef.current = { canPrestige, prestige }
+	const snapRef = useRef({ canPrestige, prestige, balance })
+	snapRef.current = { canPrestige, prestige, balance }
 
 	const setPrestige = useSetAtom(P.prestigeAtom)
 	const setGold = useSetAtom(P.goldAtom)
@@ -29,10 +30,12 @@ export function usePrestige(): () => void {
 	const setDice = useSetAtom(P.diceAtom)
 	const setTotalDieReforgeCount = useSetAtom(P.totalDieReforgeCountAtom)
 	const setGameEventLog = useSetAtom(P.gameEventLogAtom)
+	const setPendingSafeFirstRoll = useSetAtom(P.pendingSafeFirstRollAtom)
 
 	return useCallback(() => {
 		if (!snapRef.current.canPrestige) return
 		const prestigeBefore = snapRef.current.prestige
+		const multPer = snapRef.current.balance.prestigeGoldMultPerLevel
 		setPrestige((level: number) => level + 1)
 		setGold(0)
 		setLifetimeGoldEarned(0)
@@ -47,8 +50,9 @@ export function usePrestige(): () => void {
 		setStunUpgradeLevel(0)
 		setDice([makeDefaultDie()])
 		setTotalDieReforgeCount(0)
+		setPendingSafeFirstRoll(true)
 		setGameEventLog([
-			`✨ PRESTIGE ${prestigeBefore + 1}! ×${(1 + (prestigeBefore + 1) * 0.5).toFixed(1)} forever`,
+			`✨ PRESTIGE ${prestigeBefore + 1}! ×${(1 + (prestigeBefore + 1) * multPer).toFixed(1)} forever`,
 		])
 	}, [
 		setPrestige,
@@ -66,5 +70,6 @@ export function usePrestige(): () => void {
 		setDice,
 		setTotalDieReforgeCount,
 		setGameEventLog,
+		setPendingSafeFirstRoll,
 	])
 }

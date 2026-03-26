@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react'
 import { useAtomValue, useSetAtom } from 'jotai'
-import { AUTO, MULTI, SPEED, STREAK_RETENTION, STUN } from './constants'
+import type { BalanceConfig } from './balanceConfig'
 import type { UpgradeType } from './types'
 import * as P from './atoms/primitives'
 
@@ -9,6 +9,7 @@ import * as P from './atoms/primitives'
  */
 export function usePurchaseUpgrade(): (type: UpgradeType) => void {
 	const gold = useAtomValue(P.goldAtom)
+	const balance = useAtomValue(P.balanceConfigAtom)
 	const speedUpgradeLevel = useAtomValue(P.speedUpgradeLevelAtom)
 	const autoRollUpgradeLevel = useAtomValue(P.autoRollUpgradeLevelAtom)
 	const multiplierUpgradeLevel = useAtomValue(P.multiplierUpgradeLevelAtom)
@@ -17,6 +18,7 @@ export function usePurchaseUpgrade(): (type: UpgradeType) => void {
 
 	const snapRef = useRef({
 		gold,
+		balance,
 		speedUpgradeLevel,
 		autoRollUpgradeLevel,
 		multiplierUpgradeLevel,
@@ -25,6 +27,7 @@ export function usePurchaseUpgrade(): (type: UpgradeType) => void {
 	})
 	snapRef.current = {
 		gold,
+		balance,
 		speedUpgradeLevel,
 		autoRollUpgradeLevel,
 		multiplierUpgradeLevel,
@@ -42,6 +45,7 @@ export function usePurchaseUpgrade(): (type: UpgradeType) => void {
 	return useCallback(
 		(type: UpgradeType) => {
 			const snapshot = snapRef.current
+			const cfg: BalanceConfig = snapshot.balance
 
 			const tryBuyNextTier = (
 				currentTierIndex: number,
@@ -57,23 +61,23 @@ export function usePurchaseUpgrade(): (type: UpgradeType) => void {
 
 			switch (type) {
 				case 'speed':
-					tryBuyNextTier(snapshot.speedUpgradeLevel, SPEED, setSpeedUpgradeLevel)
+					tryBuyNextTier(snapshot.speedUpgradeLevel, cfg.speed, setSpeedUpgradeLevel)
 					break
 				case 'auto':
-					tryBuyNextTier(snapshot.autoRollUpgradeLevel, AUTO, setAutoRollUpgradeLevel)
+					tryBuyNextTier(snapshot.autoRollUpgradeLevel, cfg.auto, setAutoRollUpgradeLevel)
 					break
 				case 'multi':
-					tryBuyNextTier(snapshot.multiplierUpgradeLevel, MULTI, setMultiplierUpgradeLevel)
+					tryBuyNextTier(snapshot.multiplierUpgradeLevel, cfg.multi, setMultiplierUpgradeLevel)
 					break
 				case 'retention':
 					tryBuyNextTier(
 						snapshot.streakRetentionUpgradeLevel,
-						STREAK_RETENTION,
+						cfg.streakRetention,
 						setStreakRetentionUpgradeLevel
 					)
 					break
 				case 'stun':
-					tryBuyNextTier(snapshot.stunUpgradeLevel, STUN, setStunUpgradeLevel)
+					tryBuyNextTier(snapshot.stunUpgradeLevel, cfg.stun, setStunUpgradeLevel)
 					break
 			}
 		},

@@ -1,9 +1,10 @@
 import { useEffect, useRef } from 'react'
 import { useAtomValue, useSetAtom } from 'jotai'
-import { AUTO } from './constants'
+import { clampUpgradeLevel } from './balanceConfig'
 import {
 	autoRollProgressAtom,
 	autoRollUpgradeLevelAtom,
+	balanceConfigAtom,
 	isRollCooldownActiveAtom,
 	isStunnedAtom,
 	rollCooldownProgressAtom,
@@ -19,6 +20,7 @@ import { clearRollTimeouts } from './rollTimers'
  * Timers and RAF progress tied to roll phase atoms. Mount once under the Jotai provider.
  */
 export function useGameLoop(rollDice: () => void): void {
+	const balance = useAtomValue(balanceConfigAtom)
 	const autoRollUpgradeLevel = useAtomValue(autoRollUpgradeLevelAtom)
 	const speedUpgradeLevel = useAtomValue(speedUpgradeLevelAtom)
 	const runStarted = useAtomValue(runStartedAtom)
@@ -41,6 +43,9 @@ export function useGameLoop(rollDice: () => void): void {
 	const cdFrameRef = useRef(0)
 	const stunFrameRef = useRef(0)
 
+	const autoLv = clampUpgradeLevel(autoRollUpgradeLevel, balance.auto.length)
+	const autoMs = balance.auto[autoLv].ms
+
 	useEffect(
 		() => () => {
 			clearRollTimeouts()
@@ -57,20 +62,19 @@ export function useGameLoop(rollDice: () => void): void {
 	}, [speedUpgradeLevel, setRollCooldownActive, setStunned, setActiveStunWindow])
 
 	useEffect(() => {
-		const ms = AUTO[autoRollUpgradeLevel].ms
 		if (autoTimerRef.current) {
 			clearTimeout(autoTimerRef.current)
 			autoTimerRef.current = null
 		}
 
-		if (ms === null || !runStarted) {
+		if (autoMs === null || !runStarted) {
 			setAutoRollProgress(0)
 			return
 		}
 
 		if (!locked) {
 			autoStartRef.current = Date.now()
-			const delay = ms === 0 ? 10 : ms
+			const delay = autoMs === 0 ? 10 : autoMs
 			autoTimerRef.current = setTimeout(() => {
 				autoTimerRef.current = null
 				rollDice()
@@ -83,23 +87,22 @@ export function useGameLoop(rollDice: () => void): void {
 				autoTimerRef.current = null
 			}
 		}
-	}, [autoRollUpgradeLevel, locked, runStarted, rollDice, setAutoRollProgress])
+	}, [autoRollUpgradeLevel, balance, autoMs, locked, runStarted, rollDice, setAutoRollProgress])
 
 	useEffect(() => {
-		const ms = AUTO[autoRollUpgradeLevel].ms
-		if (ms === null || ms <= 0 || !runStarted || locked) {
+		if (autoMs === null || autoMs <= 0 || !runStarted || locked) {
 			setAutoRollProgress(0)
 			cancelAnimationFrame(autoFrameRef.current)
 			return
 		}
 		const tick = () => {
-			const progress = Math.min((Date.now() - autoStartRef.current) / ms, 1)
+			const progress = Math.min((Date.now() - autoStartRef.current) / autoMs, 1)
 			setAutoRollProgress(progress)
 			if (progress < 1) autoFrameRef.current = requestAnimationFrame(tick)
 		}
 		autoFrameRef.current = requestAnimationFrame(tick)
 		return () => cancelAnimationFrame(autoFrameRef.current)
-	}, [autoRollUpgradeLevel, locked, runStarted, setAutoRollProgress])
+	}, [autoRollUpgradeLevel, balance, autoMs, locked, runStarted, setAutoRollProgress])
 
 	useEffect(() => {
 		if (isRollCooldownActive && !isStunned) {

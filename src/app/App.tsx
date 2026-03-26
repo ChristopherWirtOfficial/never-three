@@ -2,6 +2,7 @@ import { Box } from '@chakra-ui/react'
 import { BottomDock } from '../components/layout/BottomDock'
 import { FlashOverlay } from '../components/layout/FlashOverlay'
 import { TopBar } from '../components/layout/TopBar'
+import { BalanceTab } from '../features/balance/BalanceTab'
 import { ForgeTab } from '../features/forge/ForgeTab'
 import { LogTab } from '../features/log/LogTab'
 import { RollTab } from '../features/roll/RollTab'
@@ -34,8 +35,9 @@ export default function NeverThree() {
 					gold={game.gold}
 					hexBalance={game.hexBalance}
 					goldStreak={game.goldStreak}
-					hexRewardStreak={game.hexRewardStreak}
 					bestGoldStreak={game.bestGoldStreak}
+					goldStreakMult={game.goldStreakMult}
+					hexStreakMult={game.hexStreakMult}
 					prestige={game.prestige}
 					prestigeGoldMultiplier={game.prestigeGoldMultiplier}
 					onOpenSaves={openSaveManager}
@@ -92,6 +94,7 @@ export default function NeverThree() {
 						/>
 					)}
 					{game.activeGameTab === 'log' && <LogTab gameEventLog={game.gameEventLog} />}
+					{game.activeGameTab === 'balance' && <BalanceTab />}
 				</Box>
 
 				<BottomDock

@@ -5,8 +5,9 @@ interface TopBarProps {
 	gold: number
 	hexBalance: number
 	goldStreak: number
-	hexRewardStreak: number
 	bestGoldStreak: number
+	goldStreakMult: number
+	hexStreakMult: number
 	prestige: number
 	prestigeGoldMultiplier: number
 	onOpenSaves?: () => void
@@ -16,8 +17,9 @@ export function TopBar({
 	gold,
 	hexBalance,
 	goldStreak,
-	hexRewardStreak,
 	bestGoldStreak,
+	goldStreakMult,
+	hexStreakMult,
 	prestige,
 	prestigeGoldMultiplier,
 	onOpenSaves,
@@ -116,14 +118,50 @@ export function TopBar({
 						{goldStreak}
 					</Text>
 				</Text>
-				{hexRewardStreak > 0 && (
+				<Text
+					fontSize='11px'
+					fontWeight={700}
+					mb='2px'
+					letterSpacing='0.02em'
+				>
 					<Text
-						fontSize='11px'
+						as='span'
+						color='never.goldMuted'
+						fontSize='9px'
+						fontWeight={600}
+						mr='3px'
+					>
+						G
+					</Text>
+					<Text
+						as='span'
+						color='never.streak'
+					>
+						×{goldStreakMult.toFixed(2)}
+					</Text>
+					<Text
+						as='span'
+						color='never.muted'
+						mx='6px'
+					>
+						·
+					</Text>
+					<Text
+						as='span'
+						color='never.hexMuted'
+						fontSize='9px'
+						fontWeight={600}
+						mr='3px'
+					>
+						H
+					</Text>
+					<Text
+						as='span'
 						color='never.hexStreak'
 					>
-						🔮 ×{hexRewardStreak}
+						×{hexStreakMult.toFixed(2)}
 					</Text>
-				)}
+				</Text>
 				<Text
 					fontSize='10px'
 					color='never.dim'

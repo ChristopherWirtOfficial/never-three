@@ -4,7 +4,9 @@ import { createStore } from 'jotai/vanilla'
 import type { Store } from 'jotai/vanilla/store'
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { SaveManagerModal } from '../features/saves/SaveManagerModal'
+import { loadResolvedActiveBalanceConfig } from '../game/balanceConfig'
 import { collectSaveStateFromStore, hydrateStoreFromSaveState } from '../game/persistGameStore'
+import * as P from '../game/atoms/primitives'
 import {
 	boot,
 	createProfile,
@@ -17,6 +19,7 @@ import {
 	saveProfile,
 	deleteProfile,
 	setActiveProfileId,
+	type SaveState,
 } from '../game/saves'
 import { system } from '../theme/system'
 import { GameSessionProvider } from './GameSessionContext'
@@ -26,6 +29,14 @@ type SessionState = {
 	store: Store
 	profileId: string
 	profileName: string
+}
+
+async function createHydratedGameStore(state: SaveState): Promise<Store> {
+	const store = createStore()
+	const balanceConfig = await loadResolvedActiveBalanceConfig()
+	store.set(P.balanceConfigAtom, balanceConfig)
+	hydrateStoreFromSaveState(store, state)
+	return store
 }
 
 /**
@@ -41,8 +52,7 @@ export function AppBootstrap({ children }: { children: ReactNode }) {
 		void (async () => {
 			const result = await boot()
 			if (cancelled) return
-			const store = createStore()
-			hydrateStoreFromSaveState(store, result.state)
+			const store = await createHydratedGameStore(result.state)
 			setSession({
 				store,
 				profileId: result.id,
@@ -67,8 +77,7 @@ export function AppBootstrap({ children }: { children: ReactNode }) {
 			const next = await loadProfile(id)
 			if (!next) return
 			const meta = (await listProfiles()).find(profile => profile.id === id)
-			const store = createStore()
-			hydrateStoreFromSaveState(store, next)
+			const store = await createHydratedGameStore(next)
 			await setActiveProfileId(id)
 			setSession({
 				store,
@@ -83,8 +92,7 @@ export function AppBootstrap({ children }: { children: ReactNode }) {
 		async (optionalDisplayName?: string) => {
 			await flushCurrent()
 			const { id, name } = await createProfile(optionalDisplayName)
-			const store = createStore()
-			hydrateStoreFromSaveState(store, DEFAULT_STATE)
+			const store = await createHydratedGameStore(DEFAULT_STATE)
 			setSession({ store, profileId: id, profileName: name })
 		},
 		[flushCurrent]
@@ -95,8 +103,7 @@ export function AppBootstrap({ children }: { children: ReactNode }) {
 			await flushCurrent()
 			const dup = await duplicateProfile(sourceId, optionalDisplayName)
 			if (!dup) return
-			const store = createStore()
-			hydrateStoreFromSaveState(store, dup.state)
+			const store = await createHydratedGameStore(dup.state)
 			await setActiveProfileId(dup.id)
 			setSession({
 				store,
@@ -117,8 +124,7 @@ export function AppBootstrap({ children }: { children: ReactNode }) {
 			await deleteProfile(id)
 			if (isCurrent) {
 				const next = await boot()
-				const store = createStore()
-				hydrateStoreFromSaveState(store, next.state)
+				const store = await createHydratedGameStore(next.state)
 				setSession({
 					store,
 					profileId: next.id,

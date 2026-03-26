@@ -1,5 +1,7 @@
 import { Text, VStack } from '@chakra-ui/react'
-import { formatCompactNumber, streakMultiplier } from '../../game/constants'
+import { streakMultiplier } from '../../game/balanceConfig'
+import { formatCompactNumber } from '../../game/constants'
+import { useBalanceConfig } from '../../game/useBalanceConfig'
 
 interface RollFeedbackProps {
 	lastRolledFace: number | null
@@ -18,6 +20,7 @@ export function RollFeedback({
 	goldMultiplier,
 	prestigeGoldMultiplier,
 }: RollFeedbackProps) {
+	const balance = useBalanceConfig()
 	const dangerous = lastRolledFace !== null && lastRolledFace % 3 === 0
 	const safe = lastRolledFace !== null && lastRolledFace % 3 !== 0
 
@@ -51,7 +54,7 @@ export function RollFeedback({
 					{formatCompactNumber(
 						Math.floor(
 							lastRolledFace *
-								streakMultiplier(Math.max(0, goldStreak - 1)) *
+								streakMultiplier(Math.max(0, goldStreak - 1), balance) *
 								goldMultiplier *
 								prestigeGoldMultiplier
 						)
@@ -66,7 +69,7 @@ export function RollFeedback({
 					fontSize='12px'
 					mt='2px'
 				>
-					streak ×{streakMultiplier(goldStreak - 1).toFixed(2)}
+					streak ×{streakMultiplier(goldStreak - 1, balance).toFixed(2)}
 				</Text>
 			)}
 		</VStack>
