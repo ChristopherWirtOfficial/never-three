@@ -6,13 +6,13 @@ interface ForgeTabProps {
   dice: Die[];
   totalReforges: number;
   reforgeCap: number;
-  gold: number;
+  hex: number;
   reforgeUp: (dieIndex: number, faceIndex: number) => void;
   reforgeDown: (dieIndex: number, faceIndex: number) => void;
 }
 
 export function ForgeTab({
-  dice, totalReforges, reforgeCap, gold,
+  dice, totalReforges, reforgeCap, hex,
   reforgeUp, reforgeDown,
 }: ForgeTabProps) {
   return (
@@ -36,7 +36,7 @@ export function ForgeTab({
               const atCap = faceVal >= reforgeCap;
               const atFloor = faceVal <= 1;
               const upCost = atCap ? 0 : reforgeCost(faceVal + 1, totalReforges);
-              const canAffordUp = gold >= upCost && !atCap;
+              const canAffordUp = hex >= upCost && !atCap;
               const nextDangerous = !atCap && (faceVal + 1) % 3 === 0;
 
               return (
@@ -128,7 +128,7 @@ export function ForgeTab({
                     {atCap ? "MAX" : (
                       <>
                         <span style={{ fontSize: 14 }}>+</span>
-                        <span>{fmt(upCost)}g</span>
+                        <span>{fmt(upCost)}🔮</span>
                       </>
                     )}
                   </button>

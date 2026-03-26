@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { SPEED, AUTO, MULTI, ARMOR, STUN, PRESTIGE_BASE, fmt, streakMultiplier, makeDefaultDie, DEFAULT_REFORGE_CAP, reforgeCost } from "./constants";
+import { SPEED, AUTO, MULTI, ARMOR, STUN, PRESTIGE_BASE, fmt, streakMultiplier, hexStreakMultiplier, makeDefaultDie, DEFAULT_REFORGE_CAP, reforgeCost } from "./constants";
 import type { TabId, UpgradeType, Die } from "./types";
 
 export function useGameState() {
@@ -7,6 +7,9 @@ export function useGameState() {
   const [earned, setEarned] = useState(0);
   const [streak, setStreak] = useState(0);
   const [best, setBest] = useState(0);
+  const [hex, setHex] = useState(0);
+  const [hexStreak, setHexStreak] = useState(0);
+  const [bestHexStreak, setBestHexStreak] = useState(0);
   const [roll, setRoll] = useState<number | null>(null);
   const [rolling, setRolling] = useState(false);
   const [cooldown, setCooldown] = useState(false);
@@ -92,8 +95,10 @@ export function useGameState() {
       if (dangerous) {
         const blocked = Math.random() * 100 < armor;
         if (blocked) {
+          // Armor makes it effectively safe
           setSaved(true);
           setFlash("#ffaa00");
+          setHexStreak(0); // safe outcome breaks hex streak
           setStreak(s => {
             const e = Math.floor(streakMultiplier(s) * multi * pMult);
             setGold(p => p + e);
@@ -108,6 +113,7 @@ export function useGameState() {
             setCooldown(false);
           }, cdMs);
         } else {
+          // Dangerous! Award hex, break gold streak, stun
           setShook(true);
           setFlash("#ff3355");
           setThrees(p => p + 1);
@@ -115,11 +121,22 @@ export function useGameState() {
             pushLog(`💀 Rolled ${v}! Streak ${s} gone. Stunned ${STUN[tLv].name}`);
             return 0;
           });
+          setHexStreak(hs => {
+            const hm = hexStreakMultiplier(hs);
+            const earned = Math.max(1, Math.floor(hm));
+            setHex(p => p + earned);
+            const nhs = hs + 1;
+            setBestHexStreak(b => Math.max(b, nhs));
+            pushLog(`🔮 +${earned} hex${hs > 1 ? ` (×${hm.toFixed(1)} streak)` : ""}`);
+            return nhs;
+          });
           setTimeout(() => { setShook(false); setFlash(null); }, 400);
           setCooldown(false);
           startStun();
         }
       } else {
+        // Safe roll — award gold, break hex streak
+        setHexStreak(0);
         setStreak(s => {
           const sm = streakMultiplier(s);
           const e = Math.floor(v * sm * multi * pMult);
@@ -250,6 +267,7 @@ export function useGameState() {
     if (!canPrestige) return;
     setPrestige(p => p + 1);
     setGold(0); setEarned(0); setStreak(0); setRoll(null);
+    setHex(0); setHexStreak(0);
     setSLv(0); setALv(0); setMLv(0); setRLv(0); setTLv(0);
     setDice([makeDefaultDie()]); setTotalReforges(0);
     // reforgeCap persists through prestige (Hex upgrade in future)
@@ -282,16 +300,16 @@ export function useGameState() {
     if (currentVal >= reforgeCap) return;
     const target = currentVal + 1;
     const cost = reforgeCost(target, totalReforges);
-    if (gold < cost) return;
-    setGold(p => p - cost);
+    if (hex < cost) return;
+    setHex(p => p - cost);
     setTotalReforges(p => p + 1);
     setDice(prev => {
       const next = prev.map(d => [...d]);
       next[dieIndex][faceIndex] = target;
       return next;
     });
-    pushLog(`🔥 Face ${faceIndex + 1}: ${currentVal} → ${target} (-${fmt(cost)}g)`);
-  }, [dice, reforgeCap, totalReforges, gold, pushLog]);
+    pushLog(`🔥 Face ${faceIndex + 1}: ${currentVal} → ${target} (-${fmt(cost)} hex)`);
+  }, [dice, reforgeCap, totalReforges, hex, pushLog]);
 
   const reforgeDown = useCallback((dieIndex: number, faceIndex: number) => {
     const die = dice[dieIndex];
@@ -309,7 +327,8 @@ export function useGameState() {
 
   return {
     // State
-    gold, earned, streak, best, roll, rolling, cooldown, stunned, stunPct, cdPct, autoPct,
+    gold, earned, streak, best, hex, hexStreak, bestHexStreak,
+    roll, rolling, cooldown, stunned, stunPct, cdPct, autoPct,
     sLv, aLv, mLv, rLv, tLv, prestige, rolls, threes, shook, flash, saved,
     tab, log, started, locked,
     // Dice

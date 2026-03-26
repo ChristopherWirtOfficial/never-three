@@ -37,17 +37,30 @@ export default function NeverThree() {
           borderBottom: "1px solid #141428",
         }}>
           <div>
-            <div style={{ fontSize: 9, color: "#bb9900", letterSpacing: 2, fontWeight: 700 }}>GOLD</div>
-            <div style={{
-              fontSize: 28, fontWeight: 900, color: "#ffdd33",
-              textShadow: "0 0 16px #ffdd3344", lineHeight: 1.1,
-            }}>
-              {g.gold >= 1e3
-                ? (g.gold >= 1e12 ? (g.gold / 1e12).toFixed(1) + "T"
-                  : g.gold >= 1e9 ? (g.gold / 1e9).toFixed(1) + "B"
-                  : g.gold >= 1e6 ? (g.gold / 1e6).toFixed(1) + "M"
-                  : (g.gold / 1e3).toFixed(1) + "K")
-                : Math.floor(g.gold).toString()}
+            <div style={{ display: "flex", gap: 16, alignItems: "baseline" }}>
+              <div>
+                <div style={{ fontSize: 9, color: "#bb9900", letterSpacing: 2, fontWeight: 700 }}>GOLD</div>
+                <div style={{
+                  fontSize: 26, fontWeight: 900, color: "#ffdd33",
+                  textShadow: "0 0 16px #ffdd3344", lineHeight: 1.1,
+                }}>
+                  {g.gold >= 1e3
+                    ? (g.gold >= 1e12 ? (g.gold / 1e12).toFixed(1) + "T"
+                      : g.gold >= 1e9 ? (g.gold / 1e9).toFixed(1) + "B"
+                      : g.gold >= 1e6 ? (g.gold / 1e6).toFixed(1) + "M"
+                      : (g.gold / 1e3).toFixed(1) + "K")
+                    : Math.floor(g.gold).toString()}
+                </div>
+              </div>
+              <div>
+                <div style={{ fontSize: 9, color: "#7744aa", letterSpacing: 2, fontWeight: 700 }}>HEX</div>
+                <div style={{
+                  fontSize: 20, fontWeight: 900, color: "#bb88ff",
+                  textShadow: "0 0 12px #bb88ff33", lineHeight: 1.1,
+                }}>
+                  {Math.floor(g.hex)}
+                </div>
+              </div>
             </div>
           </div>
           <div style={{ textAlign: "right", lineHeight: 1.5 }}>
@@ -60,6 +73,11 @@ export default function NeverThree() {
                 {g.streak}
               </span>
             </div>
+            {g.hexStreak > 0 && (
+              <div style={{ fontSize: 11, color: "#9966cc" }}>
+                🔮 ×{g.hexStreak}
+              </div>
+            )}
             <div style={{ fontSize: 10, color: "#667" }}>
               BEST {g.best}
               {g.prestige > 0 && (
@@ -97,7 +115,7 @@ export default function NeverThree() {
               dice={g.dice}
               totalReforges={g.totalReforges}
               reforgeCap={g.reforgeCap}
-              gold={g.gold}
+              hex={g.hex}
               reforgeUp={g.reforgeUp}
               reforgeDown={g.reforgeDown}
             />

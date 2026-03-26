@@ -62,9 +62,15 @@ export function streakMultiplier(streak: number): number {
   return 1 + Math.sqrt(streak) * 0.25;
 }
 
-// ── Reforging ──
+export function hexStreakMultiplier(streak: number): number {
+  return 1 + Math.sqrt(streak) * 0.3;
+}
 
-export const REFORGE_BASE = 5;
+export const HEX_BASE = 1; // base hex per dangerous roll
+
+// ── Reforging (costs Hex) ──
+
+export const REFORGE_BASE = 3;
 
 export function reforgeCost(targetValue: number, totalReforges: number): number {
   return Math.floor(REFORGE_BASE * targetValue * (1 + totalReforges * 0.15));
