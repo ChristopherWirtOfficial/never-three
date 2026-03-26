@@ -1,9 +1,3 @@
-/**
- * Delay from roll input until the face resolves (`useDiceRoll` setTimeout).
- * Cooldown UI must span roll + post-roll lock, not `cdMs` alone.
- */
-export const ROLL_RESOLVE_DELAY_MS = 160
-
 /** Abbreviated number for UI (K / M / B / T). */
 export function formatCompactNumber(value: number): string {
 	if (value >= 1e12) return (value / 1e12).toFixed(1) + 'T'

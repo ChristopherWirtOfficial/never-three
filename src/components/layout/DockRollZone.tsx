@@ -1,5 +1,4 @@
 import { Box, Flex, Text } from '@chakra-ui/react'
-import { ROLL_RESOLVE_DELAY_MS } from '../../game/constants'
 import { DiceFace } from '../dice/DiceFace'
 import { RollRewardBubbles } from './RollRewardBubbles'
 
@@ -153,7 +152,7 @@ export function DockRollZone({
 	const outerRingElapsed = autoRollProgress
 	const outerRemaining = outerRingActive ? 1 - outerRingElapsed : 0
 
-	const rollCooldownTotalMs = ROLL_RESOLVE_DELAY_MS + cdMs
+	const rollCooldownTotalMs = cdMs
 	const innerTimerText = isStunned
 		? ((1 - stunRecoveryProgress) * (stunActiveDurationMs / 1000)).toFixed(1) + 's'
 		: isRollCooldownActive
@@ -163,8 +162,8 @@ export function DockRollZone({
 		? ((1 - autoRollProgress) * ((autoMs as number) / 1000)).toFixed(1) + 's'
 		: ''
 
-	const showTimer = innerRingActive || outerRingActive
-	const timerIsInner = innerRingActive
+	const showTimer = innerRingActive || outerRingActive || isRolling
+	const timerIsInner = innerRingActive || isRolling
 	const timerText = timerIsInner ? innerTimerText : outerTimerText
 
 	return (
@@ -305,7 +304,7 @@ export function DockRollZone({
 						justifyContent='center'
 						animation={
 							isRolling
-								? 'neverSpin 0.18s ease'
+								? 'neverSpin 0.3s linear infinite'
 								: !locked && !autoRollUpgradeLevel
 									? 'neverPulse 2.5s ease infinite'
 									: undefined

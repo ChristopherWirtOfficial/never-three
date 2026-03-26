@@ -6,7 +6,7 @@ import {
 	streakMultiplier,
 	type BalanceConfig,
 } from './balanceConfig'
-import { dangerousFaceHexUnits, formatCompactNumber, ROLL_RESOLVE_DELAY_MS } from './constants'
+import { dangerousFaceHexUnits, formatCompactNumber } from './constants'
 import { currentDieAtom, gameLockedAtom } from './atoms/derived'
 import { rollTimers } from './rollTimers'
 import * as P from './atoms/primitives'
@@ -105,6 +105,9 @@ export function useDiceRoll(): () => void {
 	return useCallback(() => {
 		if (snapRef.current.locked) return
 
+		// Capture cdMs at roll time — the spin lasts this long before the face reveals.
+		const spinMs = snapRef.current.rollCooldownMs
+
 		setRollCooldownActive(true)
 		setRolling(true)
 		setRunStarted(runAlreadyStarted => (runAlreadyStarted ? runAlreadyStarted : true))
@@ -117,7 +120,6 @@ export function useDiceRoll(): () => void {
 				goldMultiplier,
 				streakRetentionPct,
 				prestigeGoldMultiplier,
-				rollCooldownMs,
 				stunMs,
 				stunTierName,
 				hexBase,
@@ -222,13 +224,9 @@ export function useDiceRoll(): () => void {
 					)
 					return nextGoldStreak
 				})
-				if (rollTimers.cool) clearTimeout(rollTimers.cool)
-				rollTimers.cool = setTimeout(() => {
-					rollTimers.cool = null
-					setRollCooldownActive(false)
-				}, rollCooldownMs)
+				setRollCooldownActive(false)
 			}
-		}, ROLL_RESOLVE_DELAY_MS)
+		}, spinMs)
 	}, [
 		setRollCooldownActive,
 		setRolling,
