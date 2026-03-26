@@ -8,12 +8,23 @@ interface BottomDockProps {
 	sides: number
 	isStunned: boolean
 	stunRecoveryProgress: number
-	/** Denominator for stunned countdown bar (locked at stun apply, not live shop tier). */
+	/** Denominator for stunned countdown (locked at stun apply, not live shop tier). */
 	stunActiveDurationMs: number
 	isRolling: boolean
 	locked: boolean
 	autoRollUpgradeLevel: number
+	isRollCooldownActive: boolean
 	rollCooldownProgress: number
+	cdMs: number
+	autoRollProgress: number
+	autoMs: number | null
+	runStarted: boolean
+	goldStreak: number
+	goldStreakMult: number
+	hexRewardStreak: number
+	hexStreakMult: number
+	bestGoldStreak: number
+	bestHexRewardStreak: number
 	activeGameTab: TabId
 	onRoll: () => void
 	onTabChange: (tab: TabId) => void

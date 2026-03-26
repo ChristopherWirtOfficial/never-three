@@ -1,7 +1,7 @@
 import { atom } from 'jotai'
 import { DEFAULT_BALANCE_CONFIG, type BalanceConfig } from '../balanceConfig'
 import { makeDefaultDie } from '../constants'
-import type { Die, TabId } from '../types'
+import type { Die, RollRewardPopup, TabId } from '../types'
 
 export const goldAtom = atom(0)
 export const lifetimeGoldEarnedAtom = atom(0)
@@ -37,10 +37,11 @@ export const totalRollCountAtom = atom(0)
 export const pendingSafeFirstRollAtom = atom(false)
 export const multipleOfThreeRollCountAtom = atom(0)
 export const dieShakeActiveAtom = atom(false)
-export const screenFlashColorAtom = atom<string | null>(null)
 
 export const activeGameTabAtom = atom<TabId>('roll')
 export const gameEventLogAtom = atom<string[]>([])
+/** Ephemeral +gold / +hex floaters from the last roll(s); not persisted. */
+export const rollRewardPopupsAtom = atom<RollRewardPopup[]>([])
 export const runStartedAtom = atom(false)
 
 export const diceAtom = atom<Die[]>([makeDefaultDie()])

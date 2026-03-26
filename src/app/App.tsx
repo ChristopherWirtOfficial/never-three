@@ -1,6 +1,5 @@
 import { Box } from '@chakra-ui/react'
 import { BottomDock } from '../components/layout/BottomDock'
-import { FlashOverlay } from '../components/layout/FlashOverlay'
 import { TopBar } from '../components/layout/TopBar'
 import { BalanceTab } from '../features/balance/BalanceTab'
 import { ForgeTab } from '../features/forge/ForgeTab'
@@ -16,8 +15,6 @@ export default function NeverThree() {
 
 	return (
 		<>
-			{game.screenFlashColor && <FlashOverlay color={game.screenFlashColor} />}
-
 			<Box
 				h='100dvh'
 				w='100%'
@@ -34,10 +31,6 @@ export default function NeverThree() {
 				<TopBar
 					gold={game.gold}
 					hexBalance={game.hexBalance}
-					goldStreak={game.goldStreak}
-					bestGoldStreak={game.bestGoldStreak}
-					goldStreakMult={game.goldStreakMult}
-					hexStreakMult={game.hexStreakMult}
 					prestige={game.prestige}
 					prestigeGoldMultiplier={game.prestigeGoldMultiplier}
 					onOpenSaves={openSaveManager}
@@ -50,21 +43,15 @@ export default function NeverThree() {
 				>
 					{game.activeGameTab === 'roll' && (
 						<RollTab
-							autoRollUpgradeLevel={game.autoRollUpgradeLevel}
-							speedUpgradeLevel={game.speedUpgradeLevel}
-							goldMultiplier={game.goldMultiplier}
-							streakRetentionPct={game.streakRetentionPct}
 							prestigeGoldMultiplier={game.prestigeGoldMultiplier}
 							lastRolledFace={game.lastRolledFace}
 							isRolling={game.isRolling}
 							goldStreak={game.goldStreak}
 							isStunned={game.isStunned}
+							goldMultiplier={game.goldMultiplier}
 							totalRollCount={game.totalRollCount}
 							multipleOfThreeRollCount={game.multipleOfThreeRollCount}
 							runStarted={game.runStarted}
-							autoRollProgress={game.autoRollProgress}
-							autoMs={game.autoMs}
-							currentDie={game.currentDie}
 						/>
 					)}
 					{game.activeGameTab === 'shop' && (
@@ -106,7 +93,18 @@ export default function NeverThree() {
 					isRolling={game.isRolling}
 					locked={game.locked}
 					autoRollUpgradeLevel={game.autoRollUpgradeLevel}
+					isRollCooldownActive={game.isRollCooldownActive}
 					rollCooldownProgress={game.rollCooldownProgress}
+					cdMs={game.cdMs}
+					autoRollProgress={game.autoRollProgress}
+					autoMs={game.autoMs}
+					runStarted={game.runStarted}
+					goldStreak={game.goldStreak}
+					goldStreakMult={game.goldStreakMult}
+					hexRewardStreak={game.hexRewardStreak}
+					hexStreakMult={game.hexStreakMult}
+					bestGoldStreak={game.bestGoldStreak}
+					bestHexRewardStreak={game.bestHexRewardStreak}
 					activeGameTab={game.activeGameTab}
 					onRoll={() => {
 						if (!game.locked) game.rollDice()

@@ -37,7 +37,6 @@ export function useGameSurface() {
 	const totalRollCount = useAtomValue(P.totalRollCountAtom)
 	const multipleOfThreeRollCount = useAtomValue(P.multipleOfThreeRollCountAtom)
 	const dieShakeActive = useAtomValue(P.dieShakeActiveAtom)
-	const screenFlashColor = useAtomValue(P.screenFlashColorAtom)
 	const activeGameTab = useAtomValue(P.activeGameTabAtom)
 	const gameEventLog = useAtomValue(P.gameEventLogAtom)
 	const runStarted = useAtomValue(P.runStartedAtom)
@@ -90,7 +89,6 @@ export function useGameSurface() {
 		totalRollCount,
 		multipleOfThreeRollCount,
 		dieShakeActive,
-		screenFlashColor,
 		activeGameTab,
 		gameEventLog,
 		runStarted,

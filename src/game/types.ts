@@ -26,6 +26,13 @@ export interface StunTier {
 export type UpgradeType = 'speed' | 'auto' | 'multi' | 'retention' | 'stun'
 export type TabId = 'roll' | 'shop' | 'forge' | 'log' | 'balance'
 
+/** One-shot UI floater: actual currency gained this roll (after all multipliers). */
+export interface RollRewardPopup {
+	id: string
+	kind: 'gold' | 'hex'
+	amount: number
+}
+
 // Each die is an array of face values
 export type Die = number[]
 
@@ -56,7 +63,6 @@ export interface GameState {
 	totalRollCount: number
 	multipleOfThreeRollCount: number
 	dieShakeActive: boolean
-	screenFlashColor: string | null
 	tab: TabId
 	gameEventLog: string[]
 	runStarted: boolean

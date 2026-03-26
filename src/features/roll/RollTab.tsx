@@ -1,43 +1,28 @@
 import { Text, VStack } from '@chakra-ui/react'
-import type { Die } from '../../game/types'
-import { AutoRollCountdown } from './AutoRollCountdown'
-import { RollBadges } from './RollBadges'
 import { RollFeedback } from './RollFeedback'
 
 interface RollTabProps {
-	autoRollUpgradeLevel: number
-	speedUpgradeLevel: number
-	goldMultiplier: number
-	streakRetentionPct: number
 	prestigeGoldMultiplier: number
 	lastRolledFace: number | null
 	isRolling: boolean
 	goldStreak: number
 	isStunned: boolean
+	goldMultiplier: number
 	totalRollCount: number
 	multipleOfThreeRollCount: number
 	runStarted: boolean
-	autoRollProgress: number
-	autoMs: number | null
-	currentDie: Die
 }
 
 export function RollTab({
-	autoRollUpgradeLevel,
-	speedUpgradeLevel,
-	goldMultiplier,
-	streakRetentionPct,
 	prestigeGoldMultiplier,
 	lastRolledFace,
 	isRolling,
 	goldStreak,
 	isStunned,
+	goldMultiplier,
 	totalRollCount,
 	multipleOfThreeRollCount,
 	runStarted,
-	autoRollProgress,
-	autoMs,
-	currentDie,
 }: RollTabProps) {
 	return (
 		<VStack
@@ -47,14 +32,6 @@ export function RollTab({
 			gap={3}
 			pb='8px'
 		>
-			<RollBadges
-				currentDie={currentDie}
-				autoRollUpgradeLevel={autoRollUpgradeLevel}
-				speedUpgradeLevel={speedUpgradeLevel}
-				goldMultiplier={goldMultiplier}
-				streakRetentionPct={streakRetentionPct}
-			/>
-
 			<RollFeedback
 				lastRolledFace={lastRolledFace}
 				isRolling={isRolling}
@@ -63,14 +40,6 @@ export function RollTab({
 				goldMultiplier={goldMultiplier}
 				prestigeGoldMultiplier={prestigeGoldMultiplier}
 			/>
-
-			{autoMs !== null && autoMs > 0 && runStarted && (
-				<AutoRollCountdown
-					autoRollProgress={autoRollProgress}
-					autoMs={autoMs}
-					runStarted={runStarted}
-				/>
-			)}
 
 			{!runStarted && (
 				<Text

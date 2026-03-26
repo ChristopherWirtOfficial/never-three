@@ -4,10 +4,6 @@ import { formatGold } from '../../game/format-gold'
 interface TopBarProps {
 	gold: number
 	hexBalance: number
-	goldStreak: number
-	bestGoldStreak: number
-	goldStreakMult: number
-	hexStreakMult: number
 	prestige: number
 	prestigeGoldMultiplier: number
 	onOpenSaves?: () => void
@@ -16,10 +12,6 @@ interface TopBarProps {
 export function TopBar({
 	gold,
 	hexBalance,
-	goldStreak,
-	bestGoldStreak,
-	goldStreakMult,
-	hexStreakMult,
 	prestige,
 	prestigeGoldMultiplier,
 	onOpenSaves,
@@ -86,7 +78,7 @@ export function TopBar({
 						type='button'
 						display='block'
 						ml='auto'
-						mb='4px'
+						mb={prestige > 0 ? '4px' : 0}
 						px='8px'
 						py='2px'
 						borderRadius='4px'
@@ -104,79 +96,19 @@ export function TopBar({
 						SAVES
 					</chakra.button>
 				)}
-				<Text
-					fontSize='12px'
-					color='never.muted'
-				>
-					STREAK{' '}
+				{prestige > 0 && (
 					<Text
-						as='span'
-						color={goldStreak > 0 ? 'never.streak' : 'never.streakDim'}
-						fontWeight={900}
-						fontSize='16px'
+						fontSize='10px'
+						color='never.dim'
 					>
-						{goldStreak}
-					</Text>
-				</Text>
-				<Text
-					fontSize='11px'
-					fontWeight={700}
-					mb='2px'
-					letterSpacing='0.02em'
-				>
-					<Text
-						as='span'
-						color='never.goldMuted'
-						fontSize='9px'
-						fontWeight={600}
-						mr='3px'
-					>
-						G
-					</Text>
-					<Text
-						as='span'
-						color='never.streak'
-					>
-						×{goldStreakMult.toFixed(2)}
-					</Text>
-					<Text
-						as='span'
-						color='never.muted'
-						mx='6px'
-					>
-						·
-					</Text>
-					<Text
-						as='span'
-						color='never.hexMuted'
-						fontSize='9px'
-						fontWeight={600}
-						mr='3px'
-					>
-						H
-					</Text>
-					<Text
-						as='span'
-						color='never.hexStreak'
-					>
-						×{hexStreakMult.toFixed(2)}
-					</Text>
-				</Text>
-				<Text
-					fontSize='10px'
-					color='never.dim'
-				>
-					BEST {bestGoldStreak}
-					{prestige > 0 && (
 						<Text
 							as='span'
 							color='never.prestige'
 						>
-							{' '}
-							· ★{prestige} ×{prestigeGoldMultiplier.toFixed(1)}
+							★{prestige} ×{prestigeGoldMultiplier.toFixed(1)}
 						</Text>
-					)}
-				</Text>
+					</Text>
+				)}
 			</Box>
 		</Flex>
 	)

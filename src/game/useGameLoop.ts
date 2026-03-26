@@ -13,6 +13,7 @@ import {
 	stunRecoveryProgressAtom,
 	activeStunWindowAtom,
 } from './atoms/primitives'
+import { ROLL_RESOLVE_DELAY_MS } from './constants'
 import { cdMsAtom, gameLockedAtom } from './atoms/derived'
 import { clearRollTimeouts } from './rollTimers'
 
@@ -107,8 +108,10 @@ export function useGameLoop(rollDice: () => void): void {
 	useEffect(() => {
 		if (isRollCooldownActive && !isStunned) {
 			const cdStart = Date.now()
+			/** Full time until unlock: face reveal delay + speed-tier cooldown (matches `useDiceRoll`). */
+			const totalCooldownMs = ROLL_RESOLVE_DELAY_MS + cdMs
 			const tick = () => {
-				const progress = Math.min((Date.now() - cdStart) / cdMs, 1)
+				const progress = Math.min((Date.now() - cdStart) / totalCooldownMs, 1)
 				setRollCooldownProgress(progress)
 				if (progress < 1) cdFrameRef.current = requestAnimationFrame(tick)
 			}

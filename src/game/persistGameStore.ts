@@ -82,9 +82,9 @@ export function hydrateStoreFromSaveState(store: Store, state: SaveState): void 
 	store.set(P.rollCooldownProgressAtom, 0)
 	store.set(P.autoRollProgressAtom, 0)
 	store.set(P.dieShakeActiveAtom, false)
-	store.set(P.screenFlashColorAtom, null)
 	store.set(P.activeGameTabAtom, 'roll')
 	store.set(P.gameEventLogAtom, [])
+	store.set(P.rollRewardPopupsAtom, [])
 
 	const hasProgress =
 		state.gold > 0 ||

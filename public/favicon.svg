@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Dice">
+  <defs>
+    <linearGradient
+      id="dieFace"
+      x1="3"
+      y1="4"
+      x2="29"
+      y2="28"
+      gradientUnits="userSpaceOnUse"
+    >
+      <stop offset="0%" stop-color="#16162a" />
+      <stop offset="100%" stop-color="#0d0d18" />
+    </linearGradient>
+    <filter
+      id="pipGlow"
+      x="-80%"
+      y="-80%"
+      width="260%"
+      height="260%"
+      color-interpolation-filters="sRGB"
+    >
+      <feGaussianBlur in="SourceGraphic" stdDeviation="1.05" result="b" />
+      <feMerge>
+        <feMergeNode in="b" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+  <rect
+    x="4.5"
+    y="4.5"
+    width="23"
+    height="23"
+    rx="5.5"
+    fill="url(#dieFace)"
+    stroke="rgba(68, 255, 187, 0.35)"
+    stroke-width="1.25"
+  />
+  <g filter="url(#pipGlow)">
+    <circle cx="11.25" cy="11.25" r="1.975" fill="#44ffbb" />
+  </g>
+  <g filter="url(#pipGlow)">
+    <circle cx="20.75" cy="11.25" r="1.975" fill="#44ffbb" />
+  </g>
+  <g filter="url(#pipGlow)">
+    <circle cx="11.25" cy="20.75" r="1.975" fill="#44ffbb" />
+  </g>
+  <g filter="url(#pipGlow)">
+    <circle cx="20.75" cy="20.75" r="1.975" fill="#44ffbb" />
+  </g>
+</svg>

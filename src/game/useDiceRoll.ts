@@ -6,7 +6,7 @@ import {
 	streakMultiplier,
 	type BalanceConfig,
 } from './balanceConfig'
-import { dangerousFaceHexUnits, formatCompactNumber } from './constants'
+import { dangerousFaceHexUnits, formatCompactNumber, ROLL_RESOLVE_DELAY_MS } from './constants'
 import { currentDieAtom, gameLockedAtom } from './atoms/derived'
 import { rollTimers } from './rollTimers'
 import * as P from './atoms/primitives'
@@ -87,7 +87,6 @@ export function useDiceRoll(): () => void {
 	const setRunStarted = useSetAtom(P.runStartedAtom)
 	const setLastRolledFace = useSetAtom(P.lastRolledFaceAtom)
 	const setTotalRollCount = useSetAtom(P.totalRollCountAtom)
-	const setScreenFlashColor = useSetAtom(P.screenFlashColorAtom)
 	const setHexRewardStreak = useSetAtom(P.hexRewardStreakAtom)
 	const setGoldStreak = useSetAtom(P.goldStreakAtom)
 	const setGold = useSetAtom(P.goldAtom)
@@ -101,6 +100,7 @@ export function useDiceRoll(): () => void {
 	const setActiveStunWindow = useSetAtom(P.activeStunWindowAtom)
 	const setGameEventLog = useSetAtom(P.gameEventLogAtom)
 	const setPendingSafeFirstRoll = useSetAtom(P.pendingSafeFirstRollAtom)
+	const setRollRewardPopups = useSetAtom(P.rollRewardPopupsAtom)
 
 	return useCallback(() => {
 		if (snapRef.current.locked) return
@@ -137,7 +137,6 @@ export function useDiceRoll(): () => void {
 
 			if (dangerous) {
 				setDieShakeActive(true)
-				setScreenFlashColor('#ff3355')
 				setMultipleOfThreeRollCount((count: number) => count + 1)
 				setGoldStreak((priorGoldStreak: number) => {
 					const kept = Math.floor((priorGoldStreak * streakRetentionPct) / 100)
@@ -158,6 +157,16 @@ export function useDiceRoll(): () => void {
 					const dangerUnits = Math.max(1, dangerousFaceHexUnits(rolledValue))
 					const hexStreakMult = hexStreakMultiplier(priorHexStreak, balance)
 					const earnedHex = Math.floor(hexBase * dangerUnits * hexStreakMult)
+					setRollRewardPopups(prev =>
+						[
+							...prev,
+							{
+								id: `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`,
+								kind: 'hex' as const,
+								amount: earnedHex,
+							},
+						].slice(-14)
+					)
 					setHexBalance((hex: number) => hex + earnedHex)
 					const nextHexStreak = priorHexStreak + dangerUnits
 					setBestHexRewardStreak((previousBest: number) => Math.max(previousBest, nextHexStreak))
@@ -172,7 +181,6 @@ export function useDiceRoll(): () => void {
 				})
 				setTimeout(() => {
 					setDieShakeActive(false)
-					setScreenFlashColor(null)
 				}, 400)
 				setRollCooldownActive(false)
 				setActiveStunWindow({ startMs: Date.now(), durationMs: stunMs })
@@ -190,6 +198,16 @@ export function useDiceRoll(): () => void {
 					const earnedGold = Math.floor(
 						rolledValue * goldStreakMult * goldMultiplier * prestigeGoldMultiplier
 					)
+					setRollRewardPopups(prev =>
+						[
+							...prev,
+							{
+								id: `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`,
+								kind: 'gold' as const,
+								amount: earnedGold,
+							},
+						].slice(-14)
+					)
 					setGold((gold: number) => gold + earnedGold)
 					setLifetimeGoldEarned((lifetimeTotal: number) => lifetimeTotal + earnedGold)
 					const nextGoldStreak = priorGoldStreak + 1
@@ -204,22 +222,19 @@ export function useDiceRoll(): () => void {
 					)
 					return nextGoldStreak
 				})
-				setScreenFlashColor('#44ffbb')
-				setTimeout(() => setScreenFlashColor(null), 200)
 				if (rollTimers.cool) clearTimeout(rollTimers.cool)
 				rollTimers.cool = setTimeout(() => {
 					rollTimers.cool = null
 					setRollCooldownActive(false)
 				}, rollCooldownMs)
 			}
-		}, 160)
+		}, ROLL_RESOLVE_DELAY_MS)
 	}, [
 		setRollCooldownActive,
 		setRolling,
 		setRunStarted,
 		setLastRolledFace,
 		setTotalRollCount,
-		setScreenFlashColor,
 		setHexRewardStreak,
 		setGoldStreak,
 		setGold,
@@ -233,5 +248,6 @@ export function useDiceRoll(): () => void {
 		setActiveStunWindow,
 		setGameEventLog,
 		setPendingSafeFirstRoll,
+		setRollRewardPopups,
 	])
 }
