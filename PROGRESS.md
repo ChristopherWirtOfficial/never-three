@@ -87,6 +87,6 @@
 - Forge tab could be more visual / show preview of danger probability
 - Roll screen die badge ([1,2,3,4,5,6] 💀2) could be prettier
 - No tutorial or onboarding beyond 3-line hint
-- Gold formatting is inlined in App.tsx instead of using fmt()
+- Header gold uses `game/format-gold.ts` instead of `fmt()`
 - Log tab could show hex earnings
 - No haptic feedback / sound

@@ -21,32 +21,52 @@ npm run preview      # serve dist/ locally
 
 ```
 src/
-├── main.tsx           # Vite entry: mounts React root + Chakra provider
+├── main.tsx              # Vite entry: mounts React root + Chakra provider
+├── app/
+│   └── App.tsx           # NeverThree root: shell + tab routing
+├── game/
+│   ├── types.ts          # Tab, die, upgrade, save-related types
+│   ├── constants.ts      # Upgrade tables, costs, fmt, reforge math
+│   ├── format-gold.ts    # Header gold abbreviation helper
+│   ├── useGameState.ts   # All game state + roll / shop / forge logic
+│   └── saves.ts          # Save/load (artifact storage; optional UI later)
+├── features/
+│   ├── roll/             # Roll screen
+│   │   ├── RollTab.tsx
+│   │   ├── RollBadges.tsx
+│   │   ├── RollFeedback.tsx
+│   │   └── AutoRollCountdown.tsx
+│   ├── shop/
+│   │   ├── ShopTab.tsx
+│   │   └── UpgradeButton.tsx
+│   ├── forge/
+│   │   ├── ForgeTab.tsx
+│   │   ├── ForgeDieSection.tsx
+│   │   ├── ReforgeFaceRow.tsx
+│   │   └── ForgeFooter.tsx
+│   └── log/
+│       └── LogTab.tsx
+├── components/
+│   ├── layout/
+│   │   ├── TopBar.tsx
+│   │   ├── FlashOverlay.tsx
+│   │   ├── BottomDock.tsx
+│   │   ├── DockRollZone.tsx
+│   │   └── DockTabBar.tsx
+│   └── dice/
+│       └── DiceFace.tsx
 ├── providers/
-│   └── AppProviders.tsx   # ChakraProvider + system
+│   └── AppProviders.tsx
 ├── theme/
-│   └── system.ts      # createSystem: tokens, keyframes, global CSS
-├── App.tsx            # Root component, layout shell, tab routing
-├── useGameState.ts    # All game state + logic in one hook
-├── constants.ts       # Upgrade tables, cost functions, helpers
-├── types.ts           # Shared TypeScript interfaces
-│
-├── RollTab.tsx        # Roll screen: feedback, auto-roll countdown, stats
-├── ShopTab.tsx        # Gold upgrade shop
-├── ForgeTab.tsx       # Hex-powered die face reforging
-├── LogTab.tsx         # Roll history log
-│
-├── BottomDock.tsx     # Die display, cooldown/stun bars, tab navigation
-├── DiceFace.tsx       # Visual die face renderer (dots for d6, numbers otherwise)
-├── UpgradeButton.tsx  # Reusable shop button with 3-state styling
-│
-├── saves.ts           # Save/load system (currently unused, preserved for later)
-└── DevSaveManager.tsx # Dev save profile UI (currently unused, preserved for later)
+│   └── system.ts
+└── DevSaveManager.tsx    # Dev save UI (unused in main app)
 ```
+
+Feature folders own one screen each; shared chrome lives under `components/`. Domain rules and persistence live under `game/`.
 
 ## State Architecture
 
-All game state lives in `useGameState()`. It returns a flat object with:
+All game state lives in `useGameState()` (`src/game/useGameState.ts`). It returns a flat object with:
 
 - **State values**: gold, hex, streaks, levels, dice, UI flags
 - **Derived values**: computed costs, multipliers, lock states

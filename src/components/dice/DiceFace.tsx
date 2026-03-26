@@ -1,4 +1,4 @@
-import { Box, SimpleGrid, Text } from "@chakra-ui/react";
+import { Box, SimpleGrid } from "@chakra-ui/react";
 
 interface DiceFaceProps {
   value: number;
@@ -28,7 +28,7 @@ export function DiceFace({ value, sides, isThree, rolling }: DiceFaceProps) {
       <SimpleGrid columns={3} gap="10px" w="100%" h="100%" p="18px">
         {Array.from({ length: 9 }).map((_, i) => (
           <Box
-            key={i}
+            key={`dot-${i}`}
             w="100%"
             aspectRatio={1}
             borderRadius="50%"

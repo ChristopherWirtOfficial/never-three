@@ -1,9 +1,31 @@
-export interface DiceTier { sides: number; name: string; cost: number }
-export interface SpeedTier { ms: number; name: string; cost: number }
-export interface AutoTier { ms: number | null; name: string; cost: number }
-export interface MultiTier { x: number; cost: number }
-export interface ArmorTier { pct: number; cost: number }
-export interface StunTier { ms: number; name: string; cost: number }
+export interface DiceTier {
+  sides: number;
+  name: string;
+  cost: number;
+}
+export interface SpeedTier {
+  ms: number;
+  name: string;
+  cost: number;
+}
+export interface AutoTier {
+  ms: number | null;
+  name: string;
+  cost: number;
+}
+export interface MultiTier {
+  x: number;
+  cost: number;
+}
+export interface ArmorTier {
+  pct: number;
+  cost: number;
+}
+export interface StunTier {
+  ms: number;
+  name: string;
+  cost: number;
+}
 
 export type UpgradeType = "speed" | "auto" | "multi" | "armor" | "stun";
 export type TabId = "roll" | "shop" | "forge" | "log";
@@ -13,9 +35,9 @@ export type Die = number[];
 
 // Full dice state
 export interface DiceState {
-  dice: Die[];          // array of dice, each is array of face values
+  dice: Die[]; // array of dice, each is array of face values
   totalReforges: number;
-  reforgeCap: number;   // max value a face can be reforged to (starts 6)
+  reforgeCap: number; // max value a face can be reforged to (starts 6)
 }
 
 export interface GameState {

@@ -1,5 +1,19 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { SPEED, AUTO, MULTI, ARMOR, STUN, PRESTIGE_BASE, fmt, streakMultiplier, hexStreakMultiplier, makeDefaultDie, DEFAULT_REFORGE_CAP, reforgeCost } from "./constants";
+import type { Dispatch, SetStateAction } from "react";
+import {
+  SPEED,
+  AUTO,
+  MULTI,
+  ARMOR,
+  STUN,
+  PRESTIGE_BASE,
+  fmt,
+  streakMultiplier,
+  hexStreakMultiplier,
+  makeDefaultDie,
+  DEFAULT_REFORGE_CAP,
+  reforgeCost,
+} from "./constants";
 import type { TabId, UpgradeType, Die } from "./types";
 
 export function useGameState() {
@@ -32,24 +46,19 @@ export function useGameState() {
   const [started, setStarted] = useState(false);
   const [autoPct, setAutoPct] = useState(0);
 
-  // Dice state
   const [dice, setDice] = useState<Die[]>([makeDefaultDie()]);
   const [totalReforges, setTotalReforges] = useState(0);
   const [reforgeCap, setReforgeCap] = useState(DEFAULT_REFORGE_CAP);
 
-  const autoRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const lockRef = useRef(false);
   const coolRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const stunRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const cdStartRef = useRef(0);
   const cdFrameRef = useRef(0);
-  const stunStartRef = useRef(0);
   const stunFrameRef = useRef(0);
   const autoStartRef = useRef(0);
   const autoFrameRef = useRef(0);
 
-  // Derived values
-  const currentDie = dice[0] ?? makeDefaultDie(); // Phase 2: single die
+  const currentDie = dice[0] ?? makeDefaultDie();
   const multi = MULTI[mLv].x;
   const armor = ARMOR[rLv].pct;
   const pMult = 1 + prestige * 0.5;
@@ -61,14 +70,13 @@ export function useGameState() {
   const locked = cooldown || stunned || rolling;
 
   const pushLog = useCallback((m: string) => {
-    setLog(p => [m, ...p].slice(0, 60));
+    setLog((p) => [m, ...p].slice(0, 60));
   }, []);
 
   const startStun = useCallback(() => {
     lockRef.current = true;
     setStunned(true);
     setCooldown(false);
-    stunStartRef.current = Date.now();
     stunRef.current = setTimeout(() => {
       setStunned(false);
       lockRef.current = false;
@@ -88,68 +96,72 @@ export function useGameState() {
       const v = currentDie[faceIndex];
       setRoll(v);
       setRolling(false);
-      setRolls(p => p + 1);
+      setRolls((p) => p + 1);
 
       const dangerous = v % 3 === 0;
 
       if (dangerous) {
         const blocked = Math.random() * 100 < armor;
         if (blocked) {
-          // Armor makes it effectively safe
           setSaved(true);
           setFlash("#ffaa00");
-          setHexStreak(0); // safe outcome breaks hex streak
-          setStreak(s => {
+          setHexStreak(0);
+          setStreak((s) => {
             const e = Math.floor(streakMultiplier(s) * multi * pMult);
-            setGold(p => p + e);
-            setEarned(p => p + e);
+            setGold((p) => p + e);
+            setEarned((p) => p + e);
             pushLog(`🛡️ ${v} blocked! +${fmt(e)}g`);
             return s + 1;
           });
           setTimeout(() => setFlash(null), 300);
-          cdStartRef.current = Date.now();
           coolRef.current = setTimeout(() => {
             lockRef.current = false;
             setCooldown(false);
           }, cdMs);
         } else {
-          // Dangerous! Award hex, break gold streak, stun
           setShook(true);
           setFlash("#ff3355");
-          setThrees(p => p + 1);
-          setStreak(s => {
-            pushLog(`💀 Rolled ${v}! Streak ${s} gone. Stunned ${STUN[tLv].name}`);
+          setThrees((p) => p + 1);
+          setStreak((s) => {
+            pushLog(
+              `💀 Rolled ${v}! Streak ${s} gone. Stunned ${STUN[tLv].name}`,
+            );
             return 0;
           });
-          setHexStreak(hs => {
+          setHexStreak((hs) => {
             const hm = hexStreakMultiplier(hs);
-            const earned = Math.max(1, Math.floor(hm));
-            setHex(p => p + earned);
+            const earnedHex = Math.max(1, Math.floor(hm));
+            setHex((p) => p + earnedHex);
             const nhs = hs + 1;
-            setBestHexStreak(b => Math.max(b, nhs));
-            pushLog(`🔮 +${earned} hex${hs > 1 ? ` (×${hm.toFixed(1)} streak)` : ""}`);
+            setBestHexStreak((b) => Math.max(b, nhs));
+            pushLog(
+              `🔮 +${earnedHex} hex${hs > 1 ? ` (×${hm.toFixed(1)} streak)` : ""}`,
+            );
             return nhs;
           });
-          setTimeout(() => { setShook(false); setFlash(null); }, 400);
+          setTimeout(() => {
+            setShook(false);
+            setFlash(null);
+          }, 400);
           setCooldown(false);
           startStun();
         }
       } else {
-        // Safe roll — award gold, break hex streak
         setHexStreak(0);
-        setStreak(s => {
+        setStreak((s) => {
           const sm = streakMultiplier(s);
           const e = Math.floor(v * sm * multi * pMult);
-          setGold(p => p + e);
-          setEarned(p => p + e);
+          setGold((p) => p + e);
+          setEarned((p) => p + e);
           const ns = s + 1;
-          setBest(b => Math.max(b, ns));
-          pushLog(`🎲 ${v} → +${fmt(e)}g${s > 2 ? ` (×${sm.toFixed(1)})` : ""}`);
+          setBest((b) => Math.max(b, ns));
+          pushLog(
+            `🎲 ${v} → +${fmt(e)}g${s > 2 ? ` (×${sm.toFixed(1)})` : ""}`,
+          );
           return ns;
         });
         setFlash("#44ffbb");
         setTimeout(() => setFlash(null), 200);
-        cdStartRef.current = Date.now();
         coolRef.current = setTimeout(() => {
           lockRef.current = false;
           setCooldown(false);
@@ -158,13 +170,14 @@ export function useGameState() {
     }, 160);
   }, [currentDie, multi, armor, pMult, cdMs, pushLog, startStun, started, tLv]);
 
-  // Cleanup timers
-  useEffect(() => () => {
-    if (coolRef.current) clearTimeout(coolRef.current);
-    if (stunRef.current) clearTimeout(stunRef.current);
-  }, []);
+  useEffect(
+    () => () => {
+      if (coolRef.current) clearTimeout(coolRef.current);
+      if (stunRef.current) clearTimeout(stunRef.current);
+    },
+    [],
+  );
 
-  // Reset on speed change
   useEffect(() => {
     lockRef.current = false;
     setCooldown(false);
@@ -173,13 +186,10 @@ export function useGameState() {
     if (stunRef.current) clearTimeout(stunRef.current);
   }, [sLv]);
 
-  // Auto-roll: chains off cooldown/stun completion
-  // When locked goes false and auto is enabled, start the auto delay, then roll
   const autoTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const ms = AUTO[aLv].ms;
-    // Clear any pending auto timer
     if (autoTimerRef.current) {
       clearTimeout(autoTimerRef.current);
       autoTimerRef.current = null;
@@ -190,11 +200,9 @@ export function useGameState() {
       return;
     }
 
-    // If we're not locked, start the auto-roll countdown
     if (!locked) {
       autoStartRef.current = Date.now();
       if (ms === 0) {
-        // Instant: roll on next tick
         autoTimerRef.current = setTimeout(() => {
           autoTimerRef.current = null;
           doRoll();
@@ -215,10 +223,13 @@ export function useGameState() {
     };
   }, [aLv, locked, started, doRoll]);
 
-  // Auto-roll progress animation
   useEffect(() => {
     const ms = AUTO[aLv].ms;
-    if (ms === null || !started || locked) { setAutoPct(0); cancelAnimationFrame(autoFrameRef.current); return; }
+    if (ms === null || !started || locked) {
+      setAutoPct(0);
+      cancelAnimationFrame(autoFrameRef.current);
+      return;
+    }
     const tick = () => {
       const p = Math.min((Date.now() - autoStartRef.current) / ms, 1);
       setAutoPct(p);
@@ -228,12 +239,11 @@ export function useGameState() {
     return () => cancelAnimationFrame(autoFrameRef.current);
   }, [aLv, locked, started]);
 
-  // Cooldown bar animation
   useEffect(() => {
     if (cooldown && !stunned) {
-      cdStartRef.current = Date.now();
+      const cdStart = Date.now();
       const tick = () => {
-        const p = Math.min((Date.now() - cdStartRef.current) / cdMs, 1);
+        const p = Math.min((Date.now() - cdStart) / cdMs, 1);
         setCdPct(p);
         if (p < 1) cdFrameRef.current = requestAnimationFrame(tick);
       };
@@ -245,12 +255,11 @@ export function useGameState() {
     return () => cancelAnimationFrame(cdFrameRef.current);
   }, [cooldown, stunned, cdMs]);
 
-  // Stun bar animation
   useEffect(() => {
     if (stunned) {
-      stunStartRef.current = Date.now();
+      const stunStart = Date.now();
       const tick = () => {
-        const p = Math.min((Date.now() - stunStartRef.current) / stunMs, 1);
+        const p = Math.min((Date.now() - stunStart) / stunMs, 1);
         setStunPct(p);
         if (p < 1) stunFrameRef.current = requestAnimationFrame(tick);
         else setStunPct(1);
@@ -265,81 +274,141 @@ export function useGameState() {
 
   const doPrestige = useCallback(() => {
     if (!canPrestige) return;
-    setPrestige(p => p + 1);
-    setGold(0); setEarned(0); setStreak(0); setRoll(null);
-    setHex(0); setHexStreak(0);
-    setSLv(0); setALv(0); setMLv(0); setRLv(0); setTLv(0);
-    setDice([makeDefaultDie()]); setTotalReforges(0);
-    // reforgeCap persists through prestige (Hex upgrade in future)
+    setPrestige((p) => p + 1);
+    setGold(0);
+    setEarned(0);
+    setStreak(0);
+    setRoll(null);
+    setHex(0);
+    setHexStreak(0);
+    setSLv(0);
+    setALv(0);
+    setMLv(0);
+    setRLv(0);
+    setTLv(0);
+    setDice([makeDefaultDie()]);
+    setTotalReforges(0);
     setLog([]);
-    pushLog(`✨ PRESTIGE ${prestige + 1}! ×${(1 + (prestige + 1) * 0.5).toFixed(1)} forever`);
+    pushLog(
+      `✨ PRESTIGE ${prestige + 1}! ×${(1 + (prestige + 1) * 0.5).toFixed(1)} forever`,
+    );
   }, [canPrestige, prestige, pushLog]);
 
-  const buy = useCallback((type: UpgradeType) => {
-    const cfg: Record<UpgradeType, [number, { cost: number }[], React.Dispatch<React.SetStateAction<number>>]> = {
-      speed: [sLv, SPEED, setSLv],
-      auto: [aLv, AUTO, setALv],
-      multi: [mLv, MULTI, setMLv],
-      armor: [rLv, ARMOR, setRLv],
-      stun: [tLv, STUN, setTLv],
-    };
-    const [lv, arr, set] = cfg[type];
-    if (lv >= arr.length - 1) return;
-    const cost = arr[lv + 1].cost;
-    if (gold < cost) return;
-    setGold(p => p - cost);
-    set(p => p + 1);
-  }, [sLv, aLv, mLv, rLv, tLv, gold]);
+  const buy = useCallback(
+    (type: UpgradeType) => {
+      const cfg: Record<
+        UpgradeType,
+        [number, { cost: number }[], Dispatch<SetStateAction<number>>]
+      > = {
+        speed: [sLv, SPEED, setSLv],
+        auto: [aLv, AUTO, setALv],
+        multi: [mLv, MULTI, setMLv],
+        armor: [rLv, ARMOR, setRLv],
+        stun: [tLv, STUN, setTLv],
+      };
+      const [lv, arr, set] = cfg[type];
+      if (lv >= arr.length - 1) return;
+      const cost = arr[lv + 1].cost;
+      if (gold < cost) return;
+      setGold((p) => p - cost);
+      set((p) => p + 1);
+    },
+    [sLv, aLv, mLv, rLv, tLv, gold],
+  );
 
-  // ── Reforging ──
+  const reforgeUp = useCallback(
+    (dieIndex: number, faceIndex: number) => {
+      const die = dice[dieIndex];
+      if (!die) return;
+      const currentVal = die[faceIndex];
+      if (currentVal >= reforgeCap) return;
+      const target = currentVal + 1;
+      const cost = reforgeCost(currentVal, target, totalReforges);
+      if (hex < cost) return;
+      setHex((p) => p - cost);
+      setTotalReforges((p) => p + 1);
+      setDice((prev) => {
+        const next = prev.map((d) => [...d]);
+        next[dieIndex][faceIndex] = target;
+        return next;
+      });
+      pushLog(
+        `🔥 Face ${faceIndex + 1}: ${currentVal} → ${target} (-${fmt(cost)} hex)`,
+      );
+    },
+    [dice, reforgeCap, totalReforges, hex, pushLog],
+  );
 
-  const reforgeUp = useCallback((dieIndex: number, faceIndex: number) => {
-    const die = dice[dieIndex];
-    if (!die) return;
-    const currentVal = die[faceIndex];
-    if (currentVal >= reforgeCap) return;
-    const target = currentVal + 1;
-    const cost = reforgeCost(currentVal, target, totalReforges);
-    if (hex < cost) return;
-    setHex(p => p - cost);
-    setTotalReforges(p => p + 1);
-    setDice(prev => {
-      const next = prev.map(d => [...d]);
-      next[dieIndex][faceIndex] = target;
-      return next;
-    });
-    pushLog(`🔥 Face ${faceIndex + 1}: ${currentVal} → ${target} (-${fmt(cost)} hex)`);
-  }, [dice, reforgeCap, totalReforges, hex, pushLog]);
-
-  const reforgeDown = useCallback((dieIndex: number, faceIndex: number) => {
-    const die = dice[dieIndex];
-    if (!die) return;
-    const currentVal = die[faceIndex];
-    if (currentVal <= 1) return;
-    const target = currentVal - 1;
-    const cost = reforgeCost(currentVal, target, totalReforges);
-    if (hex < cost) return;
-    setHex(p => p - cost);
-    setTotalReforges(p => p + 1);
-    setDice(prev => {
-      const next = prev.map(d => [...d]);
-      next[dieIndex][faceIndex] = target;
-      return next;
-    });
-    pushLog(`🔥 Face ${faceIndex + 1}: ${currentVal} → ${target} (-${fmt(cost)} hex)`);
-  }, [dice, totalReforges, hex, pushLog]);
+  const reforgeDown = useCallback(
+    (dieIndex: number, faceIndex: number) => {
+      const die = dice[dieIndex];
+      if (!die) return;
+      const currentVal = die[faceIndex];
+      if (currentVal <= 1) return;
+      const target = currentVal - 1;
+      const cost = reforgeCost(currentVal, target, totalReforges);
+      if (hex < cost) return;
+      setHex((p) => p - cost);
+      setTotalReforges((p) => p + 1);
+      setDice((prev) => {
+        const next = prev.map((d) => [...d]);
+        next[dieIndex][faceIndex] = target;
+        return next;
+      });
+      pushLog(
+        `🔥 Face ${faceIndex + 1}: ${currentVal} → ${target} (-${fmt(cost)} hex)`,
+      );
+    },
+    [dice, totalReforges, hex, pushLog],
+  );
 
   return {
-    // State
-    gold, earned, streak, best, hex, hexStreak, bestHexStreak,
-    roll, rolling, cooldown, stunned, stunPct, cdPct, autoPct,
-    sLv, aLv, mLv, rLv, tLv, prestige, rolls, threes, shook, flash, saved,
-    tab, log, started, locked,
-    // Dice
-    dice, totalReforges, reforgeCap, currentDie,
-    // Derived
-    multi, armor, pMult, cdMs, stunMs, autoMs, prestigeReq, canPrestige,
-    // Actions
-    setTab, doRoll, doPrestige, buy, reforgeUp, reforgeDown,
+    gold,
+    earned,
+    streak,
+    best,
+    hex,
+    hexStreak,
+    bestHexStreak,
+    roll,
+    rolling,
+    cooldown,
+    stunned,
+    stunPct,
+    cdPct,
+    autoPct,
+    sLv,
+    aLv,
+    mLv,
+    rLv,
+    tLv,
+    prestige,
+    rolls,
+    threes,
+    shook,
+    flash,
+    saved,
+    tab,
+    log,
+    started,
+    locked,
+    dice,
+    totalReforges,
+    reforgeCap,
+    currentDie,
+    multi,
+    armor,
+    pMult,
+    cdMs,
+    stunMs,
+    autoMs,
+    prestigeReq,
+    canPrestige,
+    setTab,
+    doRoll,
+    doPrestige,
+    buy,
+    reforgeUp,
+    reforgeDown,
   };
 }

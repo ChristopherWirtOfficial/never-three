@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import NeverThree from "./App";
+import NeverThree from "./app/App";
 import { AppProviders } from "./providers/AppProviders";
 
 const el = document.getElementById("root");

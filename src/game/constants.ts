@@ -1,4 +1,11 @@
-import type { DiceTier, SpeedTier, AutoTier, MultiTier, ArmorTier, StunTier } from "./types";
+import type {
+  DiceTier,
+  SpeedTier,
+  AutoTier,
+  MultiTier,
+  ArmorTier,
+  StunTier,
+} from "./types";
 
 export const DICE: DiceTier[] = [
   { sides: 6, name: "d6", cost: 0 },
@@ -29,14 +36,22 @@ export const AUTO: AutoTier[] = [
 ];
 
 export const MULTI: MultiTier[] = [
-  { x: 1, cost: 0 }, { x: 2, cost: 5 }, { x: 4, cost: 20 },
-  { x: 8, cost: 80 }, { x: 16, cost: 400 },
-  { x: 40, cost: 3000 }, { x: 100, cost: 25000 },
+  { x: 1, cost: 0 },
+  { x: 2, cost: 5 },
+  { x: 4, cost: 20 },
+  { x: 8, cost: 80 },
+  { x: 16, cost: 400 },
+  { x: 40, cost: 3000 },
+  { x: 100, cost: 25000 },
 ];
 
 export const ARMOR: ArmorTier[] = [
-  { pct: 0, cost: 0 }, { pct: 8, cost: 40 }, { pct: 16, cost: 200 },
-  { pct: 25, cost: 1000 }, { pct: 35, cost: 6000 }, { pct: 50, cost: 40000 },
+  { pct: 0, cost: 0 },
+  { pct: 8, cost: 40 },
+  { pct: 16, cost: 200 },
+  { pct: 25, cost: 1000 },
+  { pct: 35, cost: 6000 },
+  { pct: 50, cost: 40000 },
 ];
 
 export const STUN: StunTier[] = [
@@ -73,8 +88,15 @@ export const HEX_BASE = 1; // base hex per dangerous roll
 export const REFORGE_BASE = 3;
 export const DANGER_ESCAPE_MULT = 4; // leaving a multiple of 3 costs 4x
 
-export function reforgeCost(currentValue: number, targetValue: number, totalReforges: number): number {
-  const base = REFORGE_BASE * Math.max(currentValue, targetValue) * (1 + totalReforges * 0.15);
+export function reforgeCost(
+  currentValue: number,
+  targetValue: number,
+  totalReforges: number,
+): number {
+  const base =
+    REFORGE_BASE *
+    Math.max(currentValue, targetValue) *
+    (1 + totalReforges * 0.15);
   // Escaping a dangerous number costs a premium
   if (currentValue % 3 === 0) {
     return Math.floor(base * DANGER_ESCAPE_MULT);

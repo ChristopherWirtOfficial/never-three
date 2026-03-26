@@ -1,7 +1,7 @@
 import { Box, Text, VStack, chakra } from "@chakra-ui/react";
-import { SPEED, AUTO, MULTI, ARMOR, STUN, fmt } from "./constants";
+import { SPEED, AUTO, MULTI, ARMOR, STUN, fmt } from "../../game/constants";
+import type { UpgradeType } from "../../game/types";
 import { UpgradeButton } from "./UpgradeButton";
-import type { UpgradeType } from "./types";
 
 interface ShopTabProps {
   gold: number;

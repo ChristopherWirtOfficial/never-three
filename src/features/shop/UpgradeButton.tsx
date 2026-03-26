@@ -1,5 +1,5 @@
 import { Box, Text, chakra } from "@chakra-ui/react";
-import { fmt } from "./constants";
+import { fmt } from "../../game/constants";
 
 interface UpgradeButtonProps {
   icon: string;

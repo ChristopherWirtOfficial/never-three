@@ -1,0 +1,41 @@
+import { Box, Text } from "@chakra-ui/react";
+
+interface AutoRollCountdownProps {
+  autoPct: number;
+  autoMs: number;
+  started: boolean;
+}
+
+export function AutoRollCountdown({
+  autoPct,
+  autoMs,
+  started,
+}: AutoRollCountdownProps) {
+  if (autoMs <= 0 || !started) return null;
+
+  return (
+    <Box w="80%" maxW="240px" textAlign="center">
+      <Text fontSize="10px" color="never.dim" letterSpacing="1px" mb="4px">
+        NEXT ROLL
+      </Text>
+      <Box
+        w="100%"
+        h="8px"
+        borderRadius="4px"
+        bg="never.cooldownTrack"
+        overflow="hidden"
+      >
+        <Box
+          h="100%"
+          borderRadius="4px"
+          w={`${autoPct * 100}%`}
+          bg="linear-gradient(90deg, #44ffbb33, #44ffbb99)"
+          transition={autoPct < 0.05 ? "none" : "width 0.05s linear"}
+        />
+      </Box>
+      <Text fontSize="11px" color="never.stat" mt="4px">
+        {(((1 - autoPct) * autoMs) / 1000).toFixed(1)}s
+      </Text>
+    </Box>
+  );
+}
