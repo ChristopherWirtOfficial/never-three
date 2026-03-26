@@ -71,9 +71,15 @@ export const HEX_BASE = 1; // base hex per dangerous roll
 // ── Reforging (costs Hex) ──
 
 export const REFORGE_BASE = 3;
+export const DANGER_ESCAPE_MULT = 4; // leaving a multiple of 3 costs 4x
 
-export function reforgeCost(targetValue: number, totalReforges: number): number {
-  return Math.floor(REFORGE_BASE * targetValue * (1 + totalReforges * 0.15));
+export function reforgeCost(currentValue: number, targetValue: number, totalReforges: number): number {
+  const base = REFORGE_BASE * Math.max(currentValue, targetValue) * (1 + totalReforges * 0.15);
+  // Escaping a dangerous number costs a premium
+  if (currentValue % 3 === 0) {
+    return Math.floor(base * DANGER_ESCAPE_MULT);
+  }
+  return Math.floor(base);
 }
 
 export function makeDefaultDie(): number[] {

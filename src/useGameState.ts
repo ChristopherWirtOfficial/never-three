@@ -299,7 +299,7 @@ export function useGameState() {
     const currentVal = die[faceIndex];
     if (currentVal >= reforgeCap) return;
     const target = currentVal + 1;
-    const cost = reforgeCost(target, totalReforges);
+    const cost = reforgeCost(currentVal, target, totalReforges);
     if (hex < cost) return;
     setHex(p => p - cost);
     setTotalReforges(p => p + 1);
@@ -317,13 +317,17 @@ export function useGameState() {
     const currentVal = die[faceIndex];
     if (currentVal <= 1) return;
     const target = currentVal - 1;
+    const cost = reforgeCost(currentVal, target, totalReforges);
+    if (hex < cost) return;
+    setHex(p => p - cost);
+    setTotalReforges(p => p + 1);
     setDice(prev => {
       const next = prev.map(d => [...d]);
       next[dieIndex][faceIndex] = target;
       return next;
     });
-    pushLog(`🔥 Face ${faceIndex + 1}: ${currentVal} → ${target}`);
-  }, [dice, pushLog]);
+    pushLog(`🔥 Face ${faceIndex + 1}: ${currentVal} → ${target} (-${fmt(cost)} hex)`);
+  }, [dice, totalReforges, hex, pushLog]);
 
   return {
     // State
