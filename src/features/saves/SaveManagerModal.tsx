@@ -120,16 +120,16 @@ export function SaveManagerModal() {
 						align='stretch'
 						gap='8px'
 					>
-						{profiles.map(p => {
-							const display = resolveProfileDisplayName(p.name, p.lastPlayed)
-							const isActive = p.id === currentId
-							const isEditing = editingId === p.id
-							const isCopying = copyTargetId === p.id
-							const isConfirmDelete = confirmDeleteId === p.id
+						{profiles.map(profile => {
+							const display = resolveProfileDisplayName(profile.name, profile.lastPlayed)
+							const isActive = profile.id === currentId
+							const isEditing = editingId === profile.id
+							const isCopying = copyTargetId === profile.id
+							const isConfirmDelete = confirmDeleteId === profile.id
 
 							return (
 								<Box
-									key={p.id}
+									key={profile.id}
 									px='12px'
 									py='10px'
 									borderRadius='10px'
@@ -144,7 +144,7 @@ export function SaveManagerModal() {
 											onKeyDown={e => {
 												if (e.key === 'Enter') {
 													void run(async () => {
-														await renameSave(p.id, editName)
+														await renameSave(profile.id, editName)
 														setEditingId(null)
 													})
 												}
@@ -175,7 +175,7 @@ export function SaveManagerModal() {
 										color='never.stat'
 										mt='4px'
 									>
-										Last played {new Date(p.lastPlayed).toLocaleString()}
+										Last played {new Date(profile.lastPlayed).toLocaleString()}
 									</Text>
 									{isActive && (
 										<Text
@@ -246,7 +246,7 @@ export function SaveManagerModal() {
 													disabled={busy}
 													onClick={() =>
 														void run(async () => {
-															await duplicateProfile(p.id, copyName.trim() || undefined)
+															await duplicateProfile(profile.id, copyName.trim() || undefined)
 															setCopyTargetId(null)
 															setCopyName('')
 															closeSaveManager()
@@ -281,7 +281,7 @@ export function SaveManagerModal() {
 													disabled={busy}
 													onClick={() =>
 														void run(async () => {
-															await switchToProfile(p.id)
+															await switchToProfile(profile.id)
 															closeSaveManager()
 														})
 													}
@@ -303,8 +303,8 @@ export function SaveManagerModal() {
 												fontWeight={700}
 												disabled={busy}
 												onClick={() => {
-													setEditingId(p.id)
-													setEditName(p.name.trim() ? p.name : display)
+													setEditingId(profile.id)
+													setEditName(profile.name.trim() ? profile.name : display)
 													setConfirmDeleteId(null)
 													setCopyTargetId(null)
 												}}
@@ -325,7 +325,7 @@ export function SaveManagerModal() {
 												fontWeight={700}
 												disabled={busy}
 												onClick={() => {
-													setCopyTargetId(p.id)
+													setCopyTargetId(profile.id)
 													setCopyName('')
 													setConfirmDeleteId(null)
 													setEditingId(null)
@@ -348,11 +348,11 @@ export function SaveManagerModal() {
 												disabled={busy}
 												onClick={() => {
 													if (!isConfirmDelete) {
-														setConfirmDeleteId(p.id)
+														setConfirmDeleteId(profile.id)
 														return
 													}
 													void run(async () => {
-														await deleteSave(p.id)
+														await deleteSave(profile.id)
 														setConfirmDeleteId(null)
 													})
 												}}
@@ -379,7 +379,7 @@ export function SaveManagerModal() {
 												disabled={busy}
 												onClick={() =>
 													void run(async () => {
-														await renameSave(p.id, editName)
+														await renameSave(profile.id, editName)
 														setEditingId(null)
 													})
 												}

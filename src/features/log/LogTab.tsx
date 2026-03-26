@@ -23,15 +23,15 @@ export function LogTab({ gameEventLog }: LogTabProps) {
 			align='stretch'
 			gap='1px'
 		>
-			{gameEventLog.map((entry, i) => (
+			{gameEventLog.map((entry, index) => (
 				<Box
-					key={`${i}-${entry.slice(0, 24)}`}
+					key={`${index}-${entry.slice(0, 24)}`}
 					fontSize='11px'
-					color={i === 0 ? 'never.logHead' : 'never.stat'}
+					color={index === 0 ? 'never.logHead' : 'never.stat'}
 					py='5px'
 					borderBottom='1px solid'
 					borderColor='never.logBorder'
-					animation={i === 0 ? 'neverFadeIn 0.2s ease' : undefined}
+					animation={index === 0 ? 'neverFadeIn 0.2s ease' : undefined}
 				>
 					{entry}
 				</Box>

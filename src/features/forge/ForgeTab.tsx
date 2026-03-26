@@ -24,14 +24,14 @@ export function ForgeTab({
 
 	return (
 		<Box py={3}>
-			{dice.map((die, dieIdx) => (
+			{dice.map((die, dieIndex) => (
 				<Box
-					key={dieIdx}
+					key={dieIndex}
 					mb={4}
 				>
 					<ForgeDieSection
 						die={die}
-						dieIdx={dieIdx}
+						dieIndex={dieIndex}
 						showDieLabel={multiDie}
 						totalDieReforgeCount={totalDieReforgeCount}
 						maxReforgeFaceValue={maxReforgeFaceValue}

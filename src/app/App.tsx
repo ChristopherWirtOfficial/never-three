@@ -10,12 +10,12 @@ import { useGameSurface } from '../game/useGameSurface'
 import { useSaveSlots } from '../providers/SaveSlotsContext'
 
 export default function NeverThree() {
-	const g = useGameSurface()
+	const game = useGameSurface()
 	const { openSaveManager } = useSaveSlots()
 
 	return (
 		<>
-			{g.screenFlashColor && <FlashOverlay color={g.screenFlashColor} />}
+			{game.screenFlashColor && <FlashOverlay color={game.screenFlashColor} />}
 
 			<Box
 				h='100dvh'
@@ -28,16 +28,16 @@ export default function NeverThree() {
 				color='never.text'
 				fontFamily='monospace'
 				overflow='hidden'
-				animation={g.dieShakeActive ? 'neverShake 0.3s ease' : undefined}
+				animation={game.dieShakeActive ? 'neverShake 0.3s ease' : undefined}
 			>
 				<TopBar
-					gold={g.gold}
-					hexBalance={g.hexBalance}
-					goldStreak={g.goldStreak}
-					hexRewardStreak={g.hexRewardStreak}
-					bestGoldStreak={g.bestGoldStreak}
-					prestige={g.prestige}
-					prestigeGoldMultiplier={g.prestigeGoldMultiplier}
+					gold={game.gold}
+					hexBalance={game.hexBalance}
+					goldStreak={game.goldStreak}
+					hexRewardStreak={game.hexRewardStreak}
+					bestGoldStreak={game.bestGoldStreak}
+					prestige={game.prestige}
+					prestigeGoldMultiplier={game.prestigeGoldMultiplier}
 					onOpenSaves={openSaveManager}
 				/>
 
@@ -46,69 +46,69 @@ export default function NeverThree() {
 					overflow='auto'
 					px='18px'
 				>
-					{g.activeGameTab === 'roll' && (
+					{game.activeGameTab === 'roll' && (
 						<RollTab
-							autoRollUpgradeLevel={g.autoRollUpgradeLevel}
-							speedUpgradeLevel={g.speedUpgradeLevel}
-							multi={g.multi}
-							streakRetentionPct={g.streakRetentionPct}
-							prestigeGoldMultiplier={g.prestigeGoldMultiplier}
-							lastRolledFace={g.lastRolledFace}
-							isRolling={g.isRolling}
-							goldStreak={g.goldStreak}
-							isStunned={g.isStunned}
-							totalRollCount={g.totalRollCount}
-							multipleOfThreeRollCount={g.multipleOfThreeRollCount}
-							runStarted={g.runStarted}
-							autoRollProgress={g.autoRollProgress}
-							autoMs={g.autoMs}
-							currentDie={g.currentDie}
+							autoRollUpgradeLevel={game.autoRollUpgradeLevel}
+							speedUpgradeLevel={game.speedUpgradeLevel}
+							goldMultiplier={game.goldMultiplier}
+							streakRetentionPct={game.streakRetentionPct}
+							prestigeGoldMultiplier={game.prestigeGoldMultiplier}
+							lastRolledFace={game.lastRolledFace}
+							isRolling={game.isRolling}
+							goldStreak={game.goldStreak}
+							isStunned={game.isStunned}
+							totalRollCount={game.totalRollCount}
+							multipleOfThreeRollCount={game.multipleOfThreeRollCount}
+							runStarted={game.runStarted}
+							autoRollProgress={game.autoRollProgress}
+							autoMs={game.autoMs}
+							currentDie={game.currentDie}
 						/>
 					)}
-					{g.activeGameTab === 'shop' && (
+					{game.activeGameTab === 'shop' && (
 						<ShopTab
-							gold={g.gold}
-							lifetimeGoldEarned={g.lifetimeGoldEarned}
-							speedUpgradeLevel={g.speedUpgradeLevel}
-							autoRollUpgradeLevel={g.autoRollUpgradeLevel}
-							multiplierUpgradeLevel={g.multiplierUpgradeLevel}
-							streakRetentionUpgradeLevel={g.streakRetentionUpgradeLevel}
-							stunUpgradeLevel={g.stunUpgradeLevel}
-							prestige={g.prestige}
-							prestigeReq={g.prestigeReq}
-							canPrestige={g.canPrestige}
-							purchaseUpgrade={g.purchaseUpgrade}
-							commitPrestige={g.commitPrestige}
+							gold={game.gold}
+							lifetimeGoldEarned={game.lifetimeGoldEarned}
+							speedUpgradeLevel={game.speedUpgradeLevel}
+							autoRollUpgradeLevel={game.autoRollUpgradeLevel}
+							multiplierUpgradeLevel={game.multiplierUpgradeLevel}
+							streakRetentionUpgradeLevel={game.streakRetentionUpgradeLevel}
+							stunUpgradeLevel={game.stunUpgradeLevel}
+							prestige={game.prestige}
+							prestigeReq={game.prestigeReq}
+							canPrestige={game.canPrestige}
+							purchaseUpgrade={game.purchaseUpgrade}
+							commitPrestige={game.commitPrestige}
 						/>
 					)}
-					{g.activeGameTab === 'forge' && (
+					{game.activeGameTab === 'forge' && (
 						<ForgeTab
-							dice={g.dice}
-							totalDieReforgeCount={g.totalDieReforgeCount}
-							maxReforgeFaceValue={g.maxReforgeFaceValue}
-							hexBalance={g.hexBalance}
-							incrementDieFace={g.incrementDieFace}
-							decrementDieFace={g.decrementDieFace}
+							dice={game.dice}
+							totalDieReforgeCount={game.totalDieReforgeCount}
+							maxReforgeFaceValue={game.maxReforgeFaceValue}
+							hexBalance={game.hexBalance}
+							incrementDieFace={game.incrementDieFace}
+							decrementDieFace={game.decrementDieFace}
 						/>
 					)}
-					{g.activeGameTab === 'log' && <LogTab gameEventLog={g.gameEventLog} />}
+					{game.activeGameTab === 'log' && <LogTab gameEventLog={game.gameEventLog} />}
 				</Box>
 
 				<BottomDock
-					lastRolledFace={g.lastRolledFace}
-					sides={g.currentDie.length}
-					isStunned={g.isStunned}
-					stunRecoveryProgress={g.stunRecoveryProgress}
-					stunActiveDurationMs={g.stunActiveDurationMs}
-					isRolling={g.isRolling}
-					locked={g.locked}
-					autoRollUpgradeLevel={g.autoRollUpgradeLevel}
-					rollCooldownProgress={g.rollCooldownProgress}
-					activeGameTab={g.activeGameTab}
+					lastRolledFace={game.lastRolledFace}
+					sides={game.currentDie.length}
+					isStunned={game.isStunned}
+					stunRecoveryProgress={game.stunRecoveryProgress}
+					stunActiveDurationMs={game.stunActiveDurationMs}
+					isRolling={game.isRolling}
+					locked={game.locked}
+					autoRollUpgradeLevel={game.autoRollUpgradeLevel}
+					rollCooldownProgress={game.rollCooldownProgress}
+					activeGameTab={game.activeGameTab}
 					onRoll={() => {
-						if (!g.locked) g.rollDice()
+						if (!game.locked) game.rollDice()
 					}}
-					onTabChange={g.setActiveGameTab}
+					onTabChange={game.setActiveGameTab}
 				/>
 			</Box>
 		</>

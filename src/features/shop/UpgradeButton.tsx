@@ -1,5 +1,5 @@
 import { Box, Text, chakra } from '@chakra-ui/react'
-import { fmt } from '../../game/constants'
+import { formatCompactNumber } from '../../game/constants'
 
 interface UpgradeButtonProps {
 	icon: string
@@ -98,7 +98,7 @@ export function UpgradeButton({
 					color={affordable ? 'never.gold' : 'never.subtle'}
 					opacity={affordable ? 1 : 0.7}
 				>
-					{fmt(cost)}g
+					{formatCompactNumber(cost)}g
 				</Text>
 			)}
 		</chakra.button>

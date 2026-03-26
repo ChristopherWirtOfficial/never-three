@@ -1,5 +1,12 @@
 import { Box, Text, VStack, chakra } from '@chakra-ui/react'
-import { SPEED, AUTO, MULTI, STREAK_RETENTION, STUN, fmt } from '../../game/constants'
+import {
+	SPEED,
+	AUTO,
+	MULTI,
+	STREAK_RETENTION,
+	STUN,
+	formatCompactNumber,
+} from '../../game/constants'
 import type { UpgradeType } from '../../game/types'
 import { UpgradeButton } from './UpgradeButton'
 
@@ -54,7 +61,7 @@ export function ShopTab({
 			label: 'GOLD MULTI',
 			lv: multiplierUpgradeLevel,
 			arr: MULTI,
-			display: i => `×${i.x}`,
+			display: tier => `×${tier.x}`,
 		},
 		{
 			type: 'speed',
@@ -62,7 +69,7 @@ export function ShopTab({
 			label: 'ROLL SPEED',
 			lv: speedUpgradeLevel,
 			arr: SPEED,
-			display: i => i.name as string,
+			display: tier => tier.name as string,
 		},
 		{
 			type: 'auto',
@@ -70,7 +77,7 @@ export function ShopTab({
 			label: 'AUTO-ROLL',
 			lv: autoRollUpgradeLevel,
 			arr: AUTO,
-			display: i => i.name as string,
+			display: tier => tier.name as string,
 		},
 		{
 			type: 'stun',
@@ -78,7 +85,7 @@ export function ShopTab({
 			label: 'STUN RECOVERY',
 			lv: stunUpgradeLevel,
 			arr: STUN,
-			display: i => i.name as string,
+			display: tier => tier.name as string,
 		},
 		{
 			type: 'retention',
@@ -86,7 +93,7 @@ export function ShopTab({
 			label: 'STREAK RETENTION',
 			lv: streakRetentionUpgradeLevel,
 			arr: STREAK_RETENTION,
-			display: i => `${i.pct}% kept`,
+			display: tier => `${tier.pct}% kept`,
 		},
 	]
 
@@ -96,19 +103,19 @@ export function ShopTab({
 			gap={2}
 			py={3}
 		>
-			{upgrades.map(u => {
-				const maxed = u.lv >= u.arr.length - 1
+			{upgrades.map(upgrade => {
+				const maxed = upgrade.lv >= upgrade.arr.length - 1
 				return (
 					<UpgradeButton
-						key={u.type}
-						icon={u.icon}
-						label={u.label}
-						current={u.display(u.arr[u.lv])}
-						next={maxed ? '' : u.display(u.arr[u.lv + 1])}
-						cost={maxed ? 0 : u.arr[u.lv + 1].cost}
+						key={upgrade.type}
+						icon={upgrade.icon}
+						label={upgrade.label}
+						current={upgrade.display(upgrade.arr[upgrade.lv])}
+						next={maxed ? '' : upgrade.display(upgrade.arr[upgrade.lv + 1])}
+						cost={maxed ? 0 : upgrade.arr[upgrade.lv + 1].cost}
 						maxed={maxed}
 						gold={gold}
-						onBuy={() => purchaseUpgrade(u.type)}
+						onBuy={() => purchaseUpgrade(upgrade.type)}
 					/>
 				)
 			})}
@@ -150,14 +157,14 @@ export function ShopTab({
 								as='span'
 								color='never.dim'
 							>
-								{fmt(lifetimeGoldEarned)}
+								{formatCompactNumber(lifetimeGoldEarned)}
 							</Text>{' '}
 							/{' '}
 							<Text
 								as='span'
 								color='never.prestigeMuted'
 							>
-								{fmt(prestigeReq)}g
+								{formatCompactNumber(prestigeReq)}g
 							</Text>
 						</>
 					)}

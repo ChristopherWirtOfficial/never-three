@@ -4,7 +4,7 @@ import { ReforgeFaceRow } from './ReforgeFaceRow'
 
 interface ForgeDieSectionProps {
 	die: Die
-	dieIdx: number
+	dieIndex: number
 	showDieLabel: boolean
 	totalDieReforgeCount: number
 	maxReforgeFaceValue: number
@@ -15,7 +15,7 @@ interface ForgeDieSectionProps {
 
 export function ForgeDieSection({
 	die,
-	dieIdx,
+	dieIndex,
 	showDieLabel,
 	totalDieReforgeCount,
 	maxReforgeFaceValue,
@@ -33,7 +33,7 @@ export function ForgeDieSection({
 					mb={2}
 					fontWeight={700}
 				>
-					DIE {dieIdx + 1}
+					DIE {dieIndex + 1}
 				</Text>
 			)}
 
@@ -41,12 +41,12 @@ export function ForgeDieSection({
 				align='stretch'
 				gap='6px'
 			>
-				{die.map((faceVal, faceIdx) => (
+				{die.map((faceValue, faceIndex) => (
 					<ReforgeFaceRow
-						key={`${dieIdx}-${faceIdx}-${faceVal}`}
-						faceIdx={faceIdx}
-						dieIdx={dieIdx}
-						faceVal={faceVal}
+						key={`${dieIndex}-${faceIndex}-${faceValue}`}
+						faceIndex={faceIndex}
+						dieIndex={dieIndex}
+						faceValue={faceValue}
 						maxReforgeFaceValue={maxReforgeFaceValue}
 						totalDieReforgeCount={totalDieReforgeCount}
 						hexBalance={hexBalance}

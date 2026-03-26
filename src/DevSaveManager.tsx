@@ -9,8 +9,6 @@ import {
 	setActiveProfileId,
 	type SaveState,
 } from './game/saves'
-import { fmt } from './game/constants'
-
 interface DevSaveManagerProps {
 	visible: boolean
 	onClose: () => void
@@ -83,7 +81,7 @@ export function DevSaveManager({
 
 	const handleLoad = async (id: string) => {
 		const result = await loadProfile(id)
-		const prof = profiles.find(p => p.id === id)
+		const prof = profiles.find(profile => profile.id === id)
 		if (result && prof) {
 			await setActiveProfileId(id)
 			onLoadProfile(id, prof.name, result)
@@ -157,14 +155,14 @@ export function DevSaveManager({
 
 				{/* Profile list */}
 				<div style={{ flex: 1, overflow: 'auto', padding: '8px 12px' }}>
-					{profiles.map(p => {
-						const isActive = p.id === currentProfileId
-						const isEditing = editingId === p.id
-						const isConfirming = confirmDelete === p.id
+					{profiles.map(profile => {
+						const isActive = profile.id === currentProfileId
+						const isEditing = editingId === profile.id
+						const isConfirming = confirmDelete === profile.id
 
 						return (
 							<div
-								key={p.id}
+								key={profile.id}
 								style={{
 									padding: '10px 12px',
 									marginBottom: 6,
@@ -186,8 +184,8 @@ export function DevSaveManager({
 										<input
 											value={editName}
 											onChange={e => setEditName(e.target.value)}
-											onKeyDown={e => e.key === 'Enter' && handleRename(p.id)}
-											onBlur={() => handleRename(p.id)}
+											onKeyDown={e => e.key === 'Enter' && handleRename(profile.id)}
+											onBlur={() => handleRename(profile.id)}
 											autoFocus
 											style={{
 												flex: 1,
@@ -210,7 +208,7 @@ export function DevSaveManager({
 												color: isActive ? '#44ffbb' : '#bbc',
 											}}
 										>
-											{p.name}
+											{profile.name}
 										</div>
 									)}
 									{isActive && (
@@ -231,14 +229,14 @@ export function DevSaveManager({
 
 								{/* Info */}
 								<div style={{ fontSize: 10, color: '#556', marginBottom: 8 }}>
-									{new Date(p.lastPlayed).toLocaleString()}
+									{new Date(profile.lastPlayed).toLocaleString()}
 								</div>
 
 								{/* Action buttons */}
 								<div style={{ display: 'flex', gap: 6 }}>
 									{!isActive && (
 										<button
-											onClick={() => handleLoad(p.id)}
+											onClick={() => handleLoad(profile.id)}
 											style={{
 												flex: 1,
 												padding: '6px 0',
@@ -257,8 +255,8 @@ export function DevSaveManager({
 									)}
 									<button
 										onClick={() => {
-											setEditingId(p.id)
-											setEditName(p.name)
+											setEditingId(profile.id)
+											setEditName(profile.name)
 											setConfirmDelete(null)
 										}}
 										style={{
@@ -277,7 +275,7 @@ export function DevSaveManager({
 										RENAME
 									</button>
 									<button
-										onClick={() => handleDelete(p.id)}
+										onClick={() => handleDelete(profile.id)}
 										style={{
 											flex: 1,
 											padding: '6px 0',

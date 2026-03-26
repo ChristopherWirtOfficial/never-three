@@ -93,9 +93,9 @@ export function useGameLoop(rollDice: () => void): void {
 			return
 		}
 		const tick = () => {
-			const p = Math.min((Date.now() - autoStartRef.current) / ms, 1)
-			setAutoRollProgress(p)
-			if (p < 1) autoFrameRef.current = requestAnimationFrame(tick)
+			const progress = Math.min((Date.now() - autoStartRef.current) / ms, 1)
+			setAutoRollProgress(progress)
+			if (progress < 1) autoFrameRef.current = requestAnimationFrame(tick)
 		}
 		autoFrameRef.current = requestAnimationFrame(tick)
 		return () => cancelAnimationFrame(autoFrameRef.current)
@@ -105,9 +105,9 @@ export function useGameLoop(rollDice: () => void): void {
 		if (isRollCooldownActive && !isStunned) {
 			const cdStart = Date.now()
 			const tick = () => {
-				const p = Math.min((Date.now() - cdStart) / cdMs, 1)
-				setRollCooldownProgress(p)
-				if (p < 1) cdFrameRef.current = requestAnimationFrame(tick)
+				const progress = Math.min((Date.now() - cdStart) / cdMs, 1)
+				setRollCooldownProgress(progress)
+				if (progress < 1) cdFrameRef.current = requestAnimationFrame(tick)
 			}
 			cdFrameRef.current = requestAnimationFrame(tick)
 		} else if (!isStunned) {
@@ -121,9 +121,9 @@ export function useGameLoop(rollDice: () => void): void {
 		if (isStunned && activeStunWindow) {
 			const { startMs, durationMs } = activeStunWindow
 			const tick = () => {
-				const p = Math.min((Date.now() - startMs) / durationMs, 1)
-				setStunRecoveryProgress(p)
-				if (p < 1) stunFrameRef.current = requestAnimationFrame(tick)
+				const progress = Math.min((Date.now() - startMs) / durationMs, 1)
+				setStunRecoveryProgress(progress)
+				if (progress < 1) stunFrameRef.current = requestAnimationFrame(tick)
 				else setStunRecoveryProgress(1)
 			}
 			stunFrameRef.current = requestAnimationFrame(tick)

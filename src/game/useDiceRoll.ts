@@ -6,7 +6,7 @@ import {
 	STREAK_RETENTION,
 	STUN,
 	dangerousFaceHexUnits,
-	fmt,
+	formatCompactNumber,
 	HEX_BASE,
 	hexStreakMultiplier,
 	streakMultiplier,
@@ -18,10 +18,10 @@ import * as P from './atoms/primitives'
 type RollSnap = {
 	locked: boolean
 	currentDie: number[]
-	multi: number
+	goldMultiplier: number
 	streakRetentionPct: number
 	prestigeGoldMultiplier: number
-	cdMs: number
+	rollCooldownMs: number
 	stunMs: number
 	stunTier: (typeof STUN)[number]
 }
@@ -42,20 +42,20 @@ export function useDiceRoll(): () => void {
 	const snapRef = useRef<RollSnap>({
 		locked,
 		currentDie,
-		multi: MULTI[multiplierUpgradeLevel].x,
+		goldMultiplier: MULTI[multiplierUpgradeLevel].x,
 		streakRetentionPct: STREAK_RETENTION[streakRetentionUpgradeLevel].pct,
 		prestigeGoldMultiplier: 1 + prestige * 0.5,
-		cdMs: SPEED[speedUpgradeLevel].ms,
+		rollCooldownMs: SPEED[speedUpgradeLevel].ms,
 		stunMs: STUN[stunUpgradeLevel].ms,
 		stunTier: STUN[stunUpgradeLevel],
 	})
 	snapRef.current = {
 		locked,
 		currentDie,
-		multi: MULTI[multiplierUpgradeLevel].x,
+		goldMultiplier: MULTI[multiplierUpgradeLevel].x,
 		streakRetentionPct: STREAK_RETENTION[streakRetentionUpgradeLevel].pct,
 		prestigeGoldMultiplier: 1 + prestige * 0.5,
-		cdMs: SPEED[speedUpgradeLevel].ms,
+		rollCooldownMs: SPEED[speedUpgradeLevel].ms,
 		stunMs: STUN[stunUpgradeLevel].ms,
 		stunTier: STUN[stunUpgradeLevel],
 	}
@@ -84,59 +84,61 @@ export function useDiceRoll(): () => void {
 
 		setRollCooldownActive(true)
 		setRolling(true)
-		setRunStarted(s => (s ? s : true))
+		setRunStarted(runAlreadyStarted => (runAlreadyStarted ? runAlreadyStarted : true))
 
 		setTimeout(() => {
 			const {
-				currentDie: die,
-				multi,
+				currentDie: dieFaces,
+				goldMultiplier,
 				streakRetentionPct,
 				prestigeGoldMultiplier,
-				cdMs,
+				rollCooldownMs,
 				stunMs,
 				stunTier,
 			} = snapRef.current
 
-			const faceIndex = Math.floor(Math.random() * die.length)
-			const v = die[faceIndex]
-			setLastRolledFace(v)
+			const faceIndex = Math.floor(Math.random() * dieFaces.length)
+			const rolledValue = dieFaces[faceIndex]
+			setLastRolledFace(rolledValue)
 			setRolling(false)
-			setTotalRollCount((p: number) => p + 1)
+			setTotalRollCount((count: number) => count + 1)
 
-			const dangerous = v % 3 === 0
+			const dangerous = rolledValue % 3 === 0
 
 			if (dangerous) {
 				setDieShakeActive(true)
 				setScreenFlashColor('#ff3355')
-				setMultipleOfThreeRollCount((p: number) => p + 1)
-				setGoldStreak((s: number) => {
-					const kept = Math.floor((s * streakRetentionPct) / 100)
+				setMultipleOfThreeRollCount((count: number) => count + 1)
+				setGoldStreak((priorGoldStreak: number) => {
+					const kept = Math.floor((priorGoldStreak * streakRetentionPct) / 100)
 					let line: string
-					if (s === 0) {
-						line = `💀 Rolled ${v}! Stunned ${stunTier.name}`
-					} else if (kept >= s) {
-						line = `💀 Rolled ${v}! Streak ${s} held. Stunned ${stunTier.name}`
+					if (priorGoldStreak === 0) {
+						line = `💀 Rolled ${rolledValue}! Stunned ${stunTier.name}`
+					} else if (kept >= priorGoldStreak) {
+						line = `💀 Rolled ${rolledValue}! Streak ${priorGoldStreak} held. Stunned ${stunTier.name}`
 					} else if (streakRetentionPct > 0) {
-						line = `💀 Rolled ${v}! Streak ${s} → ${kept} (${streakRetentionPct}% kept). Stunned ${stunTier.name}`
+						line = `💀 Rolled ${rolledValue}! Streak ${priorGoldStreak} → ${kept} (${streakRetentionPct}% kept). Stunned ${stunTier.name}`
 					} else {
-						line = `💀 Rolled ${v}! Streak gone. Stunned ${stunTier.name}`
+						line = `💀 Rolled ${rolledValue}! Streak gone. Stunned ${stunTier.name}`
 					}
-					setGameEventLog((p: string[]) => [line, ...p].slice(0, 60))
+					setGameEventLog((prevLog: string[]) => [line, ...prevLog].slice(0, 60))
 					return kept
 				})
-				setHexRewardStreak((hs: number) => {
-					const mag = Math.max(1, dangerousFaceHexUnits(v))
-					const hm = hexStreakMultiplier(hs)
-					const earnedHex = Math.floor(HEX_BASE * mag * hm)
-					setHexBalance((h: number) => h + earnedHex)
-					const nhs = hs + mag
-					setBestHexRewardStreak((b: number) => Math.max(b, nhs))
+				setHexRewardStreak((priorHexStreak: number) => {
+					const dangerUnits = Math.max(1, dangerousFaceHexUnits(rolledValue))
+					const hexStreakMult = hexStreakMultiplier(priorHexStreak)
+					const earnedHex = Math.floor(HEX_BASE * dangerUnits * hexStreakMult)
+					setHexBalance((hex: number) => hex + earnedHex)
+					const nextHexStreak = priorHexStreak + dangerUnits
+					setBestHexRewardStreak((previousBest: number) => Math.max(previousBest, nextHexStreak))
 					const parts: string[] = []
-					if (mag > 1) parts.push(`${mag}× danger`)
-					if (hs > 0) parts.push(`×${hm.toFixed(1)} streak`)
+					if (dangerUnits > 1) parts.push(`${dangerUnits}× danger`)
+					if (priorHexStreak > 0) parts.push(`×${hexStreakMult.toFixed(1)} streak`)
 					const suffix = parts.length ? ` (${parts.join(', ')})` : ''
-					setGameEventLog((p: string[]) => [`🔮 +${earnedHex} hex${suffix}`, ...p].slice(0, 60))
-					return nhs
+					setGameEventLog((prevLog: string[]) =>
+						[`🔮 +${earnedHex} hex${suffix}`, ...prevLog].slice(0, 60)
+					)
+					return nextHexStreak
 				})
 				setTimeout(() => {
 					setDieShakeActive(false)
@@ -153,17 +155,24 @@ export function useDiceRoll(): () => void {
 				}, stunMs)
 			} else {
 				setHexRewardStreak(0)
-				setGoldStreak((s: number) => {
-					const sm = streakMultiplier(s)
-					const e = Math.floor(v * sm * multi * prestigeGoldMultiplier)
-					setGold((g: number) => g + e)
-					setLifetimeGoldEarned((er: number) => er + e)
-					const ns = s + 1
-					setBestGoldStreak((b: number) => Math.max(b, ns))
-					setGameEventLog((p: string[]) =>
-						[`🎲 ${v} → +${fmt(e)}g${s > 2 ? ` (×${sm.toFixed(1)})` : ''}`, ...p].slice(0, 60)
+				setGoldStreak((priorGoldStreak: number) => {
+					const goldStreakMult = streakMultiplier(priorGoldStreak)
+					const earnedGold = Math.floor(
+						rolledValue * goldStreakMult * goldMultiplier * prestigeGoldMultiplier
 					)
-					return ns
+					setGold((gold: number) => gold + earnedGold)
+					setLifetimeGoldEarned((lifetimeTotal: number) => lifetimeTotal + earnedGold)
+					const nextGoldStreak = priorGoldStreak + 1
+					setBestGoldStreak((previousBest: number) => Math.max(previousBest, nextGoldStreak))
+					setGameEventLog((prevLog: string[]) =>
+						[
+							`🎲 ${rolledValue} → +${formatCompactNumber(earnedGold)}g${
+								priorGoldStreak > 2 ? ` (×${goldStreakMult.toFixed(1)})` : ''
+							}`,
+							...prevLog,
+						].slice(0, 60)
+					)
+					return nextGoldStreak
 				})
 				setScreenFlashColor('#44ffbb')
 				setTimeout(() => setScreenFlashColor(null), 200)
@@ -171,7 +180,7 @@ export function useDiceRoll(): () => void {
 				rollTimers.cool = setTimeout(() => {
 					rollTimers.cool = null
 					setRollCooldownActive(false)
-				}, cdMs)
+				}, rollCooldownMs)
 			}
 		}, 160)
 	}, [

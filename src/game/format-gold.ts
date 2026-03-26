@@ -1,4 +1,4 @@
-/** Compact gold display for the header (differs from `fmt` for small values). */
+/** Compact gold display for the header (differs from `formatCompactNumber` for small values). */
 export function formatGold(gold: number): string {
 	if (gold < 1e3) return Math.floor(gold).toString()
 	if (gold >= 1e12) return (gold / 1e12).toFixed(1) + 'T'

@@ -1,10 +1,10 @@
 import { Box, Flex, Text, chakra } from '@chakra-ui/react'
-import { fmt, reforgeCost } from '../../game/constants'
+import { formatCompactNumber, reforgeCost } from '../../game/constants'
 
 interface ReforgeFaceRowProps {
-	faceIdx: number
-	dieIdx: number
-	faceVal: number
+	faceIndex: number
+	dieIndex: number
+	faceValue: number
 	maxReforgeFaceValue: number
 	totalDieReforgeCount: number
 	hexBalance: number
@@ -13,24 +13,24 @@ interface ReforgeFaceRowProps {
 }
 
 export function ReforgeFaceRow({
-	faceIdx,
-	dieIdx,
-	faceVal,
+	faceIndex,
+	dieIndex,
+	faceValue,
 	maxReforgeFaceValue,
 	totalDieReforgeCount,
 	hexBalance,
 	incrementDieFace,
 	decrementDieFace,
 }: ReforgeFaceRowProps) {
-	const isDangerous = faceVal % 3 === 0
-	const atCap = faceVal >= maxReforgeFaceValue
-	const atFloor = faceVal <= 1
-	const upCost = atCap ? 0 : reforgeCost(faceVal, faceVal + 1, totalDieReforgeCount)
-	const downCost = atFloor ? 0 : reforgeCost(faceVal, faceVal - 1, totalDieReforgeCount)
+	const isDangerous = faceValue % 3 === 0
+	const atCap = faceValue >= maxReforgeFaceValue
+	const atFloor = faceValue <= 1
+	const upCost = atCap ? 0 : reforgeCost(faceValue, faceValue + 1, totalDieReforgeCount)
+	const downCost = atFloor ? 0 : reforgeCost(faceValue, faceValue - 1, totalDieReforgeCount)
 	const canAffordUp = hexBalance >= upCost && !atCap
 	const canAffordDown = hexBalance >= downCost && !atFloor
-	const nextDangerous = !atCap && (faceVal + 1) % 3 === 0
-	const prevDangerous = !atFloor && (faceVal - 1) % 3 === 0
+	const nextDangerous = !atCap && (faceValue + 1) % 3 === 0
+	const prevDangerous = !atFloor && (faceValue - 1) % 3 === 0
 
 	return (
 		<Flex
@@ -51,7 +51,7 @@ export function ReforgeFaceRow({
 					fontSize='10px'
 					color='never.dim'
 				>
-					F{faceIdx + 1}
+					F{faceIndex + 1}
 				</Text>
 			</Box>
 
@@ -67,7 +67,7 @@ export function ReforgeFaceRow({
 						isDangerous ? '0 0 10px rgba(255, 51, 85, 0.27)' : '0 0 10px rgba(68, 255, 187, 0.2)'
 					}
 				>
-					{faceVal}
+					{faceValue}
 				</Text>
 			</Box>
 
@@ -129,7 +129,7 @@ export function ReforgeFaceRow({
 				alignItems='center'
 				justifyContent='center'
 				gap='3px'
-				onClick={() => decrementDieFace(dieIdx, faceIdx)}
+				onClick={() => decrementDieFace(dieIndex, faceIndex)}
 				disabled={atFloor || !canAffordDown}
 			>
 				{atFloor ? (
@@ -142,7 +142,7 @@ export function ReforgeFaceRow({
 						>
 							−
 						</Text>
-						<span>{fmt(downCost)}🔮</span>
+						<span>{formatCompactNumber(downCost)}🔮</span>
 					</>
 				)}
 			</chakra.button>
@@ -195,7 +195,7 @@ export function ReforgeFaceRow({
 				alignItems='center'
 				justifyContent='center'
 				gap='4px'
-				onClick={() => incrementDieFace(dieIdx, faceIdx)}
+				onClick={() => incrementDieFace(dieIndex, faceIndex)}
 				disabled={atCap || !canAffordUp}
 			>
 				{atCap ? (
@@ -208,7 +208,7 @@ export function ReforgeFaceRow({
 						>
 							+
 						</Text>
-						<span>{fmt(upCost)}🔮</span>
+						<span>{formatCompactNumber(upCost)}🔮</span>
 					</>
 				)}
 			</chakra.button>

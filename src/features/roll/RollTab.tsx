@@ -7,7 +7,7 @@ import { RollFeedback } from './RollFeedback'
 interface RollTabProps {
 	autoRollUpgradeLevel: number
 	speedUpgradeLevel: number
-	multi: number
+	goldMultiplier: number
 	streakRetentionPct: number
 	prestigeGoldMultiplier: number
 	lastRolledFace: number | null
@@ -25,7 +25,7 @@ interface RollTabProps {
 export function RollTab({
 	autoRollUpgradeLevel,
 	speedUpgradeLevel,
-	multi,
+	goldMultiplier,
 	streakRetentionPct,
 	prestigeGoldMultiplier,
 	lastRolledFace,
@@ -51,7 +51,7 @@ export function RollTab({
 				currentDie={currentDie}
 				autoRollUpgradeLevel={autoRollUpgradeLevel}
 				speedUpgradeLevel={speedUpgradeLevel}
-				multi={multi}
+				goldMultiplier={goldMultiplier}
 				streakRetentionPct={streakRetentionPct}
 			/>
 
@@ -60,7 +60,7 @@ export function RollTab({
 				isRolling={isRolling}
 				isStunned={isStunned}
 				goldStreak={goldStreak}
-				multi={multi}
+				goldMultiplier={goldMultiplier}
 				prestigeGoldMultiplier={prestigeGoldMultiplier}
 			/>
 

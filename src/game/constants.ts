@@ -66,12 +66,13 @@ export const STUN: StunTier[] = [
 
 export const PRESTIGE_BASE = 10000
 
-export function fmt(n: number): string {
-	if (n >= 1e12) return (n / 1e12).toFixed(1) + 'T'
-	if (n >= 1e9) return (n / 1e9).toFixed(1) + 'B'
-	if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M'
-	if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K'
-	return Math.floor(n).toString()
+/** Abbreviated number for UI (K / M / B / T). */
+export function formatCompactNumber(value: number): string {
+	if (value >= 1e12) return (value / 1e12).toFixed(1) + 'T'
+	if (value >= 1e9) return (value / 1e9).toFixed(1) + 'B'
+	if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M'
+	if (value >= 1e3) return (value / 1e3).toFixed(1) + 'K'
+	return Math.floor(value).toString()
 }
 
 export function streakMultiplier(streak: number): number {

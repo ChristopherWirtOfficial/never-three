@@ -37,7 +37,7 @@ export const gameLockedAtom = atom(get => get(rollPhaseAtom) !== 'idle')
 
 export const currentDieAtom = atom(get => get(diceAtom)[0] ?? makeDefaultDie())
 
-export const multiAtom = atom(get => MULTI[get(multiplierUpgradeLevelAtom)].x)
+export const goldMultiplierAtom = atom(get => MULTI[get(multiplierUpgradeLevelAtom)].x)
 export const streakRetentionPctAtom = atom(
 	get => STREAK_RETENTION[get(streakRetentionUpgradeLevelAtom)].pct
 )

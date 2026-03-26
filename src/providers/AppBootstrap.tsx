@@ -55,10 +55,10 @@ export function AppBootstrap({ children }: { children: ReactNode }) {
 	}, [])
 
 	const flushCurrent = useCallback(async () => {
-		const s = sessionRef.current
-		if (!s) return
-		const state = collectSaveStateFromStore(s.store)
-		await saveProfile(s.profileId, s.profileName, state)
+		const session = sessionRef.current
+		if (!session) return
+		const state = collectSaveStateFromStore(session.store)
+		await saveProfile(session.profileId, session.profileName, state)
 	}, [])
 
 	const switchToProfile = useCallback(
@@ -66,7 +66,7 @@ export function AppBootstrap({ children }: { children: ReactNode }) {
 			await flushCurrent()
 			const next = await loadProfile(id)
 			if (!next) return
-			const meta = (await listProfiles()).find(p => p.id === id)
+			const meta = (await listProfiles()).find(profile => profile.id === id)
 			const store = createStore()
 			hydrateStoreFromSaveState(store, next)
 			await setActiveProfileId(id)
@@ -135,7 +135,7 @@ export function AppBootstrap({ children }: { children: ReactNode }) {
 		await renameProfile(id, name)
 		const current = sessionRef.current
 		if (current?.profileId === id) {
-			setSession(s => (s ? { ...s, profileName: name } : s))
+			setSession(prev => (prev ? { ...prev, profileName: name } : prev))
 		}
 	}, [])
 

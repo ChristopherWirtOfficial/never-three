@@ -46,7 +46,7 @@ export function useGameSurface() {
 	const maxReforgeFaceValue = useAtomValue(P.maxReforgeFaceValueAtom)
 
 	const currentDie = useAtomValue(D.currentDieAtom)
-	const multi = useAtomValue(D.multiAtom)
+	const goldMultiplier = useAtomValue(D.goldMultiplierAtom)
 	const streakRetentionPct = useAtomValue(D.streakRetentionPctAtom)
 	const prestigeGoldMultiplier = useAtomValue(D.prestigeGoldMultiplierAtom)
 	const cdMs = useAtomValue(D.cdMsAtom)
@@ -96,7 +96,7 @@ export function useGameSurface() {
 		totalDieReforgeCount,
 		maxReforgeFaceValue,
 		currentDie,
-		multi,
+		goldMultiplier,
 		streakRetentionPct,
 		prestigeGoldMultiplier,
 		cdMs,

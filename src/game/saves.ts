@@ -66,17 +66,17 @@ function makeId(): string {
 }
 
 function num(raw: Record<string, unknown>, ...keys: string[]): number {
-	for (const k of keys) {
-		const v = raw[k]
-		if (typeof v === 'number' && !Number.isNaN(v)) return v
+	for (const key of keys) {
+		const candidate = raw[key]
+		if (typeof candidate === 'number' && !Number.isNaN(candidate)) return candidate
 	}
 	return 0
 }
 
 function numOpt(raw: Record<string, unknown>, fallback: number, ...keys: string[]): number {
-	for (const k of keys) {
-		const v = raw[k]
-		if (typeof v === 'number' && !Number.isNaN(v)) return v
+	for (const key of keys) {
+		const candidate = raw[key]
+		if (typeof candidate === 'number' && !Number.isNaN(candidate)) return candidate
 	}
 	return fallback
 }
@@ -109,8 +109,8 @@ export function migrateRawToSaveState(raw: Record<string, unknown>): SaveState {
 	}
 }
 
-export function extractSaveState(g: Record<string, unknown>): SaveState {
-	return migrateRawToSaveState({ ...g, _v: SAVE_VERSION })
+export function extractSaveState(raw: Record<string, unknown>): SaveState {
+	return migrateRawToSaveState({ ...raw, _v: SAVE_VERSION })
 }
 
 export const DEFAULT_STATE: SaveState = {
@@ -180,8 +180,8 @@ export function formatUnnamedSaveLabel(atMs: number = Date.now()): string {
 
 /** Display name for index rows (handles legacy empty names). */
 export function resolveProfileDisplayName(name: string | undefined, lastPlayed: number): string {
-	const t = name?.trim()
-	if (t) return t
+	const trimmed = name?.trim()
+	if (trimmed) return trimmed
 	return formatUnnamedSaveLabel(lastPlayed)
 }
 
@@ -190,9 +190,9 @@ export async function loadProfile(id: string): Promise<SaveState | null> {
 	if (!raw) return null
 	try {
 		const parsed = JSON.parse(raw) as Record<string, unknown> & { _v?: number }
-		const v = parsed._v
+		const saveVersion = parsed._v
 
-		if (v === 2) {
+		if (saveVersion === 2) {
 			return migrateRawToSaveState({
 				...parsed,
 				hexBalance: 0,
@@ -201,7 +201,7 @@ export async function loadProfile(id: string): Promise<SaveState | null> {
 			})
 		}
 
-		if (v === 3 || v === 4 || v === SAVE_VERSION) {
+		if (saveVersion === 3 || saveVersion === 4 || saveVersion === SAVE_VERSION) {
 			return migrateRawToSaveState(parsed)
 		}
 
@@ -305,11 +305,11 @@ export function boot(): Promise<BootResult> {
  */
 export async function resolvePlayableSession(): Promise<BootResult> {
 	const profiles = await listProfiles()
-	for (const p of profiles) {
-		const state = await loadProfile(p.id)
+	for (const profile of profiles) {
+		const state = await loadProfile(profile.id)
 		if (state) {
-			await setActiveProfileId(p.id)
-			return { id: p.id, name: p.name, state }
+			await setActiveProfileId(profile.id)
+			return { id: profile.id, name: profile.name, state }
 		}
 	}
 

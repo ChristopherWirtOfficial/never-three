@@ -7,7 +7,7 @@ interface RollBadgesProps {
 	currentDie: Die
 	autoRollUpgradeLevel: number
 	speedUpgradeLevel: number
-	multi: number
+	goldMultiplier: number
 	streakRetentionPct: number
 }
 
@@ -15,12 +15,12 @@ export function RollBadges({
 	currentDie,
 	autoRollUpgradeLevel,
 	speedUpgradeLevel,
-	multi,
+	goldMultiplier,
 	streakRetentionPct,
 }: RollBadgesProps) {
-	const dangerCount = currentDie.filter(f => f % 3 === 0).length
+	const dangerCount = currentDie.filter(face => face % 3 === 0).length
 
-	const badge = (child: ReactNode, c: string) => (
+	const badge = (child: ReactNode, colorToken: string) => (
 		<Text
 			as='span'
 			display='inline-block'
@@ -31,7 +31,7 @@ export function RollBadges({
 			borderRadius='6px'
 			border='1px solid'
 			borderColor='never.panelBorder'
-			color={c}
+			color={colorToken}
 		>
 			{child}
 		</Text>
@@ -57,7 +57,7 @@ export function RollBadges({
 				</>,
 				autoRollUpgradeLevel > 0 ? 'never.autoTeal' : 'never.subtle'
 			)}
-			{badge(<>×{multi}</>, 'never.multi')}
+			{badge(<>×{goldMultiplier}</>, 'never.multi')}
 			{streakRetentionPct > 0 && badge(<>🔒{streakRetentionPct}% streak</>, 'never.armorBlue')}
 		</Flex>
 	)

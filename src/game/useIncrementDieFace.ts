@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react'
 import { useAtomValue, useSetAtom } from 'jotai'
-import { fmt, reforgeCost } from './constants'
+import { formatCompactNumber, reforgeCost } from './constants'
 import * as P from './atoms/primitives'
 
 /**
@@ -33,30 +33,30 @@ export function useIncrementDieFace(): (dieIndex: number, faceIndex: number) => 
 	return useCallback(
 		(dieIndex: number, faceIndex: number) => {
 			const {
-				dice: d,
-				maxReforgeFaceValue: cap,
-				totalDieReforgeCount: tr,
-				hexBalance: h,
+				dice: diceSnapshot,
+				maxReforgeFaceValue: reforgeCap,
+				totalDieReforgeCount: reforgeCount,
+				hexBalance: currentHex,
 			} = snapRef.current
-			const die = d[dieIndex]
+			const die = diceSnapshot[dieIndex]
 			if (!die) return
 			const currentVal = die[faceIndex]
-			if (currentVal >= cap) return
+			if (currentVal >= reforgeCap) return
 			const target = currentVal + 1
-			const cost = reforgeCost(currentVal, target, tr)
-			if (h < cost) return
-			setHexBalance((x: number) => x - cost)
-			setTotalDieReforgeCount((t: number) => t + 1)
+			const cost = reforgeCost(currentVal, target, reforgeCount)
+			if (currentHex < cost) return
+			setHexBalance((hex: number) => hex - cost)
+			setTotalDieReforgeCount((count: number) => count + 1)
 			setDice((prev: number[][]) => {
 				const next = prev.map((row: number[]) => [...row])
 				next[dieIndex][faceIndex] = target
 				return next
 			})
-			setGameEventLog((p: string[]) =>
-				[`🔥 Face ${faceIndex + 1}: ${currentVal} → ${target} (-${fmt(cost)} hex)`, ...p].slice(
-					0,
-					60
-				)
+			setGameEventLog((prevLog: string[]) =>
+				[
+					`🔥 Face ${faceIndex + 1}: ${currentVal} → ${target} (-${formatCompactNumber(cost)} hex)`,
+					...prevLog,
+				].slice(0, 60)
 			)
 		},
 		[setHexBalance, setTotalDieReforgeCount, setDice, setGameEventLog]

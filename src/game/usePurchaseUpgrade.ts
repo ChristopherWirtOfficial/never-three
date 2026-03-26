@@ -41,35 +41,39 @@ export function usePurchaseUpgrade(): (type: UpgradeType) => void {
 
 	return useCallback(
 		(type: UpgradeType) => {
-			const s = snapRef.current
+			const snapshot = snapRef.current
 
-			const tryBuy = (
-				lv: number,
-				arr: { cost: number }[],
-				bump: (fn: (x: number) => number) => void
+			const tryBuyNextTier = (
+				currentTierIndex: number,
+				tiers: { cost: number }[],
+				setTier: (fn: (level: number) => number) => void
 			) => {
-				if (lv >= arr.length - 1) return
-				const cost = arr[lv + 1].cost
-				if (s.gold < cost) return
-				setGold((g: number) => g - cost)
-				bump((x: number) => x + 1)
+				if (currentTierIndex >= tiers.length - 1) return
+				const cost = tiers[currentTierIndex + 1].cost
+				if (snapshot.gold < cost) return
+				setGold((gold: number) => gold - cost)
+				setTier((level: number) => level + 1)
 			}
 
 			switch (type) {
 				case 'speed':
-					tryBuy(s.speedUpgradeLevel, SPEED, setSpeedUpgradeLevel)
+					tryBuyNextTier(snapshot.speedUpgradeLevel, SPEED, setSpeedUpgradeLevel)
 					break
 				case 'auto':
-					tryBuy(s.autoRollUpgradeLevel, AUTO, setAutoRollUpgradeLevel)
+					tryBuyNextTier(snapshot.autoRollUpgradeLevel, AUTO, setAutoRollUpgradeLevel)
 					break
 				case 'multi':
-					tryBuy(s.multiplierUpgradeLevel, MULTI, setMultiplierUpgradeLevel)
+					tryBuyNextTier(snapshot.multiplierUpgradeLevel, MULTI, setMultiplierUpgradeLevel)
 					break
 				case 'retention':
-					tryBuy(s.streakRetentionUpgradeLevel, STREAK_RETENTION, setStreakRetentionUpgradeLevel)
+					tryBuyNextTier(
+						snapshot.streakRetentionUpgradeLevel,
+						STREAK_RETENTION,
+						setStreakRetentionUpgradeLevel
+					)
 					break
 				case 'stun':
-					tryBuy(s.stunUpgradeLevel, STUN, setStunUpgradeLevel)
+					tryBuyNextTier(snapshot.stunUpgradeLevel, STUN, setStunUpgradeLevel)
 					break
 			}
 		},

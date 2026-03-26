@@ -32,8 +32,8 @@ export function usePrestige(): () => void {
 
 	return useCallback(() => {
 		if (!snapRef.current.canPrestige) return
-		const p = snapRef.current.prestige
-		setPrestige((x: number) => x + 1)
+		const prestigeBefore = snapRef.current.prestige
+		setPrestige((level: number) => level + 1)
 		setGold(0)
 		setLifetimeGoldEarned(0)
 		setGoldStreak(0)
@@ -47,7 +47,9 @@ export function usePrestige(): () => void {
 		setStunUpgradeLevel(0)
 		setDice([makeDefaultDie()])
 		setTotalDieReforgeCount(0)
-		setGameEventLog([`✨ PRESTIGE ${p + 1}! ×${(1 + (p + 1) * 0.5).toFixed(1)} forever`])
+		setGameEventLog([
+			`✨ PRESTIGE ${prestigeBefore + 1}! ×${(1 + (prestigeBefore + 1) * 0.5).toFixed(1)} forever`,
+		])
 	}, [
 		setPrestige,
 		setGold,
