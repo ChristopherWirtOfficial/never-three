@@ -4,7 +4,6 @@ import { fmt, streakMultiplier } from "../../game/constants";
 interface RollFeedbackProps {
   roll: number | null;
   rolling: boolean;
-  saved: boolean;
   stunned: boolean;
   streak: number;
   multi: number;
@@ -14,7 +13,6 @@ interface RollFeedbackProps {
 export function RollFeedback({
   roll,
   rolling,
-  saved,
   stunned,
   streak,
   multi,
@@ -25,18 +23,7 @@ export function RollFeedback({
 
   return (
     <VStack minH="60px" align="center" justify="center" gap={0}>
-      {saved && (
-        <Text
-          color="never.armor"
-          fontSize="18px"
-          fontWeight={700}
-          textShadow="0 0 14px rgba(255, 170, 0, 0.4)"
-        >
-          🛡️ ARMOR BLOCKED!
-        </Text>
-      )}
-
-      {dangerous && !saved && !rolling && !stunned && (
+      {dangerous && !rolling && !stunned && (
         <Text
           color="never.danger"
           fontSize="28px"

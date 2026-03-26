@@ -1,11 +1,11 @@
 import { useCallback, useRef } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
-import { ARMOR, AUTO, MULTI, SPEED, STUN } from "./constants";
+import { AUTO, MULTI, SPEED, STREAK_RETENTION, STUN } from "./constants";
 import type { UpgradeType } from "./types";
 import * as P from "./atoms/primitives";
 
 /**
- * Spend gold on the next tier of a shop upgrade (speed, auto, multi, armor, stun).
+ * Spend gold on the next tier of a shop upgrade (speed, auto, multi, streak retention, stun).
  */
 export function usePurchaseUpgrade(): (type: UpgradeType) => void {
   const gold = useAtomValue(P.goldAtom);
@@ -51,8 +51,8 @@ export function usePurchaseUpgrade(): (type: UpgradeType) => void {
         case "multi":
           tryBuy(s.mLv, MULTI, setMLv);
           break;
-        case "armor":
-          tryBuy(s.rLv, ARMOR, setRLv);
+        case "retention":
+          tryBuy(s.rLv, STREAK_RETENTION, setRLv);
           break;
         case "stun":
           tryBuy(s.tLv, STUN, setTLv);

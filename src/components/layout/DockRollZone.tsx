@@ -4,10 +4,9 @@ import { DiceFace } from "../dice/DiceFace";
 interface DockRollZoneProps {
   roll: number | null;
   sides: number;
-  saved: boolean;
   stunned: boolean;
   stunPct: number;
-  stunMs: number;
+  stunActiveDurationMs: number;
   rolling: boolean;
   locked: boolean;
   aLv: number;
@@ -18,10 +17,9 @@ interface DockRollZoneProps {
 export function DockRollZone({
   roll,
   sides,
-  saved,
   stunned,
   stunPct,
-  stunMs,
+  stunActiveDurationMs,
   rolling,
   locked,
   aLv,
@@ -60,19 +58,15 @@ export function DockRollZone({
         bg={
           stunned
             ? "linear-gradient(145deg,#2a0a12,#18060a)"
-            : saved
-              ? "linear-gradient(145deg,#2a2510,#181505)"
-              : "linear-gradient(145deg,#16162a,#0d0d18)"
+            : "linear-gradient(145deg,#16162a,#0d0d18)"
         }
         border="2px solid"
         borderColor={
           stunned
             ? "#ff335566"
-            : saved
-              ? "#ffaa0044"
-              : locked
-                ? "never.dieBorderLocked"
-                : "never.streakBorder"
+            : locked
+              ? "never.dieBorderLocked"
+              : "never.streakBorder"
         }
         display="flex"
         alignItems="center"
@@ -106,7 +100,7 @@ export function DockRollZone({
           <DiceFace
             value={roll}
             sides={sides}
-            isThree={roll !== null && roll % 3 === 0 && !saved}
+            isThree={roll !== null && roll % 3 === 0}
             rolling={rolling}
           />
         )}
@@ -135,7 +129,8 @@ export function DockRollZone({
             fontWeight={700}
             animation="neverStunPulse 1s ease infinite"
           >
-            STUNNED {(((1 - stunPct) * stunMs) / 1000).toFixed(1)}s
+            STUNNED {(((1 - stunPct) * stunActiveDurationMs) / 1000).toFixed(1)}
+            s
           </Text>
         </Box>
       ) : (

@@ -3,7 +3,7 @@ import type {
   SpeedTier,
   AutoTier,
   MultiTier,
-  ArmorTier,
+  StreakRetentionTier,
   StunTier,
 } from "./types";
 
@@ -45,7 +45,8 @@ export const MULTI: MultiTier[] = [
   { x: 100, cost: 25000 },
 ];
 
-export const ARMOR: ArmorTier[] = [
+/** % of gold streak kept after a dangerous roll (stun + hex still apply). */
+export const STREAK_RETENTION: StreakRetentionTier[] = [
   { pct: 0, cost: 0 },
   { pct: 8, cost: 40 },
   { pct: 16, cost: 200 },

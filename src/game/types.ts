@@ -17,7 +17,8 @@ export interface MultiTier {
   x: number;
   cost: number;
 }
-export interface ArmorTier {
+export interface StreakRetentionTier {
+  /** Percent of gold streak preserved when a multiple-of-3 is rolled. */
   pct: number;
   cost: number;
 }
@@ -27,7 +28,7 @@ export interface StunTier {
   cost: number;
 }
 
-export type UpgradeType = "speed" | "auto" | "multi" | "armor" | "stun";
+export type UpgradeType = "speed" | "auto" | "multi" | "retention" | "stun";
 export type TabId = "roll" | "shop" | "forge" | "log";
 
 // Each die is an array of face values
@@ -61,7 +62,6 @@ export interface GameState {
   threes: number;
   shook: boolean;
   flash: string | null;
-  saved: boolean;
   tab: TabId;
   log: string[];
   started: boolean;

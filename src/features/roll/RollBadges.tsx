@@ -8,7 +8,7 @@ interface RollBadgesProps {
   aLv: number;
   sLv: number;
   multi: number;
-  armor: number;
+  streakRetentionPct: number;
 }
 
 export function RollBadges({
@@ -16,7 +16,7 @@ export function RollBadges({
   aLv,
   sLv,
   multi,
-  armor,
+  streakRetentionPct,
 }: RollBadgesProps) {
   const dangerCount = currentDie.filter((f) => f % 3 === 0).length;
 
@@ -50,7 +50,8 @@ export function RollBadges({
         aLv > 0 ? "never.autoTeal" : "never.subtle",
       )}
       {badge(<>×{multi}</>, "never.multi")}
-      {armor > 0 && badge(<>🛡{armor}%</>, "never.armorBlue")}
+      {streakRetentionPct > 0 &&
+        badge(<>🔒{streakRetentionPct}% streak</>, "never.armorBlue")}
     </Flex>
   );
 }

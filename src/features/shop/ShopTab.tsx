@@ -1,5 +1,12 @@
 import { Box, Text, VStack, chakra } from "@chakra-ui/react";
-import { SPEED, AUTO, MULTI, ARMOR, STUN, fmt } from "../../game/constants";
+import {
+  SPEED,
+  AUTO,
+  MULTI,
+  STREAK_RETENTION,
+  STUN,
+  fmt,
+} from "../../game/constants";
 import type { UpgradeType } from "../../game/types";
 import { UpgradeButton } from "./UpgradeButton";
 
@@ -81,12 +88,12 @@ export function ShopTab({
       display: (i) => i.name as string,
     },
     {
-      type: "armor",
-      icon: "🛡️",
-      label: "STREAK ARMOR",
+      type: "retention",
+      icon: "🔒",
+      label: "STREAK RETENTION",
       lv: rLv,
-      arr: ARMOR,
-      display: (i) => `${i.pct}%`,
+      arr: STREAK_RETENTION,
+      display: (i) => `${i.pct}% kept`,
     },
   ];
 

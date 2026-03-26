@@ -1,10 +1,10 @@
 import { atom } from "jotai";
 import {
-  ARMOR,
   AUTO,
   MULTI,
   PRESTIGE_BASE,
   SPEED,
+  STREAK_RETENTION,
   STUN,
   makeDefaultDie,
 } from "../constants";
@@ -40,7 +40,9 @@ export const currentDieAtom = atom(
 );
 
 export const multiAtom = atom((get) => MULTI[get(mLvAtom)].x);
-export const armorAtom = atom((get) => ARMOR[get(rLvAtom)].pct);
+export const streakRetentionPctAtom = atom(
+  (get) => STREAK_RETENTION[get(rLvAtom)].pct,
+);
 export const pMultAtom = atom((get) => 1 + get(prestigeAtom) * 0.5);
 export const cdMsAtom = atom((get) => SPEED[get(sLvAtom)].ms);
 export const stunMsAtom = atom((get) => STUN[get(tLvAtom)].ms);

@@ -8,12 +8,11 @@ interface RollTabProps {
   aLv: number;
   sLv: number;
   multi: number;
-  armor: number;
+  streakRetentionPct: number;
   pMult: number;
   roll: number | null;
   rolling: boolean;
   streak: number;
-  saved: boolean;
   stunned: boolean;
   rolls: number;
   threes: number;
@@ -27,12 +26,11 @@ export function RollTab({
   aLv,
   sLv,
   multi,
-  armor,
+  streakRetentionPct,
   pMult,
   roll,
   rolling,
   streak,
-  saved,
   stunned,
   rolls,
   threes,
@@ -48,13 +46,12 @@ export function RollTab({
         aLv={aLv}
         sLv={sLv}
         multi={multi}
-        armor={armor}
+        streakRetentionPct={streakRetentionPct}
       />
 
       <RollFeedback
         roll={roll}
         rolling={rolling}
-        saved={saved}
         stunned={stunned}
         streak={streak}
         multi={multi}

@@ -60,7 +60,8 @@ src/
 │   └── dice/
 │       └── DiceFace.tsx
 ├── providers/
-│   └── AppProviders.tsx
+│   ├── AppBootstrap.tsx    # boot() → Jotai store + hydrate + session/autosave
+│   └── GameSessionContext.tsx
 ├── theme/
 │   └── system.ts
 └── DevSaveManager.tsx    # Dev save UI (unused in main app)

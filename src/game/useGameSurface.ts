@@ -25,6 +25,7 @@ export function useGameSurface() {
   const rolling = useAtomValue(P.rollingAtom);
   const cooldown = useAtomValue(P.cooldownAtom);
   const stunned = useAtomValue(P.stunnedAtom);
+  const stunSchedule = useAtomValue(P.stunScheduleAtom);
   const stunPct = useAtomValue(P.stunPctAtom);
   const cdPct = useAtomValue(P.cdPctAtom);
   const autoPct = useAtomValue(P.autoPctAtom);
@@ -38,7 +39,6 @@ export function useGameSurface() {
   const threes = useAtomValue(P.threesAtom);
   const shook = useAtomValue(P.shookAtom);
   const flash = useAtomValue(P.flashAtom);
-  const saved = useAtomValue(P.savedAtom);
   const tab = useAtomValue(P.tabAtom);
   const log = useAtomValue(P.logAtom);
   const started = useAtomValue(P.startedAtom);
@@ -48,10 +48,11 @@ export function useGameSurface() {
 
   const currentDie = useAtomValue(D.currentDieAtom);
   const multi = useAtomValue(D.multiAtom);
-  const armor = useAtomValue(D.armorAtom);
+  const streakRetentionPct = useAtomValue(D.streakRetentionPctAtom);
   const pMult = useAtomValue(D.pMultAtom);
   const cdMs = useAtomValue(D.cdMsAtom);
   const stunMs = useAtomValue(D.stunMsAtom);
+  const stunActiveDurationMs = stunSchedule?.durationMs ?? stunMs;
   const autoMs = useAtomValue(D.autoMsAtom);
   const prestigeReq = useAtomValue(D.prestigeReqAtom);
   const canPrestige = useAtomValue(D.canPrestigeAtom);
@@ -89,7 +90,6 @@ export function useGameSurface() {
     threes,
     shook,
     flash,
-    saved,
     tab,
     log,
     started,
@@ -99,10 +99,11 @@ export function useGameSurface() {
     reforgeCap,
     currentDie,
     multi,
-    armor,
+    streakRetentionPct,
     pMult,
     cdMs,
     stunMs,
+    stunActiveDurationMs,
     autoMs,
     prestigeReq,
     canPrestige,

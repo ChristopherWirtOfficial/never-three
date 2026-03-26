@@ -44,12 +44,11 @@ export default function NeverThree() {
               aLv={g.aLv}
               sLv={g.sLv}
               multi={g.multi}
-              armor={g.armor}
+              streakRetentionPct={g.streakRetentionPct}
               pMult={g.pMult}
               roll={g.roll}
               rolling={g.rolling}
               streak={g.streak}
-              saved={g.saved}
               stunned={g.stunned}
               rolls={g.rolls}
               threes={g.threes}
@@ -91,10 +90,9 @@ export default function NeverThree() {
         <BottomDock
           roll={g.roll}
           sides={g.currentDie.length}
-          saved={g.saved}
           stunned={g.stunned}
           stunPct={g.stunPct}
-          stunMs={g.stunMs}
+          stunActiveDurationMs={g.stunActiveDurationMs}
           rolling={g.rolling}
           locked={g.locked}
           aLv={g.aLv}

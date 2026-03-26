@@ -15,6 +15,11 @@ export const rollAtom = atom<number | null>(null);
 export const rollingAtom = atom(false);
 export const cooldownAtom = atom(false);
 export const stunnedAtom = atom(false);
+/** Wall-clock span of the current stun (set with roll; not tied to live stun upgrade tier). */
+export const stunScheduleAtom = atom<{
+  startMs: number;
+  durationMs: number;
+} | null>(null);
 export const stunPctAtom = atom(0);
 export const cdPctAtom = atom(0);
 export const autoPctAtom = atom(0);
@@ -30,7 +35,6 @@ export const rollsAtom = atom(0);
 export const threesAtom = atom(0);
 export const shookAtom = atom(false);
 export const flashAtom = atom<string | null>(null);
-export const savedAtom = atom(false);
 
 export const tabAtom = atom<TabId>("roll");
 export const logAtom = atom<string[]>([]);

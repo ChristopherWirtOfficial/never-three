@@ -6,10 +6,10 @@ import { DockTabBar } from "./DockTabBar";
 interface BottomDockProps {
   roll: number | null;
   sides: number;
-  saved: boolean;
   stunned: boolean;
   stunPct: number;
-  stunMs: number;
+  /** Denominator for stunned countdown bar (locked at stun apply, not live shop tier). */
+  stunActiveDurationMs: number;
   rolling: boolean;
   locked: boolean;
   aLv: number;

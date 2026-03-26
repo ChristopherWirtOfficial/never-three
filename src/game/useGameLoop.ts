@@ -9,14 +9,10 @@ import {
   sLvAtom,
   startedAtom,
   stunPctAtom,
+  stunScheduleAtom,
   stunnedAtom,
 } from "./atoms/primitives";
-import {
-  autoMsAtom,
-  cdMsAtom,
-  gameLockedAtom,
-  stunMsAtom,
-} from "./atoms/derived";
+import { autoMsAtom, cdMsAtom, gameLockedAtom } from "./atoms/derived";
 import { clearRollTimeouts } from "./rollTimers";
 
 /**
@@ -29,10 +25,11 @@ export function useGameLoop(rollDice: () => void): void {
   const cooldown = useAtomValue(cooldownAtom);
   const stunned = useAtomValue(stunnedAtom);
   const cdMs = useAtomValue(cdMsAtom);
-  const stunMs = useAtomValue(stunMsAtom);
+  const stunSchedule = useAtomValue(stunScheduleAtom);
 
   const setCooldown = useSetAtom(cooldownAtom);
   const setStunned = useSetAtom(stunnedAtom);
+  const setStunSchedule = useSetAtom(stunScheduleAtom);
   const setAutoPct = useSetAtom(autoPctAtom);
   const setCdPct = useSetAtom(cdPctAtom);
   const setStunPct = useSetAtom(stunPctAtom);
@@ -46,8 +43,9 @@ export function useGameLoop(rollDice: () => void): void {
   useEffect(
     () => () => {
       clearRollTimeouts();
+      setStunSchedule(null);
     },
-    [],
+    [setStunSchedule],
   );
 
   const sLv = useAtomValue(sLvAtom);
@@ -55,7 +53,8 @@ export function useGameLoop(rollDice: () => void): void {
     clearRollTimeouts();
     setCooldown(false);
     setStunned(false);
-  }, [sLv, setCooldown, setStunned]);
+    setStunSchedule(null);
+  }, [sLv, setCooldown, setStunned, setStunSchedule]);
 
   useEffect(() => {
     const ms = AUTO[aLv].ms;
@@ -119,19 +118,19 @@ export function useGameLoop(rollDice: () => void): void {
   }, [cooldown, stunned, cdMs, setCdPct]);
 
   useEffect(() => {
-    if (stunned) {
-      const stunStart = Date.now();
+    if (stunned && stunSchedule) {
+      const { startMs, durationMs } = stunSchedule;
       const tick = () => {
-        const p = Math.min((Date.now() - stunStart) / stunMs, 1);
+        const p = Math.min((Date.now() - startMs) / durationMs, 1);
         setStunPct(p);
         if (p < 1) stunFrameRef.current = requestAnimationFrame(tick);
         else setStunPct(1);
       };
       stunFrameRef.current = requestAnimationFrame(tick);
-    } else {
+    } else if (!stunned) {
       setStunPct(0);
       cancelAnimationFrame(stunFrameRef.current);
     }
     return () => cancelAnimationFrame(stunFrameRef.current);
-  }, [stunned, stunMs, setStunPct]);
+  }, [stunned, stunSchedule, setStunPct]);
 }
