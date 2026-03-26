@@ -1,28 +1,28 @@
 # NEVER THREE — Architecture Guide
 
 ## Tech Stack
+
 - **TypeScript** with strict mode
 - **React** (JSX, hooks only, no class components)
-- **esbuild** for bundling to single-file JSX artifact
+- **Vite** for dev server and production builds
 - No external UI libraries — all inline styles
 
 ## Build
+
 ```bash
 cd never-three
 npm install          # first time only
-bash build.sh        # typechecks via tsc, bundles via esbuild
-# Output: dist/never-three.jsx
+npm run dev          # Vite dev server with HMR
+npm run build        # tsc --noEmit, then vite build → dist/
+npm run preview      # serve dist/ locally
 ```
-
-Build takes ~50ms. The output is a single ESM file with `export default`
-that React artifact renderers can consume directly. JSX is preserved
-(not compiled to createElement) because the artifact runtime handles it.
 
 ## File Structure
 
 ```
 src/
-├── index.tsx          # Root component, layout shell, tab routing
+├── main.tsx           # Vite entry: mounts React root
+├── App.tsx            # Root component, layout shell, tab routing
 ├── useGameState.ts    # All game state + logic in one hook
 ├── constants.ts       # Upgrade tables, cost functions, helpers
 ├── types.ts           # Shared TypeScript interfaces
@@ -44,6 +44,7 @@ src/
 ## State Architecture
 
 All game state lives in `useGameState()`. It returns a flat object with:
+
 - **State values**: gold, hex, streaks, levels, dice, UI flags
 - **Derived values**: computed costs, multipliers, lock states
 - **Actions**: doRoll, buy, reforgeUp, reforgeDown, doPrestige, setTab
@@ -60,6 +61,7 @@ No component has its own game state.
 **Meta**: prestige, rolls, threes, tab, log, started
 
 ### Roll Flow
+
 1. `doRoll()` called (tap or auto-roll)
 2. Lock set, cooldown starts, rolling animation plays
 3. Random face picked from `currentDie`
@@ -71,7 +73,9 @@ No component has its own game state.
 7. When cooldown ends → if auto-roll enabled, auto-roll delay starts → chain continues
 
 ### Auto-Roll Architecture
+
 Auto-roll is NOT an interval. It's a chained timeout:
+
 - Cooldown/stun ends → `locked` becomes false
 - Effect detects `!locked && autoMs !== null` → starts setTimeout for autoMs
 - Timeout fires → calls doRoll() → new cooldown starts → cycle repeats
@@ -80,6 +84,7 @@ This means auto-roll delay is ADDITIVE with cooldown. Total time between
 rolls = cooldown + auto delay. Both are independently upgradeable.
 
 ### Reforge Cost Model
+
 ```
 cost = REFORGE_BASE × max(current, target) × (1 + totalReforges × 0.15)
 if escaping a multiple of 3: cost × 4
@@ -91,4 +96,4 @@ if escaping a multiple of 3: cost × 4
 2. **Always progressing**: Safe rolls earn gold, dangerous rolls earn hex. No dead time.
 3. **Readable at a glance**: Three visual states for everything (active/inactive/maxed)
 4. **Minimal dependencies**: No state management libraries, no CSS frameworks
-5. **Fast iteration**: TypeScript catches errors, esbuild bundles instantly
+5. **Fast iteration**: TypeScript catches errors, Vite dev server + HMR

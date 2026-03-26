@@ -6,7 +6,9 @@ An incremental idle dice game where rolling multiples of 3 is dangerous.
 
 ```bash
 npm install
-bash build.sh     # typechecks + bundles → dist/never-three.jsx
+npm run dev       # local dev server (Vite)
+npm run build     # typecheck + production bundle → dist/
+npm run preview   # serve production build locally
 ```
 
 ## Docs
