@@ -5,7 +5,9 @@ import {
 	SPEED,
 	STREAK_RETENTION,
 	STUN,
+	dangerousFaceHexUnits,
 	fmt,
+	HEX_BASE,
 	hexStreakMultiplier,
 	streakMultiplier,
 } from './constants'
@@ -123,17 +125,17 @@ export function useDiceRoll(): () => void {
 					return kept
 				})
 				setHexRewardStreak((hs: number) => {
+					const mag = Math.max(1, dangerousFaceHexUnits(v))
 					const hm = hexStreakMultiplier(hs)
-					const earnedHex = Math.max(1, Math.floor(hm))
+					const earnedHex = Math.floor(HEX_BASE * mag * hm)
 					setHexBalance((h: number) => h + earnedHex)
-					const nhs = hs + 1
+					const nhs = hs + mag
 					setBestHexRewardStreak((b: number) => Math.max(b, nhs))
-					setGameEventLog((p: string[]) =>
-						[`🔮 +${earnedHex} hex${hs > 1 ? ` (×${hm.toFixed(1)} streak)` : ''}`, ...p].slice(
-							0,
-							60
-						)
-					)
+					const parts: string[] = []
+					if (mag > 1) parts.push(`${mag}× danger`)
+					if (hs > 0) parts.push(`×${hm.toFixed(1)} streak`)
+					const suffix = parts.length ? ` (${parts.join(', ')})` : ''
+					setGameEventLog((p: string[]) => [`🔮 +${earnedHex} hex${suffix}`, ...p].slice(0, 60))
 					return nhs
 				})
 				setTimeout(() => {

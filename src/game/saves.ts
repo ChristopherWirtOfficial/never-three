@@ -298,7 +298,11 @@ export function boot(): Promise<BootResult> {
 	return bootSingleFlight
 }
 
-/** Pick the most recently played loadable profile, or create a fresh unnamed save. */
+/**
+ * Pick the most recently played loadable profile, or create a fresh unnamed save.
+ * Prefer `boot()` from app entry so concurrent calls (Strict Mode, HMR) share one result
+ * and do not each create a new profile.
+ */
 export async function resolvePlayableSession(): Promise<BootResult> {
 	const profiles = await listProfiles()
 	for (const p of profiles) {

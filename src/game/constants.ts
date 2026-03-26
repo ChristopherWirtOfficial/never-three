@@ -82,7 +82,12 @@ export function hexStreakMultiplier(streak: number): number {
 	return 1 + Math.sqrt(streak) * 0.3
 }
 
-export const HEX_BASE = 1 // base hex per dangerous roll
+export const HEX_BASE = 1 // scales hex per “danger unit” (face value / 3)
+
+/** For a multiple-of-3 face, how many danger units (3→1, 6→2, …). */
+export function dangerousFaceHexUnits(faceValue: number): number {
+	return Math.floor(faceValue / 3)
+}
 
 // ── Reforging (costs Hex) ──
 

@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } fro
 import { SaveManagerModal } from '../features/saves/SaveManagerModal'
 import { collectSaveStateFromStore, hydrateStoreFromSaveState } from '../game/persistGameStore'
 import {
+	boot,
 	createProfile,
 	DEFAULT_STATE,
 	duplicateProfile,
@@ -13,7 +14,6 @@ import {
 	listProfiles,
 	loadProfile,
 	renameProfile,
-	resolvePlayableSession,
 	saveProfile,
 	deleteProfile,
 	setActiveProfileId,
@@ -39,7 +39,7 @@ export function AppBootstrap({ children }: { children: ReactNode }) {
 	useEffect(() => {
 		let cancelled = false
 		void (async () => {
-			const result = await resolvePlayableSession()
+			const result = await boot()
 			if (cancelled) return
 			const store = createStore()
 			hydrateStoreFromSaveState(store, result.state)
@@ -116,7 +116,7 @@ export function AppBootstrap({ children }: { children: ReactNode }) {
 			}
 			await deleteProfile(id)
 			if (isCurrent) {
-				const next = await resolvePlayableSession()
+				const next = await boot()
 				const store = createStore()
 				hydrateStoreFromSaveState(store, next.state)
 				setSession({
