@@ -106,7 +106,7 @@ function BubbleLine({
 				fontSize={popup.kind === 'gold' ? '19px' : '17px'}
 				fontWeight={900}
 				letterSpacing={popup.kind === 'gold' ? '0.02em' : '0.04em'}
-				color={popup.kind === 'gold' ? 'never.gold' : 'never.hex'}
+				color={popup.kind === 'gold' ? 'app.gold' : 'app.hex'}
 				lineHeight={1}
 				style={
 					{

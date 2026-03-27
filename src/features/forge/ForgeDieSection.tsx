@@ -28,7 +28,7 @@ export function ForgeDieSection({
 			{showDieLabel && (
 				<Text
 					fontSize='11px'
-					color='never.forgeLabel'
+					color='app.forgeLabel'
 					letterSpacing='2px'
 					mb={2}
 					fontWeight={700}

@@ -33,7 +33,7 @@ export function RollFeedback({
 		>
 			{dangerous && !isRolling && !isStunned && (
 				<Text
-					color='never.danger'
+					color='app.danger'
 					fontSize='28px'
 					fontWeight={900}
 					textShadow='0 0 24px rgba(255, 51, 85, 0.4)'
@@ -45,7 +45,7 @@ export function RollFeedback({
 
 			{safe && !isRolling && lastRolledFace != null && (
 				<Text
-					color='never.streak'
+					color='app.streak'
 					fontSize='28px'
 					fontWeight={900}
 					textShadow='0 0 20px rgba(68, 255, 187, 0.27)'
@@ -65,7 +65,7 @@ export function RollFeedback({
 
 			{safe && !isRolling && goldStreak > 2 && (
 				<Text
-					color='never.streakMuted'
+					color='app.streakMuted'
 					fontSize='12px'
 					mt='2px'
 				>

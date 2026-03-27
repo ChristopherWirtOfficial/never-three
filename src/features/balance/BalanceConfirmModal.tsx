@@ -40,9 +40,9 @@ export function BalanceConfirmModal({
 			<Box
 				w='100%'
 				maxW='380px'
-				bg='never.panel'
+				bg='app.panel'
 				border='1px solid'
-				borderColor='never.panelBorder'
+				borderColor='app.panelBorder'
 				borderRadius='12px'
 				p='16px'
 				onClick={e => e.stopPropagation()}
@@ -51,13 +51,13 @@ export function BalanceConfirmModal({
 					fontSize='14px'
 					fontWeight={700}
 					mb='8px'
-					color='never.text'
+					color='app.text'
 				>
 					{title}
 				</Text>
 				<Text
 					fontSize='12px'
-					color='never.muted'
+					color='app.muted'
 					mb='16px'
 					lineHeight={1.5}
 				>
@@ -74,9 +74,9 @@ export function BalanceConfirmModal({
 						fontSize='12px'
 						borderRadius='8px'
 						border='1px solid'
-						borderColor='never.rowBorder'
-						bg='never.panelMuted'
-						color='never.subtle'
+						borderColor='app.rowBorder'
+						bg='app.panelMuted'
+						color='app.subtle'
 						onClick={onClose}
 						disabled={busy}
 					>
@@ -89,9 +89,9 @@ export function BalanceConfirmModal({
 						fontSize='12px'
 						borderRadius='8px'
 						border='1px solid'
-						borderColor={destructive ? '#552222' : 'never.streakBorder'}
-						bg={destructive ? '#2a1010' : 'never.streak'}
-						color={destructive ? 'never.dangerSoft' : 'never.bg'}
+						borderColor={destructive ? '#552222' : 'app.streakBorder'}
+						bg={destructive ? '#2a1010' : 'app.streak'}
+						color={destructive ? 'app.dangerSoft' : 'app.bg'}
 						onClick={onConfirm}
 						disabled={busy}
 					>

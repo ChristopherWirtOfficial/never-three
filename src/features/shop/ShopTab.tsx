@@ -123,7 +123,7 @@ export function ShopTab({
 			<Box mt='6px'>
 				<Text
 					fontSize='10px'
-					color='never.prestige'
+					color='app.prestige'
 					letterSpacing='2px'
 					mb='6px'
 				>
@@ -135,9 +135,9 @@ export function ShopTab({
 					py='14px'
 					borderRadius='12px'
 					border='1px solid'
-					borderColor={canPrestige ? 'never.prestigeBorder' : 'never.rowBorder'}
-					bg={canPrestige ? 'linear-gradient(135deg,#1a0a2e,#0d051a)' : 'never.panelMuted'}
-					color={canPrestige ? 'never.prestige' : 'never.subtle'}
+					borderColor={canPrestige ? 'app.prestigeBorder' : 'app.rowBorder'}
+					bg={canPrestige ? 'linear-gradient(135deg,#1a0a2e,#0d051a)' : 'app.panelMuted'}
+					color={canPrestige ? 'app.prestige' : 'app.subtle'}
 					fontFamily='monospace'
 					fontSize='13px'
 					fontWeight={700}
@@ -154,14 +154,14 @@ export function ShopTab({
 						<>
 							<Text
 								as='span'
-								color='never.dim'
+								color='app.dim'
 							>
 								{formatCompactNumber(lifetimeGoldEarned)}
 							</Text>{' '}
 							/{' '}
 							<Text
 								as='span'
-								color='never.prestigeMuted'
+								color='app.prestigeMuted'
 							>
 								{formatCompactNumber(prestigeReq)}g
 							</Text>

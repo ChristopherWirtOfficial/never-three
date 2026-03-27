@@ -43,9 +43,9 @@ export function ReforgeFaceRow({
 			gap='6px'
 			py='10px'
 			px='12px'
-			bg={isDangerous ? 'never.forgeDangerBg' : 'never.panel'}
+			bg={isDangerous ? 'app.forgeDangerBg' : 'app.panel'}
 			border='1px solid'
-			borderColor={isDangerous ? '#ff335533' : 'never.panelBorder'}
+			borderColor={isDangerous ? '#ff335533' : 'app.panelBorder'}
 			borderRadius='10px'
 		>
 			<Box
@@ -54,7 +54,7 @@ export function ReforgeFaceRow({
 			>
 				<Text
 					fontSize='10px'
-					color='never.dim'
+					color='app.dim'
 				>
 					F{faceIndex + 1}
 				</Text>
@@ -67,7 +67,7 @@ export function ReforgeFaceRow({
 				<Text
 					fontSize='20px'
 					fontWeight={900}
-					color={isDangerous ? 'never.dangerSoft' : 'never.streak'}
+					color={isDangerous ? 'app.dangerSoft' : 'app.streak'}
 					textShadow={
 						isDangerous ? '0 0 10px rgba(255, 51, 85, 0.27)' : '0 0 10px rgba(68, 255, 187, 0.2)'
 					}
@@ -94,37 +94,37 @@ export function ReforgeFaceRow({
 				px='8px'
 				bg={
 					atFloor
-						? 'never.btnDisabledBg'
+						? 'app.btnDisabledBg'
 						: canAffordDown
 							? prevDangerous
 								? 'linear-gradient(135deg, #2a1a1e, #1a0e12)'
 								: isDangerous
 									? 'linear-gradient(135deg, #2a1a2e, #1a0e1a)'
-									: 'never.rowDeep'
-							: 'never.panel'
+									: 'app.rowDeep'
+							: 'app.panel'
 				}
 				border='1px solid'
 				borderColor={
 					atFloor
-						? 'never.panelBorderDim'
+						? 'app.panelBorderDim'
 						: canAffordDown
 							? isDangerous
 								? '#bb88ff44'
 								: prevDangerous
 									? '#ff335544'
-									: 'never.rowDeep2'
-							: 'never.rowBorder'
+									: 'app.rowDeep2'
+							: 'app.rowBorder'
 				}
 				color={
 					atFloor
-						? 'never.btnDisabledFg'
+						? 'app.btnDisabledFg'
 						: canAffordDown
 							? prevDangerous
-								? 'never.dangerBadge'
+								? 'app.dangerBadge'
 								: isDangerous
-									? 'never.hex'
-									: 'never.subtle'
-							: 'never.stat'
+									? 'app.hex'
+									: 'app.subtle'
+							: 'app.stat'
 				}
 				fontSize='11px'
 				fontWeight={700}
@@ -160,37 +160,37 @@ export function ReforgeFaceRow({
 				px='10px'
 				bg={
 					atCap
-						? 'never.btnDisabledBg'
+						? 'app.btnDisabledBg'
 						: canAffordUp
 							? isDangerous
 								? 'linear-gradient(135deg, #2a1a2e, #1a0e1a)'
 								: nextDangerous
 									? 'linear-gradient(135deg, #2a1a1e, #1a0e12)'
 									: 'linear-gradient(135deg, #12261a, #0b1810)'
-							: 'never.panel'
+							: 'app.panel'
 				}
 				border='1px solid'
 				borderColor={
 					atCap
-						? 'never.panelBorderDim'
+						? 'app.panelBorderDim'
 						: canAffordUp
 							? isDangerous
 								? '#bb88ff44'
 								: nextDangerous
 									? '#ff335544'
-									: 'never.streakBorder'
-							: 'never.rowBorder'
+									: 'app.streakBorder'
+							: 'app.rowBorder'
 				}
 				color={
 					atCap
-						? 'never.btnDisabledFg'
+						? 'app.btnDisabledFg'
 						: canAffordUp
 							? isDangerous
-								? 'never.hex'
+								? 'app.hex'
 								: nextDangerous
-									? 'never.dangerBadge'
-									: 'never.streak'
-							: 'never.stat'
+									? 'app.dangerBadge'
+									: 'app.streak'
+							: 'app.stat'
 				}
 				fontSize='11px'
 				fontWeight={700}

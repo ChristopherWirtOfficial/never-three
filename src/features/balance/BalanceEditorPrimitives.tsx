@@ -30,11 +30,11 @@ export function NumInput({
 			py='4px'
 			fontSize='11px'
 			fontFamily='monospace'
-			bg='never.panelMuted'
+			bg='app.panelMuted'
 			border='1px solid'
-			borderColor='never.rowBorder'
+			borderColor='app.rowBorder'
 			borderRadius='6px'
-			color='never.text'
+			color='app.text'
 		/>
 	)
 }
@@ -48,9 +48,9 @@ export function ResetChip({ onClick }: { onClick: () => void }) {
 			py='1px'
 			borderRadius='4px'
 			border='1px solid'
-			borderColor='never.rowBorder'
-			bg='never.panel'
-			color='never.dim'
+			borderColor='app.rowBorder'
+			bg='app.panel'
+			color='app.dim'
 			onClick={onClick}
 			title='Reset to default'
 		>
@@ -74,7 +74,7 @@ export function CollapsibleSection({
 	return (
 		<Box
 			borderBottom='1px solid'
-			borderColor='never.panelBorder'
+			borderColor='app.panelBorder'
 			py='10px'
 		>
 			<Flex
@@ -92,14 +92,14 @@ export function CollapsibleSection({
 					px='2px'
 					bg='transparent'
 					border='none'
-					color='never.text'
+					color='app.text'
 					textAlign='left'
 					aria-expanded={open}
 					onClick={() => setOpen(o => !o)}
 				>
 					<Text
 						fontSize='10px'
-						color='never.dim'
+						color='app.dim'
 						w='14px'
 						flexShrink={0}
 					>
@@ -108,7 +108,7 @@ export function CollapsibleSection({
 					<Text
 						fontSize='10px'
 						letterSpacing='2px'
-						color='never.hexMuted'
+						color='app.hexMuted'
 					>
 						{title}
 					</Text>
@@ -133,10 +133,10 @@ export function ScalarRow({
 		<Box
 			mb='8px'
 			p='8px'
-			bg='never.panelMuted'
+			bg='app.panelMuted'
 			borderRadius='8px'
 			border='1px solid'
-			borderColor='never.panelBorderDim'
+			borderColor='app.panelBorderDim'
 		>
 			<Flex
 				align='center'
@@ -145,7 +145,7 @@ export function ScalarRow({
 			>
 				<Text
 					fontSize='10px'
-					color='never.muted'
+					color='app.muted'
 				>
 					{label}
 				</Text>
@@ -190,7 +190,7 @@ export function TierTable<T extends object>({
 			<Box
 				overflow='auto'
 				border='1px solid'
-				borderColor='never.panelBorder'
+				borderColor='app.panelBorder'
 				borderRadius='8px'
 			>
 				<chakra.table
@@ -205,9 +205,9 @@ export function TierTable<T extends object>({
 									key={idx}
 									textAlign='left'
 									p='6px'
-									color='never.dim'
+									color='app.dim'
 									borderBottom='1px solid'
-									borderColor='never.rowBorder'
+									borderColor='app.rowBorder'
 								>
 									{h}
 								</chakra.th>
@@ -232,7 +232,7 @@ export function TierTable<T extends object>({
 							>
 								<chakra.td
 									p='4px'
-									color='never.dim'
+									color='app.dim'
 									cursor='grab'
 								>
 									⋮⋮
@@ -242,7 +242,7 @@ export function TierTable<T extends object>({
 									<chakra.button
 										type='button'
 										fontSize='10px'
-										color='never.dangerSoft'
+										color='app.dangerSoft'
 										onClick={() => onRemove(i)}
 										disabled={rows.length <= 1}
 									>
@@ -258,7 +258,7 @@ export function TierTable<T extends object>({
 				type='button'
 				mt='6px'
 				fontSize='10px'
-				color='never.streak'
+				color='app.streak'
 				onClick={onAdd}
 			>
 				+ Add tier

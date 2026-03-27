@@ -34,17 +34,17 @@ export function UpgradeButton({
 			px='14px'
 			bg={
 				maxed
-					? 'never.panelMuted'
+					? 'app.panelMuted'
 					: affordable
 						? 'linear-gradient(135deg, #132e1e, #0b1a10)'
-						: 'never.panelMuted'
+						: 'app.panelMuted'
 			}
 			border='1px solid'
 			borderColor={
-				maxed ? 'never.panelBorderMuted' : affordable ? 'never.streakBorder' : 'never.rowBorder'
+				maxed ? 'app.panelBorderMuted' : affordable ? 'app.streakBorder' : 'app.rowBorder'
 			}
 			borderRadius='12px'
-			color='never.text'
+			color='app.text'
 			cursor={maxed || !affordable ? 'default' : 'pointer'}
 			opacity={maxed ? 0.35 : 1}
 			fontFamily='monospace'
@@ -56,7 +56,7 @@ export function UpgradeButton({
 			<Box>
 				<Text
 					fontSize='10px'
-					color={maxed ? 'never.stat' : affordable ? 'never.upgradeLabel' : 'never.dim'}
+					color={maxed ? 'app.stat' : affordable ? 'app.upgradeLabel' : 'app.dim'}
 					mb='2px'
 				>
 					{icon} {label}
@@ -68,7 +68,7 @@ export function UpgradeButton({
 					{maxed ? (
 						<Text
 							as='span'
-							color='never.streak'
+							color='app.streak'
 						>
 							MAX
 						</Text>
@@ -76,13 +76,13 @@ export function UpgradeButton({
 						<>
 							<Text
 								as='span'
-								color={affordable ? 'never.textFaint' : 'never.costMuted'}
+								color={affordable ? 'app.textFaint' : 'app.costMuted'}
 							>
 								{current}
 							</Text>{' '}
 							<Text
 								as='span'
-								color={affordable ? 'never.streak' : 'never.upgradeArrow'}
+								color={affordable ? 'app.streak' : 'app.upgradeArrow'}
 							>
 								→ {next}
 							</Text>
@@ -95,7 +95,7 @@ export function UpgradeButton({
 					fontSize='13px'
 					fontWeight={700}
 					whiteSpace='nowrap'
-					color={affordable ? 'never.gold' : 'never.subtle'}
+					color={affordable ? 'app.gold' : 'app.subtle'}
 					opacity={affordable ? 1 : 0.7}
 				>
 					{formatCompactNumber(cost)}g

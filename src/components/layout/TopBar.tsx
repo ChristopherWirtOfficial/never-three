@@ -24,7 +24,7 @@ export function TopBar({
 			justify='space-between'
 			align='baseline'
 			borderBottom='1px solid'
-			borderColor='never.border'
+			borderColor='app.border'
 		>
 			<Flex
 				gap={4}
@@ -33,7 +33,7 @@ export function TopBar({
 				<Box>
 					<Text
 						fontSize='9px'
-						color='never.goldMuted'
+						color='app.goldMuted'
 						letterSpacing='2px'
 						fontWeight={700}
 					>
@@ -42,7 +42,7 @@ export function TopBar({
 					<Text
 						fontSize='26px'
 						fontWeight={900}
-						color='never.gold'
+						color='app.gold'
 						textShadow='0 0 16px rgba(255, 221, 51, 0.27)'
 						lineHeight={1.1}
 					>
@@ -52,7 +52,7 @@ export function TopBar({
 				<Box>
 					<Text
 						fontSize='9px'
-						color='never.hexMuted'
+						color='app.hexMuted'
 						letterSpacing='2px'
 						fontWeight={700}
 					>
@@ -61,7 +61,7 @@ export function TopBar({
 					<Text
 						fontSize='20px'
 						fontWeight={900}
-						color='never.hex'
+						color='app.hex'
 						textShadow='0 0 12px rgba(187, 136, 255, 0.2)'
 						lineHeight={1.1}
 					>
@@ -83,9 +83,9 @@ export function TopBar({
 						py='2px'
 						borderRadius='4px'
 						border='1px solid'
-						borderColor='never.rowBorder'
+						borderColor='app.rowBorder'
 						bg='transparent'
-						color='never.dim'
+						color='app.dim'
 						fontSize='9px'
 						fontWeight={700}
 						letterSpacing='0.12em'
@@ -99,11 +99,11 @@ export function TopBar({
 				{prestige > 0 && (
 					<Text
 						fontSize='10px'
-						color='never.dim'
+						color='app.dim'
 					>
 						<Text
 							as='span'
-							color='never.prestige'
+							color='app.prestige'
 						>
 							★{prestige} ×{prestigeGoldMultiplier.toFixed(1)}
 						</Text>

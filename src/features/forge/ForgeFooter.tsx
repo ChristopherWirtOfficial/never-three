@@ -11,10 +11,10 @@ export function ForgeFooter({ totalDieReforgeCount, maxReforgeFaceValue }: Forge
 			mt='10px'
 			py='8px'
 			px='12px'
-			bg='never.dock'
+			bg='app.dock'
 			borderRadius='8px'
 			fontSize='10px'
-			color='never.stat'
+			color='app.stat'
 			lineHeight={1.6}
 		>
 			{totalDieReforgeCount} total reforges · cap: {maxReforgeFaceValue}

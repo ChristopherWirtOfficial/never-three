@@ -7,38 +7,53 @@ import {
 	defineTokens,
 } from '@chakra-ui/react'
 
-/** Game-specific keyframes (prefixed so we do not override Chakra defaults). */
+/** App-specific keyframes (`app*` prefix avoids Chakra defaults and the word “never” in identifiers). */
 const keyframes = defineKeyframes({
-	neverShake: {
+	appShake: {
 		'0%, 100%': { transform: 'translateX(0)' },
 		'20%': { transform: 'translateX(-6px)' },
 		'40%': { transform: 'translateX(6px)' },
 		'60%': { transform: 'translateX(-3px)' },
 		'80%': { transform: 'translateX(3px)' },
 	},
-	neverPulse: {
+	appPulse: {
 		'0%, 100%': { boxShadow: '0 0 16px rgba(68, 255, 187, 0.13)' },
 		'50%': {
 			boxShadow: '0 0 36px rgba(68, 255, 187, 0.27), 0 0 70px rgba(68, 255, 187, 0.067)',
 		},
 	},
-	neverSpin: {
+	appSpin: {
 		'0%': { transform: 'scale(1) rotate(0deg)' },
 		'50%': { transform: 'scale(0.85) rotate(180deg)' },
 		'100%': { transform: 'scale(1) rotate(360deg)' },
 	},
-	neverFadeIn: {
+	/** Dice-cup shake while rolling — rhythmic, not frantic. */
+	appRollWobble: {
+		'0%': { transform: 'rotate(-4deg) scale(0.97)' },
+		'30%': { transform: 'rotate(4deg) scale(1.02)' },
+		'60%': { transform: 'rotate(-3deg) scale(0.98)' },
+		'80%': { transform: 'rotate(3.5deg) scale(1.01)' },
+		'100%': { transform: 'rotate(-4deg) scale(0.97)' },
+	},
+	/** Pop-in when the rolled face is first revealed. */
+	appReveal: {
+		'0%': { transform: 'scale(0.82)', opacity: '0.5' },
+		'45%': { transform: 'scale(1.14)', opacity: '1' },
+		'70%': { transform: 'scale(0.96)', opacity: '1' },
+		'100%': { transform: 'scale(1)', opacity: '1' },
+	},
+	appFadeIn: {
 		from: { opacity: 0, transform: 'translateY(-6px)' },
 		to: { opacity: 1, transform: 'translateY(0)' },
 	},
-	neverStunPulse: {
+	appStunPulse: {
 		'0%, 100%': { opacity: 0.6 },
 		'50%': { opacity: 1 },
 	},
 })
 
 const colors = defineTokens.colors({
-	never: {
+	app: {
 		bg: { value: '#08080f' },
 		border: { value: '#141428' },
 		text: { value: '#dddddd' },

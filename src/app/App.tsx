@@ -22,11 +22,11 @@ export default function NeverThree() {
 				mx='auto'
 				display='flex'
 				flexDirection='column'
-				bg='never.bg'
-				color='never.text'
+				bg='app.bg'
+				color='app.text'
 				fontFamily='monospace'
 				overflow='hidden'
-				animation={game.dieShakeActive ? 'neverShake 0.3s ease' : undefined}
+				animation={game.dieShakeActive ? 'appShake 0.3s ease' : undefined}
 			>
 				<TopBar
 					gold={game.gold}
@@ -86,6 +86,7 @@ export default function NeverThree() {
 
 				<BottomDock
 					lastRolledFace={game.lastRolledFace}
+					dieValues={game.currentDie}
 					sides={game.currentDie.length}
 					isStunned={game.isStunned}
 					stunRecoveryProgress={game.stunRecoveryProgress}

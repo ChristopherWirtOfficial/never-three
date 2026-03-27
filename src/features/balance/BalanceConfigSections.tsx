@@ -104,11 +104,11 @@ export function BalanceConfigSections({
 									py='4px'
 									w='100%'
 									minW='40px'
-									bg='never.panelMuted'
+									bg='app.panelMuted'
 									border='1px solid'
-									borderColor='never.rowBorder'
+									borderColor='app.rowBorder'
 									borderRadius='6px'
-									color='never.text'
+									color='app.text'
 								/>
 							</chakra.td>
 							<chakra.td p='4px'>
@@ -128,7 +128,7 @@ export function BalanceConfigSections({
 			>
 				<Text
 					fontSize='9px'
-					color='never.dim'
+					color='app.dim'
 					mb='4px'
 				>
 					Leave ms empty for Off (null). Use 0 for instant.
@@ -162,11 +162,11 @@ export function BalanceConfigSections({
 									fontSize='11px'
 									px='6px'
 									py='4px'
-									bg='never.panelMuted'
+									bg='app.panelMuted'
 									border='1px solid'
-									borderColor='never.rowBorder'
+									borderColor='app.rowBorder'
 									borderRadius='6px'
-									color='never.text'
+									color='app.text'
 								/>
 							</chakra.td>
 							<chakra.td p='4px'>
@@ -178,11 +178,11 @@ export function BalanceConfigSections({
 									py='4px'
 									w='100%'
 									minW='40px'
-									bg='never.panelMuted'
+									bg='app.panelMuted'
 									border='1px solid'
-									borderColor='never.rowBorder'
+									borderColor='app.rowBorder'
 									borderRadius='6px'
-									color='never.text'
+									color='app.text'
 								/>
 							</chakra.td>
 							<chakra.td p='4px'>
@@ -228,11 +228,11 @@ export function BalanceConfigSections({
 									py='4px'
 									w='100%'
 									minW='40px'
-									bg='never.panelMuted'
+									bg='app.panelMuted'
 									border='1px solid'
-									borderColor='never.rowBorder'
+									borderColor='app.rowBorder'
 									borderRadius='6px'
-									color='never.text'
+									color='app.text'
 								/>
 							</chakra.td>
 							<chakra.td p='4px'>

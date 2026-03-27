@@ -34,10 +34,10 @@ export function RollBadges({
 			fontSize='11px'
 			px='10px'
 			py='3px'
-			bg='never.panel'
+			bg='app.panel'
 			borderRadius='6px'
 			border='1px solid'
-			borderColor='never.panelBorder'
+			borderColor='app.panelBorder'
 			color={colorToken}
 		>
 			{child}
@@ -54,14 +54,14 @@ export function RollBadges({
 				<>
 					[{currentDie.join(',')}]{dangerCount > 0 ? ` 💀${dangerCount}` : ' ✓'}
 				</>,
-				dangerCount > 0 ? 'never.dangerBadge' : 'never.streak'
+				dangerCount > 0 ? 'app.dangerBadge' : 'app.streak'
 			)}
 			{badge(
 				<>{autoRollUpgradeLevel > 0 ? `AUTO ${autoName}` : `TAP ${speedName}`}</>,
-				autoRollUpgradeLevel > 0 ? 'never.autoTeal' : 'never.subtle'
+				autoRollUpgradeLevel > 0 ? 'app.autoTeal' : 'app.subtle'
 			)}
-			{badge(<>×{goldMultiplier}</>, 'never.multi')}
-			{streakRetentionPct > 0 && badge(<>🔒{streakRetentionPct}% streak</>, 'never.armorBlue')}
+			{badge(<>×{goldMultiplier}</>, 'app.multi')}
+			{streakRetentionPct > 0 && badge(<>🔒{streakRetentionPct}% streak</>, 'app.armorBlue')}
 		</Flex>
 	)
 }

@@ -44,7 +44,7 @@ export function RollTab({
 			{!runStarted && (
 				<Text
 					fontSize='13px'
-					color='never.subtle'
+					color='app.subtle'
 					lineHeight={1.7}
 					textAlign='center'
 					maxW='260px'
@@ -55,7 +55,7 @@ export function RollTab({
 					Don&apos;t roll a{' '}
 					<Text
 						as='span'
-						color='never.danger'
+						color='app.danger'
 						fontWeight={700}
 					>
 						multiple of 3
@@ -67,7 +67,7 @@ export function RollTab({
 			{runStarted && (
 				<Text
 					fontSize='10px'
-					color='never.stat'
+					color='app.stat'
 				>
 					{totalRollCount} rolls · {multipleOfThreeRollCount} threes
 					{totalRollCount > 0 &&

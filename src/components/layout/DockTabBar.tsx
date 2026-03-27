@@ -18,7 +18,7 @@ export function DockTabBar({ activeGameTab, onTabChange }: DockTabBarProps) {
 	return (
 		<Flex
 			borderTop='1px solid'
-			borderColor='never.border'
+			borderColor='app.border'
 		>
 			{TABS.map(([key, label]) => (
 				<chakra.button
@@ -29,8 +29,8 @@ export function DockTabBar({ activeGameTab, onTabChange }: DockTabBarProps) {
 					bg='transparent'
 					border='none'
 					borderTop='2px solid'
-					borderTopColor={activeGameTab === key ? 'never.streak' : 'transparent'}
-					color={activeGameTab === key ? 'never.streak' : 'never.tabInactive'}
+					borderTopColor={activeGameTab === key ? 'app.streak' : 'transparent'}
+					color={activeGameTab === key ? 'app.streak' : 'app.tabInactive'}
 					fontFamily='monospace'
 					fontSize='12px'
 					fontWeight={700}

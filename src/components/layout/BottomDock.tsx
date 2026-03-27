@@ -5,6 +5,7 @@ import { DockTabBar } from './DockTabBar'
 
 interface BottomDockProps {
 	lastRolledFace: number | null
+	dieValues: number[]
 	sides: number
 	isStunned: boolean
 	stunRecoveryProgress: number
@@ -36,8 +37,8 @@ export function BottomDock(props: BottomDockProps) {
 		<Box
 			flexShrink={0}
 			borderTop='1px solid'
-			borderColor='never.border'
-			bg='never.dock'
+			borderColor='app.border'
+			bg='app.dock'
 		>
 			<DockRollZone
 				{...rollZone}

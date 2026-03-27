@@ -1,4 +1,5 @@
 import { Box, Flex, Text } from '@chakra-ui/react'
+import { useEffect, useRef, useState } from 'react'
 import { DiceFace } from '../dice/DiceFace'
 import { RollRewardBubbles } from './RollRewardBubbles'
 
@@ -83,6 +84,7 @@ function ConicRingDonut({
 
 interface DockRollZoneProps {
 	lastRolledFace: number | null
+	dieValues: number[]
 	sides: number
 	isStunned: boolean
 	stunRecoveryProgress: number
@@ -108,6 +110,7 @@ interface DockRollZoneProps {
 
 export function DockRollZone({
 	lastRolledFace,
+	dieValues,
 	sides,
 	isStunned,
 	stunRecoveryProgress,
@@ -130,6 +133,33 @@ export function DockRollZone({
 	onRoll,
 }: DockRollZoneProps) {
 	const autoEnabled = autoRollUpgradeLevel > 0 && autoMs !== null && autoMs > 0 && runStarted
+
+	// Cycle through the die's actual face values while rolling (correct probability distribution).
+	const [cyclingFace, setCyclingFace] = useState<number | null>(null)
+	useEffect(() => {
+		if (!isRolling || dieValues.length === 0) {
+			setCyclingFace(null)
+			return
+		}
+		const pick = () => setCyclingFace(dieValues[Math.floor(Math.random() * dieValues.length)])
+		pick()
+		const id = setInterval(pick, 90)
+		return () => clearInterval(id)
+	}, [isRolling, dieValues])
+
+	const displayFace = isRolling && cyclingFace !== null ? cyclingFace : lastRolledFace
+
+	// Fire a brief reveal animation the moment rolling stops.
+	const [justRevealed, setJustRevealed] = useState(false)
+	const prevIsRollingRef = useRef(isRolling)
+	useEffect(() => {
+		if (prevIsRollingRef.current && !isRolling && lastRolledFace !== null) {
+			setJustRevealed(true)
+			const t = setTimeout(() => setJustRevealed(false), 300)
+			return () => clearTimeout(t)
+		}
+		prevIsRollingRef.current = isRolling
+	}, [isRolling, lastRolledFace])
 
 	let innerRingActive = false
 	let innerRingElapsed = 0
@@ -262,15 +292,15 @@ export function DockRollZone({
 						transform='translateX(-50%)'
 						zIndex={4}
 						px='4px'
-						bg='never.dock'
+						bg='app.dock'
 					>
 						<Text
 							fontSize='11px'
 							fontWeight={800}
-							color={timerIsInner ? (isStunRing ? 'never.stun' : 'never.streak') : 'never.autoTeal'}
+							color={timerIsInner ? (isStunRing ? 'app.stun' : 'app.streak') : 'app.autoTeal'}
 							lineHeight={1.3}
 							whiteSpace='nowrap'
-							animation={timerIsInner && isStunRing ? 'neverStunPulse 1s ease infinite' : undefined}
+							animation={timerIsInner && isStunRing ? 'appStunPulse 1s ease infinite' : undefined}
 						>
 							{timerText}
 						</Text>
@@ -297,24 +327,24 @@ export function DockRollZone({
 						}
 						border='2px solid'
 						borderColor={
-							isStunned ? '#ff335566' : locked ? 'never.dieBorderLocked' : 'never.streakBorder'
+							isStunned ? '#ff335566' : locked ? 'app.dieBorderLocked' : 'app.streakBorder'
 						}
 						display='flex'
 						alignItems='center'
 						justifyContent='center'
 						animation={
 							isRolling
-								? 'neverSpin 0.3s linear infinite'
-								: !locked && !autoRollUpgradeLevel
-									? 'neverPulse 2.5s ease infinite'
+								? 'appRollWobble 0.38s ease-in-out infinite'
+								: !locked && !isStunned && !autoRollUpgradeLevel
+									? 'appPulse 2.5s ease infinite'
 									: undefined
 						}
 						opacity={locked && !isRolling && !isStunned ? 0.55 : 1}
 						transition='border-color 0.3s, background 0.3s, opacity 0.3s'
 					>
-						{lastRolledFace === null ? (
+						{displayFace === null ? (
 							<Text
-								color='never.hint'
+								color='app.hint'
 								fontSize='15px'
 								textAlign='center'
 								lineHeight={1.5}
@@ -327,12 +357,18 @@ export function DockRollZone({
 								ROLL
 							</Text>
 						) : (
-							<DiceFace
-								value={lastRolledFace}
-								sides={sides}
-								isThree={lastRolledFace !== null && lastRolledFace % 3 === 0}
-								rolling={isRolling}
-							/>
+							<Box
+								w='100%'
+								h='100%'
+								animation={justRevealed ? 'appReveal 0.28s ease-out forwards' : undefined}
+							>
+								<DiceFace
+									value={displayFace}
+									sides={sides}
+									isThree={displayFace % 3 === 0}
+									dimmed={isRolling}
+								/>
+							</Box>
 						)}
 					</Box>
 				</Box>
@@ -353,7 +389,7 @@ export function DockRollZone({
 				>
 					<Text
 						fontSize='9px'
-						color='never.goldMuted'
+						color='app.goldMuted'
 						letterSpacing='0.1em'
 						fontWeight={700}
 					>
@@ -363,14 +399,14 @@ export function DockRollZone({
 						fontSize='26px'
 						fontWeight={900}
 						lineHeight={1}
-						color={goldStreak > 0 ? 'never.streak' : 'never.streakDim'}
+						color={goldStreak > 0 ? 'app.streak' : 'app.streakDim'}
 					>
 						{goldStreak}
 					</Text>
 					<Text
 						fontSize='11px'
 						fontWeight={600}
-						color={goldStreak > 0 ? 'never.streak' : 'never.streakDim'}
+						color={goldStreak > 0 ? 'app.streak' : 'app.streakDim'}
 						opacity={goldStreak > 0 ? 0.6 : 0.3}
 						letterSpacing='0.03em'
 					>
@@ -378,7 +414,7 @@ export function DockRollZone({
 					</Text>
 					<Text
 						fontSize='9px'
-						color='never.dim'
+						color='app.dim'
 						mt='1px'
 					>
 						best {bestGoldStreak}
@@ -393,7 +429,7 @@ export function DockRollZone({
 				>
 					<Text
 						fontSize='9px'
-						color='never.hexMuted'
+						color='app.hexMuted'
 						letterSpacing='0.1em'
 						fontWeight={700}
 					>
@@ -403,14 +439,14 @@ export function DockRollZone({
 						fontSize='26px'
 						fontWeight={900}
 						lineHeight={1}
-						color={hexRewardStreak > 0 ? 'never.hex' : 'never.streakDim'}
+						color={hexRewardStreak > 0 ? 'app.hex' : 'app.streakDim'}
 					>
 						{hexRewardStreak}
 					</Text>
 					<Text
 						fontSize='11px'
 						fontWeight={600}
-						color={hexRewardStreak > 0 ? 'never.hexStreak' : 'never.streakDim'}
+						color={hexRewardStreak > 0 ? 'app.hexStreak' : 'app.streakDim'}
 						opacity={hexRewardStreak > 0 ? 0.6 : 0.3}
 						letterSpacing='0.03em'
 					>
@@ -418,7 +454,7 @@ export function DockRollZone({
 					</Text>
 					<Text
 						fontSize='9px'
-						color='never.dim'
+						color='app.dim'
 						mt='1px'
 					>
 						best {bestHexRewardStreak}

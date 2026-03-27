@@ -260,7 +260,7 @@ export function BalanceTab() {
 		>
 			<Text
 				fontSize='11px'
-				color='never.dim'
+				color='app.dim'
 				mb='8px'
 			>
 				Tune costs, tiers, and formulas. Apply saves to a named preset and updates the running game.
@@ -270,7 +270,7 @@ export function BalanceTab() {
 			{dirty && (
 				<Text
 					fontSize='10px'
-					color='never.goldMuted'
+					color='app.goldMuted'
 					mb='6px'
 				>
 					● Unapplied edits (not in the live game yet)
@@ -306,17 +306,17 @@ export function BalanceTab() {
 				mt='20px'
 				pt='12px'
 				borderTop='1px solid'
-				borderColor='never.panelBorder'
+				borderColor='app.panelBorder'
 			>
 				<chakra.button
 					type='button'
 					flex={1}
 					py='12px'
 					borderRadius='10px'
-					bg='never.panelMuted'
+					bg='app.panelMuted'
 					border='1px solid'
-					borderColor='never.rowBorder'
-					color='never.subtle'
+					borderColor='app.rowBorder'
+					color='app.subtle'
 					fontWeight={700}
 					fontSize='12px'
 					onClick={handleResetAllDraft}
@@ -331,8 +331,8 @@ export function BalanceTab() {
 					borderRadius='10px'
 					bg='linear-gradient(135deg,#1a2a1e,#0d1810)'
 					border='1px solid'
-					borderColor='never.streakBorder'
-					color='never.streak'
+					borderColor='app.streakBorder'
+					color='app.streak'
 					fontWeight={700}
 					fontSize='12px'
 					onClick={() => void handleApply()}

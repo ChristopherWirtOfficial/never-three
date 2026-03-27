@@ -69,9 +69,9 @@ export function SaveManagerModal() {
 				w='100%'
 				maxW='400px'
 				maxH='85dvh'
-				bg='never.panel'
+				bg='app.panel'
 				border='1px solid'
-				borderColor='never.panelBorder'
+				borderColor='app.panelBorder'
 				borderRadius='16px'
 				overflow='hidden'
 				display='flex'
@@ -83,14 +83,14 @@ export function SaveManagerModal() {
 					px='16px'
 					py='14px'
 					borderBottom='1px solid'
-					borderColor='never.border'
+					borderColor='app.border'
 					align='center'
 					justify='space-between'
 				>
 					<Text
 						fontSize='14px'
 						fontWeight={800}
-						color='never.gold'
+						color='app.gold'
 						letterSpacing='0.08em'
 					>
 						SAVES
@@ -99,7 +99,7 @@ export function SaveManagerModal() {
 						type='button'
 						bg='transparent'
 						border='none'
-						color='never.dim'
+						color='app.dim'
 						fontSize='18px'
 						cursor={busy ? 'default' : 'pointer'}
 						opacity={busy ? 0.4 : 1}
@@ -134,8 +134,8 @@ export function SaveManagerModal() {
 									py='10px'
 									borderRadius='10px'
 									border='1px solid'
-									borderColor={isActive ? 'never.streakBorder' : 'never.panelBorder'}
-									bg={isActive ? 'never.dock' : 'never.bg'}
+									borderColor={isActive ? 'app.streakBorder' : 'app.panelBorder'}
+									bg={isActive ? 'app.dock' : 'app.bg'}
 								>
 									{isEditing ? (
 										<chakra.input
@@ -155,9 +155,9 @@ export function SaveManagerModal() {
 											py='6px'
 											borderRadius='6px'
 											border='1px solid'
-											borderColor='never.streakBorder'
-											bg='never.bg'
-											color='never.text'
+											borderColor='app.streakBorder'
+											bg='app.bg'
+											color='app.text'
 											fontSize='13px'
 											fontFamily='monospace'
 										/>
@@ -165,14 +165,14 @@ export function SaveManagerModal() {
 										<Text
 											fontSize='13px'
 											fontWeight={700}
-											color={isActive ? 'never.streak' : 'never.text'}
+											color={isActive ? 'app.streak' : 'app.text'}
 										>
 											{display}
 										</Text>
 									)}
 									<Text
 										fontSize='10px'
-										color='never.stat'
+										color='app.stat'
 										mt='4px'
 									>
 										Last played {new Date(profile.lastPlayed).toLocaleString()}
@@ -180,7 +180,7 @@ export function SaveManagerModal() {
 									{isActive && (
 										<Text
 											fontSize='9px'
-											color='never.streakMuted'
+											color='app.streakMuted'
 											mt='2px'
 										>
 											Current · autosaves to this slot
@@ -191,7 +191,7 @@ export function SaveManagerModal() {
 										<Box mt='8px'>
 											<Text
 												fontSize='10px'
-												color='never.dim'
+												color='app.dim'
 												mb='4px'
 											>
 												Name for copy (optional)
@@ -205,9 +205,9 @@ export function SaveManagerModal() {
 												py='6px'
 												borderRadius='6px'
 												border='1px solid'
-												borderColor='never.rowBorder'
-												bg='never.bg'
-												color='never.text'
+												borderColor='app.rowBorder'
+												bg='app.bg'
+												color='app.text'
 												fontSize='12px'
 												fontFamily='monospace'
 												mb='6px'
@@ -218,10 +218,10 @@ export function SaveManagerModal() {
 													flex={1}
 													py='6px'
 													borderRadius='6px'
-													bg='never.panelMuted'
+													bg='app.panelMuted'
 													border='1px solid'
-													borderColor='never.rowBorder'
-													color='never.subtle'
+													borderColor='app.rowBorder'
+													color='app.subtle'
 													fontSize='11px'
 													fontWeight={700}
 													disabled={busy}
@@ -239,8 +239,8 @@ export function SaveManagerModal() {
 													borderRadius='6px'
 													bg='linear-gradient(135deg,#1a0a2e,#0d051a)'
 													border='1px solid'
-													borderColor='never.prestigeBorder'
-													color='never.prestige'
+													borderColor='app.prestigeBorder'
+													color='app.prestige'
 													fontSize='11px'
 													fontWeight={700}
 													disabled={busy}
@@ -274,8 +274,8 @@ export function SaveManagerModal() {
 													borderRadius='6px'
 													bg='#1a2a22'
 													border='1px solid'
-													borderColor='never.streakBorder'
-													color='never.streak'
+													borderColor='app.streakBorder'
+													color='app.streak'
 													fontSize='11px'
 													fontWeight={700}
 													disabled={busy}
@@ -295,10 +295,10 @@ export function SaveManagerModal() {
 												minW='100px'
 												py='6px'
 												borderRadius='6px'
-												bg='never.panelMuted'
+												bg='app.panelMuted'
 												border='1px solid'
-												borderColor='never.rowBorder'
-												color='never.subtle'
+												borderColor='app.rowBorder'
+												color='app.subtle'
 												fontSize='11px'
 												fontWeight={700}
 												disabled={busy}
@@ -317,10 +317,10 @@ export function SaveManagerModal() {
 												minW='100px'
 												py='6px'
 												borderRadius='6px'
-												bg='never.panelMuted'
+												bg='app.panelMuted'
 												border='1px solid'
-												borderColor='never.rowBorder'
-												color='never.multi'
+												borderColor='app.rowBorder'
+												color='app.multi'
 												fontSize='11px'
 												fontWeight={700}
 												disabled={busy}
@@ -339,10 +339,10 @@ export function SaveManagerModal() {
 												minW='100px'
 												py='6px'
 												borderRadius='6px'
-												bg={isConfirmDelete ? '#2a0a12' : 'never.panelMuted'}
+												bg={isConfirmDelete ? '#2a0a12' : 'app.panelMuted'}
 												border='1px solid'
-												borderColor={isConfirmDelete ? 'never.danger' : 'never.rowBorder'}
-												color={isConfirmDelete ? 'never.danger' : 'never.dim'}
+												borderColor={isConfirmDelete ? 'app.danger' : 'app.rowBorder'}
+												color={isConfirmDelete ? 'app.danger' : 'app.dim'}
 												fontSize='11px'
 												fontWeight={700}
 												disabled={busy}
@@ -372,8 +372,8 @@ export function SaveManagerModal() {
 												flex={1}
 												py='6px'
 												borderRadius='6px'
-												bg='never.streak'
-												color='never.bg'
+												bg='app.streak'
+												color='app.bg'
 												fontSize='11px'
 												fontWeight={800}
 												disabled={busy}
@@ -391,10 +391,10 @@ export function SaveManagerModal() {
 												flex={1}
 												py='6px'
 												borderRadius='6px'
-												bg='never.panelMuted'
+												bg='app.panelMuted'
 												border='1px solid'
-												borderColor='never.rowBorder'
-												color='never.subtle'
+												borderColor='app.rowBorder'
+												color='app.subtle'
 												fontSize='11px'
 												disabled={busy}
 												onClick={() => setEditingId(null)}
@@ -413,11 +413,11 @@ export function SaveManagerModal() {
 					px='12px'
 					py='12px'
 					borderTop='1px solid'
-					borderColor='never.border'
+					borderColor='app.border'
 				>
 					<Text
 						fontSize='10px'
-						color='never.dim'
+						color='app.dim'
 						letterSpacing='0.06em'
 						mb='6px'
 					>
@@ -433,9 +433,9 @@ export function SaveManagerModal() {
 							py='8px'
 							borderRadius='8px'
 							border='1px solid'
-							borderColor='never.rowBorder'
-							bg='never.bg'
-							color='never.text'
+							borderColor='app.rowBorder'
+							bg='app.bg'
+							color='app.text'
 							fontSize='12px'
 							fontFamily='monospace'
 							onKeyDown={e => {
@@ -455,8 +455,8 @@ export function SaveManagerModal() {
 							borderRadius='8px'
 							bg='linear-gradient(135deg,#132e1e,#0b1a10)'
 							border='1px solid'
-							borderColor='never.streakBorder'
-							color='never.streak'
+							borderColor='app.streakBorder'
+							color='app.streak'
 							fontSize='12px'
 							fontWeight={800}
 							whiteSpace='nowrap'
@@ -474,7 +474,7 @@ export function SaveManagerModal() {
 					</Flex>
 					<Text
 						fontSize='9px'
-						color='never.stat'
+						color='app.stat'
 						mt='8px'
 						lineHeight={1.5}
 					>

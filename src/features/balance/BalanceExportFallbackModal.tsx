@@ -32,9 +32,9 @@ export function BalanceExportFallbackModal({
 			<Box
 				w='100%'
 				maxW='440px'
-				bg='never.panel'
+				bg='app.panel'
 				border='1px solid'
-				borderColor='never.panelBorder'
+				borderColor='app.panelBorder'
 				borderRadius='12px'
 				p='16px'
 				onClick={e => e.stopPropagation()}
@@ -42,7 +42,7 @@ export function BalanceExportFallbackModal({
 				<Text
 					fontSize='12px'
 					mb='8px'
-					color='never.text'
+					color='app.text'
 				>
 					Clipboard unavailable — copy JSON manually:
 				</Text>
@@ -53,11 +53,11 @@ export function BalanceExportFallbackModal({
 					w='100%'
 					fontSize='10px'
 					fontFamily='monospace'
-					bg='never.bg'
+					bg='app.bg'
 					border='1px solid'
-					borderColor='never.rowBorder'
+					borderColor='app.rowBorder'
 					borderRadius='8px'
-					color='never.text'
+					color='app.text'
 					p='8px'
 					mb='12px'
 				/>
@@ -79,8 +79,8 @@ export function BalanceExportFallbackModal({
 						px='12px'
 						py='8px'
 						fontSize='12px'
-						bg='never.streak'
-						color='never.bg'
+						bg='app.streak'
+						color='app.bg'
 						borderRadius='8px'
 						onClick={copy}
 					>

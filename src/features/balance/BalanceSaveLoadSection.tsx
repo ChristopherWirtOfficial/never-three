@@ -38,14 +38,14 @@ export function BalanceSaveLoadSection({
 	return (
 		<Box
 			border='1px solid'
-			borderColor='never.panelBorder'
+			borderColor='app.panelBorder'
 			borderRadius='10px'
-			bg='never.panelMuted'
+			bg='app.panelMuted'
 			p='10px'
 		>
 			<Text
 				fontSize='10px'
-				color='never.muted'
+				color='app.muted'
 				mb='8px'
 				textTransform='uppercase'
 				letterSpacing='0.08em'
@@ -61,11 +61,11 @@ export function BalanceSaveLoadSection({
 					onChange={e => onSelectSlot(e.target.value)}
 					disabled={busy}
 					fontSize='12px'
-					bg='never.bg'
+					bg='app.bg'
 					border='1px solid'
-					borderColor='never.rowBorder'
+					borderColor='app.rowBorder'
 					borderRadius='8px'
-					color='never.text'
+					color='app.text'
 					p='6px 8px'
 				>
 					<option value={BALANCE_EDITOR_TEMPLATE}>Built-in defaults (template)</option>
@@ -81,7 +81,7 @@ export function BalanceSaveLoadSection({
 				<Box>
 					<Text
 						fontSize='10px'
-						color='never.muted'
+						color='app.muted'
 						mb='4px'
 					>
 						Preset name
@@ -98,11 +98,11 @@ export function BalanceSaveLoadSection({
 								: undefined
 						}
 						fontSize='12px'
-						bg='never.bg'
+						bg='app.bg'
 						border='1px solid'
-						borderColor='never.rowBorder'
+						borderColor='app.rowBorder'
 						borderRadius='8px'
-						color='never.text'
+						color='app.text'
 						p='6px 8px'
 						w='100%'
 					/>
@@ -116,8 +116,8 @@ export function BalanceSaveLoadSection({
 						px='10px'
 						py='6px'
 						fontSize='11px'
-						bg='never.streak'
-						color='never.bg'
+						bg='app.streak'
+						color='app.bg'
 						borderRadius='8px'
 						onClick={onApply}
 						disabled={busy}
@@ -129,10 +129,10 @@ export function BalanceSaveLoadSection({
 						px='10px'
 						py='6px'
 						fontSize='11px'
-						bg='never.panel'
-						color='never.subtle'
+						bg='app.panel'
+						color='app.subtle'
 						border='1px solid'
-						borderColor='never.rowBorder'
+						borderColor='app.rowBorder'
 						borderRadius='8px'
 						onClick={onReload}
 						disabled={busy}
@@ -145,10 +145,10 @@ export function BalanceSaveLoadSection({
 							px='10px'
 							py='6px'
 							fontSize='11px'
-							bg='never.panel'
-							color='never.subtle'
+							bg='app.panel'
+							color='app.subtle'
 							border='1px solid'
-							borderColor='never.rowBorder'
+							borderColor='app.rowBorder'
 							borderRadius='8px'
 							onClick={onDuplicate}
 							disabled={busy}
@@ -161,10 +161,10 @@ export function BalanceSaveLoadSection({
 						px='10px'
 						py='6px'
 						fontSize='11px'
-						bg='never.panel'
-						color='never.subtle'
+						bg='app.panel'
+						color='app.subtle'
 						border='1px solid'
-						borderColor='never.rowBorder'
+						borderColor='app.rowBorder'
 						borderRadius='8px'
 						onClick={onExport}
 						disabled={busy}
@@ -176,10 +176,10 @@ export function BalanceSaveLoadSection({
 						px='10px'
 						py='6px'
 						fontSize='11px'
-						bg='never.panel'
-						color='never.subtle'
+						bg='app.panel'
+						color='app.subtle'
 						border='1px solid'
-						borderColor='never.rowBorder'
+						borderColor='app.rowBorder'
 						borderRadius='8px'
 						onClick={onImportClick}
 						disabled={busy}
@@ -191,8 +191,8 @@ export function BalanceSaveLoadSection({
 						px='10px'
 						py='6px'
 						fontSize='11px'
-						bg='never.panel'
-						color='never.dangerSoft'
+						bg='app.panel'
+						color='app.dangerSoft'
 						border='1px solid'
 						borderColor='#442222'
 						borderRadius='8px'

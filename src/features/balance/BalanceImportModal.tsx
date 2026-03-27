@@ -36,9 +36,9 @@ export function BalanceImportModal({
 			<Box
 				w='100%'
 				maxW='400px'
-				bg='never.panel'
+				bg='app.panel'
 				border='1px solid'
-				borderColor='never.panelBorder'
+				borderColor='app.panelBorder'
 				borderRadius='12px'
 				p='16px'
 				onClick={e => e.stopPropagation()}
@@ -46,7 +46,7 @@ export function BalanceImportModal({
 				<Text
 					fontSize='12px'
 					mb='8px'
-					color='never.text'
+					color='app.text'
 				>
 					Paste balance JSON
 				</Text>
@@ -57,16 +57,16 @@ export function BalanceImportModal({
 					w='100%'
 					fontSize='10px'
 					fontFamily='monospace'
-					bg='never.bg'
+					bg='app.bg'
 					border='1px solid'
-					borderColor='never.rowBorder'
+					borderColor='app.rowBorder'
 					borderRadius='8px'
-					color='never.text'
+					color='app.text'
 					p='8px'
 				/>
 				{importError && (
 					<Text
-						color='never.danger'
+						color='app.danger'
 						fontSize='11px'
 						mt='6px'
 					>
@@ -89,8 +89,8 @@ export function BalanceImportModal({
 						type='button'
 						flex={1}
 						py='10px'
-						bg='never.streak'
-						color='never.bg'
+						bg='app.streak'
+						color='app.bg'
 						borderRadius='8px'
 						onClick={onConfirm}
 					>

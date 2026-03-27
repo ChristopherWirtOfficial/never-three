@@ -21,7 +21,7 @@ export function AutoRollCountdown({
 		>
 			<Text
 				fontSize='10px'
-				color='never.dim'
+				color='app.dim'
 				letterSpacing='1px'
 				mb='4px'
 			>
@@ -31,7 +31,7 @@ export function AutoRollCountdown({
 				w='100%'
 				h='8px'
 				borderRadius='4px'
-				bg='never.cooldownTrack'
+				bg='app.cooldownTrack'
 				overflow='hidden'
 			>
 				<Box
@@ -44,7 +44,7 @@ export function AutoRollCountdown({
 			</Box>
 			<Text
 				fontSize='11px'
-				color='never.stat'
+				color='app.stat'
 				mt='4px'
 			>
 				{(((1 - autoRollProgress) * autoMs) / 1000).toFixed(1)}s
