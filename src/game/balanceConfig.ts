@@ -139,32 +139,32 @@ export function cloneBalanceConfig(cfg: BalanceConfig): BalanceConfig {
 export function mergeWithDefaults(
 	partial: Partial<BalanceConfig> | null | undefined
 ): BalanceConfig {
-	const d = DEFAULT_BALANCE_CONFIG
-	if (!partial || typeof partial !== 'object') return deepClone(d)
+	const defaults = DEFAULT_BALANCE_CONFIG
+	if (!partial || typeof partial !== 'object') return deepClone(defaults)
 	return {
-		_v: typeof partial._v === 'number' ? partial._v : d._v,
-		speed: Array.isArray(partial.speed) ? deepClone(partial.speed) : deepClone(d.speed),
-		auto: Array.isArray(partial.auto) ? deepClone(partial.auto) : deepClone(d.auto),
-		multi: Array.isArray(partial.multi) ? deepClone(partial.multi) : deepClone(d.multi),
+		_v: typeof partial._v === 'number' ? partial._v : defaults._v,
+		speed: Array.isArray(partial.speed) ? deepClone(partial.speed) : deepClone(defaults.speed),
+		auto: Array.isArray(partial.auto) ? deepClone(partial.auto) : deepClone(defaults.auto),
+		multi: Array.isArray(partial.multi) ? deepClone(partial.multi) : deepClone(defaults.multi),
 		streakRetention: Array.isArray(partial.streakRetention)
 			? deepClone(partial.streakRetention)
-			: deepClone(d.streakRetention),
-		stun: Array.isArray(partial.stun) ? deepClone(partial.stun) : deepClone(d.stun),
-		prestigeBase: num(partial.prestigeBase, d.prestigeBase),
-		hexBase: num(partial.hexBase, d.hexBase),
-		reforgeBase: num(partial.reforgeBase, d.reforgeBase),
-		dangerEscapeMult: num(partial.dangerEscapeMult, d.dangerEscapeMult),
-		defaultReforgeCap: num(partial.defaultReforgeCap, d.defaultReforgeCap),
-		streakMultSlope: num(partial.streakMultSlope, d.streakMultSlope),
-		hexStreakMultSlope: num(partial.hexStreakMultSlope, d.hexStreakMultSlope),
-		reforgeScalingPerCount: num(partial.reforgeScalingPerCount, d.reforgeScalingPerCount),
+			: deepClone(defaults.streakRetention),
+		stun: Array.isArray(partial.stun) ? deepClone(partial.stun) : deepClone(defaults.stun),
+		prestigeBase: num(partial.prestigeBase, defaults.prestigeBase),
+		hexBase: num(partial.hexBase, defaults.hexBase),
+		reforgeBase: num(partial.reforgeBase, defaults.reforgeBase),
+		dangerEscapeMult: num(partial.dangerEscapeMult, defaults.dangerEscapeMult),
+		defaultReforgeCap: num(partial.defaultReforgeCap, defaults.defaultReforgeCap),
+		streakMultSlope: num(partial.streakMultSlope, defaults.streakMultSlope),
+		hexStreakMultSlope: num(partial.hexStreakMultSlope, defaults.hexStreakMultSlope),
+		reforgeScalingPerCount: num(partial.reforgeScalingPerCount, defaults.reforgeScalingPerCount),
 		prestigePipletMultPerLevel: (() => {
 			const next = (partial as Partial<BalanceConfig> & { prestigeGoldMultPerLevel?: number })
 				.prestigePipletMultPerLevel
 			if (typeof next === 'number' && !Number.isNaN(next)) return next
 			const legacy = (partial as { prestigeGoldMultPerLevel?: number }).prestigeGoldMultPerLevel
 			if (typeof legacy === 'number' && !Number.isNaN(legacy)) return legacy
-			return d.prestigePipletMultPerLevel
+			return defaults.prestigePipletMultPerLevel
 		})(),
 	}
 }

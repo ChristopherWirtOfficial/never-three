@@ -11,15 +11,17 @@ const ANCHOR_OFFSET_Y = -58
 const DURATION_MS = 1150
 
 function driftFromId(id: string): { dx: number; dy: number } {
-	let h = 0
-	for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) | 0
-	const u1 = (Math.abs(h) % 1000) / 1000
-	const u2 = (Math.abs(h >> 11) % 1000) / 1000
-	const u3 = (Math.abs(h >> 22) % 1000) / 1000
-	const angle = (u1 - 0.5) * 1.15
-	const dist = 82 + u2 * 52
+	let stringHash = 0
+	for (let i = 0; i < id.length; i++) {
+		stringHash = (stringHash * 31 + id.charCodeAt(i)) | 0
+	}
+	const angleSpreadUnit = (Math.abs(stringHash) % 1000) / 1000
+	const distanceSpreadUnit = (Math.abs(stringHash >> 11) % 1000) / 1000
+	const verticalJitterUnit = (Math.abs(stringHash >> 22) % 1000) / 1000
+	const angle = (angleSpreadUnit - 0.5) * 1.15
+	const dist = 82 + distanceSpreadUnit * 52
 	const dx = Math.sin(angle) * dist * 0.9
-	const dy = -Math.cos(angle) * dist - u3 * 14
+	const dy = -Math.cos(angle) * dist - verticalJitterUnit * 14
 	return { dx, dy }
 }
 
@@ -144,10 +146,10 @@ export function RollRewardBubbles({ centerX, centerY }: RollRewardBubblesProps) 
 			zIndex={12}
 			pointerEvents='none'
 		>
-			{popups.map(p => (
+			{popups.map(popup => (
 				<BubbleLine
-					key={p.id}
-					popup={p}
+					key={popup.id}
+					popup={popup}
 					removeById={removeById}
 				/>
 			))}

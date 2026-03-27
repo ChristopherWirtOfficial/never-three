@@ -22,10 +22,10 @@ export function RollBadges({
 	const balance = useBalanceConfig()
 	const dangerCount = currentDie.filter(face => face % 3 === 0).length
 
-	const autoLv = clampUpgradeLevel(autoRollUpgradeLevel, balance.auto.length)
-	const speedLv = clampUpgradeLevel(speedUpgradeLevel, balance.speed.length)
-	const autoName = balance.auto[autoLv].name
-	const speedName = balance.speed[speedLv].name
+	const autoRollTierIndex = clampUpgradeLevel(autoRollUpgradeLevel, balance.auto.length)
+	const speedTierIndex = clampUpgradeLevel(speedUpgradeLevel, balance.speed.length)
+	const autoName = balance.auto[autoRollTierIndex].name
+	const speedName = balance.speed[speedTierIndex].name
 
 	const badge = (child: ReactNode, colorToken: string) => (
 		<Text

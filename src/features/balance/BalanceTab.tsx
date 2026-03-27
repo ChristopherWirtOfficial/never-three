@@ -94,18 +94,18 @@ export function BalanceTab() {
 			return
 		}
 
-		const p = profiles.find(x => x.id === selectedSlot)
-		if (!p) {
+		const profileForSlot = profiles.find(x => x.id === selectedSlot)
+		if (!profileForSlot) {
 			if (slotChanged) setPresetNameDraft('')
 			return
 		}
 
 		if (slotChanged) {
-			setPresetNameDraft(p.name)
+			setPresetNameDraft(profileForSlot.name)
 			return
 		}
 
-		setPresetNameDraft(prev => (prev === '' ? p.name : prev))
+		setPresetNameDraft(prev => (prev === '' ? profileForSlot.name : prev))
 	}, [selectedSlot, profiles])
 
 	const dirty = useMemo(
@@ -230,12 +230,12 @@ export function BalanceTab() {
 		setImportError(null)
 		try {
 			const parsed = JSON.parse(importText) as unknown
-			const cfg = parseBalanceConfigJson(parsed)
-			if (!cfg) {
+			const importedBalanceConfig = parseBalanceConfigJson(parsed)
+			if (!importedBalanceConfig) {
 				setImportError('Invalid JSON')
 				return
 			}
-			setDraft(cloneBalanceConfig(cfg))
+			setDraft(cloneBalanceConfig(importedBalanceConfig))
 			setImportOpen(false)
 			setImportText('')
 		} catch {

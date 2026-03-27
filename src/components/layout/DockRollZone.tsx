@@ -52,9 +52,9 @@ function ConicRingDonut({
 }) {
 	const outerR = centerlineRadius + strokeWidth / 2
 	const innerR = Math.max(0, centerlineRadius - strokeWidth / 2)
-	const rem = Math.max(0, Math.min(1, remaining01))
+	const clampedRemaining01 = Math.max(0, Math.min(1, remaining01))
 	/** Degrees of “time gone” (elapsed); empty region grows clockwise from 12 o’clock. */
-	const emptyDeg = (1 - rem) * 360
+	const emptyDeg = (1 - clampedRemaining01) * 360
 	const mask = `radial-gradient(circle at center, transparent ${innerR}px, black ${innerR + 1}px)`
 
 	return (
@@ -70,7 +70,7 @@ function ConicRingDonut({
 			pointerEvents='none'
 			zIndex={zIndex}
 			background={
-				rem <= 0
+				clampedRemaining01 <= 0
 					? 'transparent'
 					: `conic-gradient(from 0deg, transparent 0deg, transparent ${emptyDeg}deg, ${color} ${emptyDeg}deg, ${color} 360deg)`
 			}
@@ -155,8 +155,8 @@ export function DockRollZone({
 	useEffect(() => {
 		if (prevIsRollingRef.current && !isRolling && lastRolledFace !== null) {
 			setJustRevealed(true)
-			const t = setTimeout(() => setJustRevealed(false), 300)
-			return () => clearTimeout(t)
+			const revealFlashTimeoutId = setTimeout(() => setJustRevealed(false), 300)
+			return () => clearTimeout(revealFlashTimeoutId)
 		}
 		prevIsRollingRef.current = isRolling
 	}, [isRolling, lastRolledFace])

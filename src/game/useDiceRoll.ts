@@ -48,22 +48,25 @@ export function useDiceRoll(): () => void {
 	const speedUpgradeLevel = useAtomValue(P.speedUpgradeLevelAtom)
 	const stunUpgradeLevel = useAtomValue(P.stunUpgradeLevelAtom)
 
-	const mLv = clampUpgradeLevel(multiplierUpgradeLevel, balance.multi.length)
-	const rLv = clampUpgradeLevel(streakRetentionUpgradeLevel, balance.streakRetention.length)
-	const sLv = clampUpgradeLevel(speedUpgradeLevel, balance.speed.length)
-	const tLv = clampUpgradeLevel(stunUpgradeLevel, balance.stun.length)
+	const multiplierTierIndex = clampUpgradeLevel(multiplierUpgradeLevel, balance.multi.length)
+	const streakRetentionTierIndex = clampUpgradeLevel(
+		streakRetentionUpgradeLevel,
+		balance.streakRetention.length
+	)
+	const speedTierIndex = clampUpgradeLevel(speedUpgradeLevel, balance.speed.length)
+	const stunTierIndex = clampUpgradeLevel(stunUpgradeLevel, balance.stun.length)
 
 	const snapRef = useRef<RollSnap>({
 		locked,
 		currentDie,
 		totalRollCount,
 		pendingSafeFirstRoll,
-		pipletMultiplier: balance.multi[mLv].x,
-		streakRetentionPct: balance.streakRetention[rLv].pct,
+		pipletMultiplier: balance.multi[multiplierTierIndex].x,
+		streakRetentionPct: balance.streakRetention[streakRetentionTierIndex].pct,
 		prestigePipletMultiplier: 1 + prestige * balance.prestigePipletMultPerLevel,
-		rollCooldownMs: balance.speed[sLv].ms,
-		stunMs: balance.stun[tLv].ms,
-		stunTierName: balance.stun[tLv].name,
+		rollCooldownMs: balance.speed[speedTierIndex].ms,
+		stunMs: balance.stun[stunTierIndex].ms,
+		stunTierName: balance.stun[stunTierIndex].name,
 		hexBase: balance.hexBase,
 		balance,
 	})
@@ -72,12 +75,12 @@ export function useDiceRoll(): () => void {
 		currentDie,
 		totalRollCount,
 		pendingSafeFirstRoll,
-		pipletMultiplier: balance.multi[mLv].x,
-		streakRetentionPct: balance.streakRetention[rLv].pct,
+		pipletMultiplier: balance.multi[multiplierTierIndex].x,
+		streakRetentionPct: balance.streakRetention[streakRetentionTierIndex].pct,
 		prestigePipletMultiplier: 1 + prestige * balance.prestigePipletMultPerLevel,
-		rollCooldownMs: balance.speed[sLv].ms,
-		stunMs: balance.stun[tLv].ms,
-		stunTierName: balance.stun[tLv].name,
+		rollCooldownMs: balance.speed[speedTierIndex].ms,
+		stunMs: balance.stun[stunTierIndex].ms,
+		stunTierName: balance.stun[stunTierIndex].name,
 		hexBase: balance.hexBase,
 		balance,
 	}

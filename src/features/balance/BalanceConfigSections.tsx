@@ -25,21 +25,21 @@ export function BalanceConfigSections({
 	dragTier,
 	setDragTier,
 }: BalanceConfigSectionsProps) {
-	const updateSpeed = (next: BalanceConfig['speed']) => setDraft(d => ({ ...d, speed: next }))
-	const updateAuto = (next: BalanceConfig['auto']) => setDraft(d => ({ ...d, auto: next }))
-	const updateMulti = (next: BalanceConfig['multi']) => setDraft(d => ({ ...d, multi: next }))
+	const updateSpeed = (next: BalanceConfig['speed']) => setDraft(prev => ({ ...prev, speed: next }))
+	const updateAuto = (next: BalanceConfig['auto']) => setDraft(prev => ({ ...prev, auto: next }))
+	const updateMulti = (next: BalanceConfig['multi']) => setDraft(prev => ({ ...prev, multi: next }))
 	const updateRetention = (next: BalanceConfig['streakRetention']) =>
-		setDraft(d => ({ ...d, streakRetention: next }))
-	const updateStun = (next: BalanceConfig['stun']) => setDraft(d => ({ ...d, stun: next }))
+		setDraft(prev => ({ ...prev, streakRetention: next }))
+	const updateStun = (next: BalanceConfig['stun']) => setDraft(prev => ({ ...prev, stun: next }))
 
-	const d = cloneBalanceConfig(DEFAULT_BALANCE_CONFIG)
+	const balanceConfigDefaults = cloneBalanceConfig(DEFAULT_BALANCE_CONFIG)
 
 	return (
 		<>
 			{/* Shop order: multi → speed → auto → stun → retention (see ShopTab `upgrades`) */}
 			<CollapsibleSection
 				title='💰 PIPLET MULTI'
-				onResetSection={() => updateMulti(d.multi)}
+				onResetSection={() => updateMulti(balanceConfigDefaults.multi)}
 			>
 				<TierTable
 					rows={draft.multi}
@@ -74,7 +74,7 @@ export function BalanceConfigSections({
 
 			<CollapsibleSection
 				title='⚡ ROLL SPEED'
-				onResetSection={() => updateSpeed(d.speed)}
+				onResetSection={() => updateSpeed(balanceConfigDefaults.speed)}
 			>
 				<TierTable
 					rows={draft.speed}
@@ -124,7 +124,7 @@ export function BalanceConfigSections({
 
 			<CollapsibleSection
 				title='🔄 AUTO-ROLL'
-				onResetSection={() => updateAuto(d.auto)}
+				onResetSection={() => updateAuto(balanceConfigDefaults.auto)}
 			>
 				<Text
 					fontSize='9px'
@@ -198,7 +198,7 @@ export function BalanceConfigSections({
 
 			<CollapsibleSection
 				title='💊 STUN RECOVERY'
-				onResetSection={() => updateStun(d.stun)}
+				onResetSection={() => updateStun(balanceConfigDefaults.stun)}
 			>
 				<TierTable
 					rows={draft.stun}
@@ -248,7 +248,7 @@ export function BalanceConfigSections({
 
 			<CollapsibleSection
 				title='🔒 STREAK RETENTION'
-				onResetSection={() => updateRetention(d.streakRetention)}
+				onResetSection={() => updateRetention(balanceConfigDefaults.streakRetention)}
 			>
 				<TierTable
 					rows={draft.streakRetention}
@@ -288,14 +288,16 @@ export function BalanceConfigSections({
 				onResetSection={() =>
 					setDraft(prev => ({
 						...prev,
-						prestigeBase: d.prestigeBase,
-						prestigePipletMultPerLevel: d.prestigePipletMultPerLevel,
+						prestigeBase: balanceConfigDefaults.prestigeBase,
+						prestigePipletMultPerLevel: balanceConfigDefaults.prestigePipletMultPerLevel,
 					}))
 				}
 			>
 				<ScalarRow
 					label='Prestige base (piplets)'
-					onReset={() => setDraft(prev => ({ ...prev, prestigeBase: d.prestigeBase }))}
+					onReset={() =>
+						setDraft(prev => ({ ...prev, prestigeBase: balanceConfigDefaults.prestigeBase }))
+					}
 				>
 					<NumInput
 						value={draft.prestigeBase}
@@ -310,7 +312,7 @@ export function BalanceConfigSections({
 					onReset={() =>
 						setDraft(prev => ({
 							...prev,
-							prestigePipletMultPerLevel: d.prestigePipletMultPerLevel,
+							prestigePipletMultPerLevel: balanceConfigDefaults.prestigePipletMultPerLevel,
 						}))
 					}
 				>
@@ -329,16 +331,16 @@ export function BalanceConfigSections({
 				onResetSection={() =>
 					setDraft(prev => ({
 						...prev,
-						hexBase: d.hexBase,
-						reforgeBase: d.reforgeBase,
-						dangerEscapeMult: d.dangerEscapeMult,
-						defaultReforgeCap: d.defaultReforgeCap,
+						hexBase: balanceConfigDefaults.hexBase,
+						reforgeBase: balanceConfigDefaults.reforgeBase,
+						dangerEscapeMult: balanceConfigDefaults.dangerEscapeMult,
+						defaultReforgeCap: balanceConfigDefaults.defaultReforgeCap,
 					}))
 				}
 			>
 				<ScalarRow
 					label='Hex base (per danger unit)'
-					onReset={() => setDraft(prev => ({ ...prev, hexBase: d.hexBase }))}
+					onReset={() => setDraft(prev => ({ ...prev, hexBase: balanceConfigDefaults.hexBase }))}
 				>
 					<NumInput
 						value={draft.hexBase}
@@ -348,7 +350,9 @@ export function BalanceConfigSections({
 				</ScalarRow>
 				<ScalarRow
 					label='Reforge base'
-					onReset={() => setDraft(prev => ({ ...prev, reforgeBase: d.reforgeBase }))}
+					onReset={() =>
+						setDraft(prev => ({ ...prev, reforgeBase: balanceConfigDefaults.reforgeBase }))
+					}
 				>
 					<NumInput
 						value={draft.reforgeBase}
@@ -358,7 +362,12 @@ export function BalanceConfigSections({
 				</ScalarRow>
 				<ScalarRow
 					label='Danger escape mult (× cost leaving ÷3 face)'
-					onReset={() => setDraft(prev => ({ ...prev, dangerEscapeMult: d.dangerEscapeMult }))}
+					onReset={() =>
+						setDraft(prev => ({
+							...prev,
+							dangerEscapeMult: balanceConfigDefaults.dangerEscapeMult,
+						}))
+					}
 				>
 					<NumInput
 						value={draft.dangerEscapeMult}
@@ -368,7 +377,12 @@ export function BalanceConfigSections({
 				</ScalarRow>
 				<ScalarRow
 					label='Default max reforge face value'
-					onReset={() => setDraft(prev => ({ ...prev, defaultReforgeCap: d.defaultReforgeCap }))}
+					onReset={() =>
+						setDraft(prev => ({
+							...prev,
+							defaultReforgeCap: balanceConfigDefaults.defaultReforgeCap,
+						}))
+					}
 				>
 					<NumInput
 						value={draft.defaultReforgeCap}
@@ -385,15 +399,17 @@ export function BalanceConfigSections({
 				onResetSection={() =>
 					setDraft(prev => ({
 						...prev,
-						streakMultSlope: d.streakMultSlope,
-						hexStreakMultSlope: d.hexStreakMultSlope,
-						reforgeScalingPerCount: d.reforgeScalingPerCount,
+						streakMultSlope: balanceConfigDefaults.streakMultSlope,
+						hexStreakMultSlope: balanceConfigDefaults.hexStreakMultSlope,
+						reforgeScalingPerCount: balanceConfigDefaults.reforgeScalingPerCount,
 					}))
 				}
 			>
 				<ScalarRow
 					label='Piplet streak: 1 + √streak × slope'
-					onReset={() => setDraft(prev => ({ ...prev, streakMultSlope: d.streakMultSlope }))}
+					onReset={() =>
+						setDraft(prev => ({ ...prev, streakMultSlope: balanceConfigDefaults.streakMultSlope }))
+					}
 				>
 					<NumInput
 						value={draft.streakMultSlope}
@@ -403,7 +419,12 @@ export function BalanceConfigSections({
 				</ScalarRow>
 				<ScalarRow
 					label='Hex streak: 1 + √streak × slope'
-					onReset={() => setDraft(prev => ({ ...prev, hexStreakMultSlope: d.hexStreakMultSlope }))}
+					onReset={() =>
+						setDraft(prev => ({
+							...prev,
+							hexStreakMultSlope: balanceConfigDefaults.hexStreakMultSlope,
+						}))
+					}
 				>
 					<NumInput
 						value={draft.hexStreakMultSlope}
@@ -414,7 +435,10 @@ export function BalanceConfigSections({
 				<ScalarRow
 					label='Reforge scaling per prior reforge (in 1 + count×…)'
 					onReset={() =>
-						setDraft(prev => ({ ...prev, reforgeScalingPerCount: d.reforgeScalingPerCount }))
+						setDraft(prev => ({
+							...prev,
+							reforgeScalingPerCount: balanceConfigDefaults.reforgeScalingPerCount,
+						}))
 					}
 				>
 					<NumInput

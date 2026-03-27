@@ -34,15 +34,21 @@ export const gameLockedAtom = atom(get => get(rollPhaseAtom) !== 'idle')
 export const currentDieAtom = atom(get => get(diceAtom)[0] ?? makeDefaultDie())
 
 export const pipletMultiplierAtom = atom(get => {
-	const cfg = get(balanceConfigAtom)
-	const lv = clampUpgradeLevel(get(multiplierUpgradeLevelAtom), cfg.multi.length)
-	return cfg.multi[lv].x
+	const balanceConfig = get(balanceConfigAtom)
+	const multiplierTierIndex = clampUpgradeLevel(
+		get(multiplierUpgradeLevelAtom),
+		balanceConfig.multi.length
+	)
+	return balanceConfig.multi[multiplierTierIndex].x
 })
 
 export const streakRetentionPctAtom = atom(get => {
-	const cfg = get(balanceConfigAtom)
-	const lv = clampUpgradeLevel(get(streakRetentionUpgradeLevelAtom), cfg.streakRetention.length)
-	return cfg.streakRetention[lv].pct
+	const balanceConfig = get(balanceConfigAtom)
+	const streakRetentionTierIndex = clampUpgradeLevel(
+		get(streakRetentionUpgradeLevelAtom),
+		balanceConfig.streakRetention.length
+	)
+	return balanceConfig.streakRetention[streakRetentionTierIndex].pct
 })
 
 export const prestigePipletMultiplierAtom = atom(
@@ -51,32 +57,35 @@ export const prestigePipletMultiplierAtom = atom(
 
 /** Multiplier applied on the next safe roll from the current piplet streak (matches `useDiceRoll`). */
 export const pipletStreakMultAtom = atom(get => {
-	const cfg = get(balanceConfigAtom)
-	return streakMultiplier(get(pipletStreakAtom), cfg)
+	const balanceConfig = get(balanceConfigAtom)
+	return streakMultiplier(get(pipletStreakAtom), balanceConfig)
 })
 
 /** Multiplier applied on the next dangerous roll from the current hex streak (matches `useDiceRoll`). */
 export const hexStreakMultAtom = atom(get => {
-	const cfg = get(balanceConfigAtom)
-	return hexStreakMultiplier(get(hexRewardStreakAtom), cfg)
+	const balanceConfig = get(balanceConfigAtom)
+	return hexStreakMultiplier(get(hexRewardStreakAtom), balanceConfig)
 })
 
 export const cdMsAtom = atom(get => {
-	const cfg = get(balanceConfigAtom)
-	const lv = clampUpgradeLevel(get(speedUpgradeLevelAtom), cfg.speed.length)
-	return cfg.speed[lv].ms
+	const balanceConfig = get(balanceConfigAtom)
+	const speedTierIndex = clampUpgradeLevel(get(speedUpgradeLevelAtom), balanceConfig.speed.length)
+	return balanceConfig.speed[speedTierIndex].ms
 })
 
 export const stunMsAtom = atom(get => {
-	const cfg = get(balanceConfigAtom)
-	const lv = clampUpgradeLevel(get(stunUpgradeLevelAtom), cfg.stun.length)
-	return cfg.stun[lv].ms
+	const balanceConfig = get(balanceConfigAtom)
+	const stunTierIndex = clampUpgradeLevel(get(stunUpgradeLevelAtom), balanceConfig.stun.length)
+	return balanceConfig.stun[stunTierIndex].ms
 })
 
 export const autoMsAtom = atom(get => {
-	const cfg = get(balanceConfigAtom)
-	const lv = clampUpgradeLevel(get(autoRollUpgradeLevelAtom), cfg.auto.length)
-	return cfg.auto[lv].ms
+	const balanceConfig = get(balanceConfigAtom)
+	const autoRollTierIndex = clampUpgradeLevel(
+		get(autoRollUpgradeLevelAtom),
+		balanceConfig.auto.length
+	)
+	return balanceConfig.auto[autoRollTierIndex].ms
 })
 
 export const prestigeReqAtom = atom(

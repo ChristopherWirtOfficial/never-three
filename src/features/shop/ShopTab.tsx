@@ -24,7 +24,7 @@ interface UpgradeConfig {
 	type: UpgradeType
 	icon: string
 	label: string
-	lv: number
+	tierIndex: number
 	arr: {
 		cost: number
 		name?: string
@@ -57,7 +57,7 @@ export function ShopTab({
 			type: 'multi',
 			icon: '💰',
 			label: 'PIPLET MULTI',
-			lv: clampUpgradeLevel(multiplierUpgradeLevel, balance.multi.length),
+			tierIndex: clampUpgradeLevel(multiplierUpgradeLevel, balance.multi.length),
 			arr: balance.multi,
 			display: tier => `×${tier.x}`,
 		},
@@ -65,7 +65,7 @@ export function ShopTab({
 			type: 'speed',
 			icon: '⚡',
 			label: 'ROLL SPEED',
-			lv: clampUpgradeLevel(speedUpgradeLevel, balance.speed.length),
+			tierIndex: clampUpgradeLevel(speedUpgradeLevel, balance.speed.length),
 			arr: balance.speed,
 			display: tier => tier.name as string,
 		},
@@ -73,7 +73,7 @@ export function ShopTab({
 			type: 'auto',
 			icon: '🔄',
 			label: 'AUTO-ROLL',
-			lv: clampUpgradeLevel(autoRollUpgradeLevel, balance.auto.length),
+			tierIndex: clampUpgradeLevel(autoRollUpgradeLevel, balance.auto.length),
 			arr: balance.auto,
 			display: tier => tier.name as string,
 		},
@@ -81,7 +81,7 @@ export function ShopTab({
 			type: 'stun',
 			icon: '💊',
 			label: 'STUN RECOVERY',
-			lv: clampUpgradeLevel(stunUpgradeLevel, balance.stun.length),
+			tierIndex: clampUpgradeLevel(stunUpgradeLevel, balance.stun.length),
 			arr: balance.stun,
 			display: tier => tier.name as string,
 		},
@@ -89,7 +89,7 @@ export function ShopTab({
 			type: 'retention',
 			icon: '🔒',
 			label: 'STREAK RETENTION',
-			lv: clampUpgradeLevel(streakRetentionUpgradeLevel, balance.streakRetention.length),
+			tierIndex: clampUpgradeLevel(streakRetentionUpgradeLevel, balance.streakRetention.length),
 			arr: balance.streakRetention,
 			display: tier => `${tier.pct}% kept`,
 		},
@@ -104,15 +104,15 @@ export function ShopTab({
 			py={3}
 		>
 			{upgrades.map(upgrade => {
-				const maxed = upgrade.lv >= upgrade.arr.length - 1
+				const maxed = upgrade.tierIndex >= upgrade.arr.length - 1
 				return (
 					<UpgradeButton
 						key={upgrade.type}
 						icon={upgrade.icon}
 						label={upgrade.label}
-						current={upgrade.display(upgrade.arr[upgrade.lv])}
-						next={maxed ? '' : upgrade.display(upgrade.arr[upgrade.lv + 1])}
-						cost={maxed ? 0 : upgrade.arr[upgrade.lv + 1].cost}
+						current={upgrade.display(upgrade.arr[upgrade.tierIndex])}
+						next={maxed ? '' : upgrade.display(upgrade.arr[upgrade.tierIndex + 1])}
+						cost={maxed ? 0 : upgrade.arr[upgrade.tierIndex + 1].cost}
 						maxed={maxed}
 						piplets={piplets}
 						onBuy={() => purchaseUpgrade(upgrade.type)}

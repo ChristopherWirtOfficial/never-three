@@ -45,7 +45,7 @@ export function usePurchaseUpgrade(): (type: UpgradeType) => void {
 	return useCallback(
 		(type: UpgradeType) => {
 			const snapshot = snapRef.current
-			const cfg: BalanceConfig = snapshot.balance
+			const balanceConfig: BalanceConfig = snapshot.balance
 
 			const tryBuyNextTier = (
 				currentTierIndex: number,
@@ -61,23 +61,27 @@ export function usePurchaseUpgrade(): (type: UpgradeType) => void {
 
 			switch (type) {
 				case 'speed':
-					tryBuyNextTier(snapshot.speedUpgradeLevel, cfg.speed, setSpeedUpgradeLevel)
+					tryBuyNextTier(snapshot.speedUpgradeLevel, balanceConfig.speed, setSpeedUpgradeLevel)
 					break
 				case 'auto':
-					tryBuyNextTier(snapshot.autoRollUpgradeLevel, cfg.auto, setAutoRollUpgradeLevel)
+					tryBuyNextTier(snapshot.autoRollUpgradeLevel, balanceConfig.auto, setAutoRollUpgradeLevel)
 					break
 				case 'multi':
-					tryBuyNextTier(snapshot.multiplierUpgradeLevel, cfg.multi, setMultiplierUpgradeLevel)
+					tryBuyNextTier(
+						snapshot.multiplierUpgradeLevel,
+						balanceConfig.multi,
+						setMultiplierUpgradeLevel
+					)
 					break
 				case 'retention':
 					tryBuyNextTier(
 						snapshot.streakRetentionUpgradeLevel,
-						cfg.streakRetention,
+						balanceConfig.streakRetention,
 						setStreakRetentionUpgradeLevel
 					)
 					break
 				case 'stun':
-					tryBuyNextTier(snapshot.stunUpgradeLevel, cfg.stun, setStunUpgradeLevel)
+					tryBuyNextTier(snapshot.stunUpgradeLevel, balanceConfig.stun, setStunUpgradeLevel)
 					break
 			}
 		},

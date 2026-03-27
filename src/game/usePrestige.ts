@@ -35,7 +35,7 @@ export function usePrestige(): () => void {
 	return useCallback(() => {
 		if (!snapRef.current.canPrestige) return
 		const prestigeBefore = snapRef.current.prestige
-		const multPer = snapRef.current.balance.prestigePipletMultPerLevel
+		const prestigePipletMultPerLevel = snapRef.current.balance.prestigePipletMultPerLevel
 		setPrestige((level: number) => level + 1)
 		setPiplets(0)
 		setLifetimePipletsEarned(0)
@@ -52,7 +52,7 @@ export function usePrestige(): () => void {
 		setTotalDieReforgeCount(0)
 		setPendingSafeFirstRoll(true)
 		setGameEventLog([
-			`✨ PRESTIGE ${prestigeBefore + 1}! ×${(1 + (prestigeBefore + 1) * multPer).toFixed(1)} forever`,
+			`✨ PRESTIGE ${prestigeBefore + 1}! ×${(1 + (prestigeBefore + 1) * prestigePipletMultPerLevel).toFixed(1)} forever`,
 		])
 	}, [
 		setPrestige,

@@ -81,10 +81,10 @@ export function DevSaveManager({
 
 	const handleLoad = async (id: string) => {
 		const result = await loadProfile(id)
-		const prof = profiles.find(profile => profile.id === id)
-		if (result && prof) {
+		const matchingProfile = profiles.find(profile => profile.id === id)
+		if (result && matchingProfile) {
 			await setActiveProfileId(id)
-			onLoadProfile(id, prof.name, result)
+			onLoadProfile(id, matchingProfile.name, result)
 		}
 	}
 

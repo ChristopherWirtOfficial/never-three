@@ -43,8 +43,8 @@ export function useGameLoop(rollDice: () => void): void {
 	const cdFrameRef = useRef(0)
 	const stunFrameRef = useRef(0)
 
-	const autoLv = clampUpgradeLevel(autoRollUpgradeLevel, balance.auto.length)
-	const autoMs = balance.auto[autoLv].ms
+	const autoRollTierIndex = clampUpgradeLevel(autoRollUpgradeLevel, balance.auto.length)
+	const autoMs = balance.auto[autoRollTierIndex].ms
 
 	useEffect(
 		() => () => {

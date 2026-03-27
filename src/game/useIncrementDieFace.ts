@@ -41,14 +41,14 @@ export function useIncrementDieFace(): (dieIndex: number, faceIndex: number) => 
 				maxReforgeFaceValue: reforgeCap,
 				totalDieReforgeCount: reforgeCount,
 				hexBalance: currentHex,
-				balance: cfg,
+				balance: balanceConfig,
 			} = snapRef.current
 			const die = diceSnapshot[dieIndex]
 			if (!die) return
-			const currentVal = die[faceIndex]
-			if (currentVal >= reforgeCap) return
-			const target = currentVal + 1
-			const cost = reforgeCost(currentVal, target, reforgeCount, cfg)
+			const currentFaceValue = die[faceIndex]
+			if (currentFaceValue >= reforgeCap) return
+			const target = currentFaceValue + 1
+			const cost = reforgeCost(currentFaceValue, target, reforgeCount, balanceConfig)
 			if (currentHex < cost) return
 			setHexBalance((hex: number) => hex - cost)
 			setTotalDieReforgeCount((count: number) => count + 1)
@@ -59,7 +59,7 @@ export function useIncrementDieFace(): (dieIndex: number, faceIndex: number) => 
 			})
 			setGameEventLog((prevLog: string[]) =>
 				[
-					`🔥 Face ${faceIndex + 1}: ${currentVal} → ${target} (-${formatCompactNumber(cost)} hex)`,
+					`🔥 Face ${faceIndex + 1}: ${currentFaceValue} → ${target} (-${formatCompactNumber(cost)} hex)`,
 					...prevLog,
 				].slice(0, 60)
 			)

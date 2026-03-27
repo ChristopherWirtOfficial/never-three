@@ -39,9 +39,9 @@ export function SaveSlotsProvider({
 }
 
 export function useSaveSlots(): SaveSlotsContextValue {
-	const ctx = useContext(SaveSlotsContext)
-	if (!ctx) {
+	const saveSlots = useContext(SaveSlotsContext)
+	if (!saveSlots) {
 		throw new Error('useSaveSlots must be used under SaveSlotsProvider')
 	}
-	return ctx
+	return saveSlots
 }

@@ -27,14 +27,14 @@ export function useDecrementDieFace(): (dieIndex: number, faceIndex: number) => 
 				dice: diceSnapshot,
 				totalDieReforgeCount: reforgeCount,
 				hexBalance: currentHex,
-				balance: cfg,
+				balance: balanceConfig,
 			} = snapRef.current
 			const die = diceSnapshot[dieIndex]
 			if (!die) return
-			const currentVal = die[faceIndex]
-			if (currentVal <= 1) return
-			const target = currentVal - 1
-			const cost = reforgeCost(currentVal, target, reforgeCount, cfg)
+			const currentFaceValue = die[faceIndex]
+			if (currentFaceValue <= 1) return
+			const target = currentFaceValue - 1
+			const cost = reforgeCost(currentFaceValue, target, reforgeCount, balanceConfig)
 			if (currentHex < cost) return
 			setHexBalance((hex: number) => hex - cost)
 			setTotalDieReforgeCount((count: number) => count + 1)
@@ -45,7 +45,7 @@ export function useDecrementDieFace(): (dieIndex: number, faceIndex: number) => 
 			})
 			setGameEventLog((prevLog: string[]) =>
 				[
-					`🔥 Face ${faceIndex + 1}: ${currentVal} → ${target} (-${formatCompactNumber(cost)} hex)`,
+					`🔥 Face ${faceIndex + 1}: ${currentFaceValue} → ${target} (-${formatCompactNumber(cost)} hex)`,
 					...prevLog,
 				].slice(0, 60)
 			)
