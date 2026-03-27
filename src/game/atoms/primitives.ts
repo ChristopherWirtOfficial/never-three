@@ -3,10 +3,10 @@ import { DEFAULT_BALANCE_CONFIG, type BalanceConfig } from '../balanceConfig'
 import { makeDefaultDie } from '../constants'
 import type { Die, RollRewardPopup, TabId } from '../types'
 
-export const goldAtom = atom(0)
-export const lifetimeGoldEarnedAtom = atom(0)
-export const goldStreakAtom = atom(0)
-export const bestGoldStreakAtom = atom(0)
+export const pipletsAtom = atom(0)
+export const lifetimePipletsEarnedAtom = atom(0)
+export const pipletStreakAtom = atom(0)
+export const bestPipletStreakAtom = atom(0)
 
 export const hexBalanceAtom = atom(0)
 export const hexRewardStreakAtom = atom(0)
@@ -40,7 +40,7 @@ export const dieShakeActiveAtom = atom(false)
 
 export const activeGameTabAtom = atom<TabId>('roll')
 export const gameEventLogAtom = atom<string[]>([])
-/** Ephemeral +gold / +hex floaters from the last roll(s); not persisted. */
+/** Ephemeral +piplets / +hex floaters from the last roll(s); not persisted. */
 export const rollRewardPopupsAtom = atom<RollRewardPopup[]>([])
 export const runStartedAtom = atom(false)
 

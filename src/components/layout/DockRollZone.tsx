@@ -99,11 +99,11 @@ interface DockRollZoneProps {
 	autoRollProgress: number
 	autoMs: number | null
 	runStarted: boolean
-	goldStreak: number
-	goldStreakMult: number
+	pipletStreak: number
+	pipletStreakMult: number
 	hexRewardStreak: number
 	hexStreakMult: number
-	bestGoldStreak: number
+	bestPipletStreak: number
 	bestHexRewardStreak: number
 	onRoll: () => void
 }
@@ -124,11 +124,11 @@ export function DockRollZone({
 	autoRollProgress,
 	autoMs,
 	runStarted,
-	goldStreak,
-	goldStreakMult,
+	pipletStreak,
+	pipletStreakMult,
 	hexRewardStreak,
 	hexStreakMult,
-	bestGoldStreak,
+	bestPipletStreak,
 	bestHexRewardStreak,
 	onRoll,
 }: DockRollZoneProps) {
@@ -381,7 +381,7 @@ export function DockRollZone({
 				pointerEvents='none'
 				pb='2px'
 			>
-				{/* Gold streak */}
+				{/* Piplet streak */}
 				<Flex
 					direction='column'
 					align='center'
@@ -389,35 +389,35 @@ export function DockRollZone({
 				>
 					<Text
 						fontSize='9px'
-						color='app.goldMuted'
+						color='app.pipletMuted'
 						letterSpacing='0.1em'
 						fontWeight={700}
 					>
-						GOLD STREAK
+						PIPLET STREAK
 					</Text>
 					<Text
 						fontSize='26px'
 						fontWeight={900}
 						lineHeight={1}
-						color={goldStreak > 0 ? 'app.streak' : 'app.streakDim'}
+						color={pipletStreak > 0 ? 'app.streak' : 'app.streakDim'}
 					>
-						{goldStreak}
+						{pipletStreak}
 					</Text>
 					<Text
 						fontSize='11px'
 						fontWeight={600}
-						color={goldStreak > 0 ? 'app.streak' : 'app.streakDim'}
-						opacity={goldStreak > 0 ? 0.6 : 0.3}
+						color={pipletStreak > 0 ? 'app.streak' : 'app.streakDim'}
+						opacity={pipletStreak > 0 ? 0.6 : 0.3}
 						letterSpacing='0.03em'
 					>
-						mult ×{goldStreakMult.toFixed(2)}
+						mult ×{pipletStreakMult.toFixed(2)}
 					</Text>
 					<Text
 						fontSize='9px'
 						color='app.dim'
 						mt='1px'
 					>
-						best {bestGoldStreak}
+						best {bestPipletStreak}
 					</Text>
 				</Flex>
 

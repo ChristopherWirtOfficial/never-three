@@ -1,6 +1,6 @@
 // Save/load via localStorage (keys prefixed nt-)
 
-export const SAVE_VERSION = 5
+export const SAVE_VERSION = 6
 
 export interface SaveProfile {
 	name: string
@@ -12,10 +12,10 @@ export interface SaveProfile {
 /** On-disk shape; field names are stable for future save/export features. */
 export interface SaveState {
 	_v: number
-	gold: number
-	lifetimeGoldEarned: number
-	goldStreak: number
-	bestGoldStreak: number
+	piplets: number
+	lifetimePipletsEarned: number
+	pipletStreak: number
+	bestPipletStreak: number
 	hexBalance: number
 	hexRewardStreak: number
 	bestHexRewardStreak: number
@@ -88,10 +88,10 @@ function numOpt(raw: Record<string, unknown>, fallback: number, ...keys: string[
 export function migrateRawToSaveState(raw: Record<string, unknown>): SaveState {
 	return {
 		_v: SAVE_VERSION,
-		gold: num(raw, 'gold'),
-		lifetimeGoldEarned: num(raw, 'lifetimeGoldEarned', 'earned'),
-		goldStreak: num(raw, 'goldStreak', 'streak'),
-		bestGoldStreak: num(raw, 'bestGoldStreak', 'best'),
+		piplets: num(raw, 'piplets', 'gold'),
+		lifetimePipletsEarned: num(raw, 'lifetimePipletsEarned', 'lifetimeGoldEarned', 'earned'),
+		pipletStreak: num(raw, 'pipletStreak', 'goldStreak', 'streak'),
+		bestPipletStreak: num(raw, 'bestPipletStreak', 'bestGoldStreak', 'best'),
 		hexBalance: numOpt(raw, 0, 'hexBalance', 'hex'),
 		hexRewardStreak: numOpt(raw, 0, 'hexRewardStreak', 'hexStreak'),
 		bestHexRewardStreak: numOpt(raw, 0, 'bestHexRewardStreak', 'bestHexStreak'),
@@ -115,10 +115,10 @@ export function extractSaveState(raw: Record<string, unknown>): SaveState {
 
 export const DEFAULT_STATE: SaveState = {
 	_v: SAVE_VERSION,
-	gold: 0,
-	lifetimeGoldEarned: 0,
-	goldStreak: 0,
-	bestGoldStreak: 0,
+	piplets: 0,
+	lifetimePipletsEarned: 0,
+	pipletStreak: 0,
+	bestPipletStreak: 0,
 	hexBalance: 0,
 	hexRewardStreak: 0,
 	bestHexRewardStreak: 0,
@@ -201,7 +201,12 @@ export async function loadProfile(id: string): Promise<SaveState | null> {
 			})
 		}
 
-		if (saveVersion === 3 || saveVersion === 4 || saveVersion === SAVE_VERSION) {
+		if (
+			saveVersion === 3 ||
+			saveVersion === 4 ||
+			saveVersion === 5 ||
+			saveVersion === SAVE_VERSION
+		) {
 			return migrateRawToSaveState(parsed)
 		}
 

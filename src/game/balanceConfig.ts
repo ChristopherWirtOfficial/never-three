@@ -13,14 +13,14 @@ export interface BalanceConfig {
 	reforgeBase: number
 	dangerEscapeMult: number
 	defaultReforgeCap: number
-	/** `1 + sqrt(streak) * slope` gold streak multiplier */
+	/** `1 + sqrt(streak) * slope` piplet streak multiplier */
 	streakMultSlope: number
 	/** `1 + sqrt(streak) * slope` hex streak multiplier */
 	hexStreakMultSlope: number
 	/** Added to reforge cost as `totalDieReforgeCount * this` factor inside `(1 + …)` */
 	reforgeScalingPerCount: number
-	/** `1 + prestige * this` gold multiplier */
-	prestigeGoldMultPerLevel: number
+	/** `1 + prestige * this` piplet multiplier */
+	prestigePipletMultPerLevel: number
 }
 
 export const BALANCE_CONFIG_VERSION = 1
@@ -122,7 +122,7 @@ export const DEFAULT_BALANCE_CONFIG: BalanceConfig = {
 	streakMultSlope: 0.25,
 	hexStreakMultSlope: 0.3,
 	reforgeScalingPerCount: 0.15,
-	prestigeGoldMultPerLevel: 0.5,
+	prestigePipletMultPerLevel: 0.5,
 }
 
 /** Keep upgrade level index valid when tier tables are edited shorter. */
@@ -158,7 +158,14 @@ export function mergeWithDefaults(
 		streakMultSlope: num(partial.streakMultSlope, d.streakMultSlope),
 		hexStreakMultSlope: num(partial.hexStreakMultSlope, d.hexStreakMultSlope),
 		reforgeScalingPerCount: num(partial.reforgeScalingPerCount, d.reforgeScalingPerCount),
-		prestigeGoldMultPerLevel: num(partial.prestigeGoldMultPerLevel, d.prestigeGoldMultPerLevel),
+		prestigePipletMultPerLevel: (() => {
+			const next = (partial as Partial<BalanceConfig> & { prestigeGoldMultPerLevel?: number })
+				.prestigePipletMultPerLevel
+			if (typeof next === 'number' && !Number.isNaN(next)) return next
+			const legacy = (partial as { prestigeGoldMultPerLevel?: number }).prestigeGoldMultPerLevel
+			if (typeof legacy === 'number' && !Number.isNaN(legacy)) return legacy
+			return d.prestigePipletMultPerLevel
+		})(),
 	}
 }
 

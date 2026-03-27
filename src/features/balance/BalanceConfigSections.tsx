@@ -38,7 +38,7 @@ export function BalanceConfigSections({
 		<>
 			{/* Shop order: multi → speed → auto → stun → retention (see ShopTab `upgrades`) */}
 			<CollapsibleSection
-				title='💰 GOLD MULTI'
+				title='💰 PIPLET MULTI'
 				onResetSection={() => updateMulti(d.multi)}
 			>
 				<TierTable
@@ -289,12 +289,12 @@ export function BalanceConfigSections({
 					setDraft(prev => ({
 						...prev,
 						prestigeBase: d.prestigeBase,
-						prestigeGoldMultPerLevel: d.prestigeGoldMultPerLevel,
+						prestigePipletMultPerLevel: d.prestigePipletMultPerLevel,
 					}))
 				}
 			>
 				<ScalarRow
-					label='Prestige base gold'
+					label='Prestige base (piplets)'
 					onReset={() => setDraft(prev => ({ ...prev, prestigeBase: d.prestigeBase }))}
 				>
 					<NumInput
@@ -306,15 +306,18 @@ export function BalanceConfigSections({
 					/>
 				</ScalarRow>
 				<ScalarRow
-					label='Prestige gold mult per level (× per ★)'
+					label='Prestige piplet mult per level (× per ★)'
 					onReset={() =>
-						setDraft(prev => ({ ...prev, prestigeGoldMultPerLevel: d.prestigeGoldMultPerLevel }))
+						setDraft(prev => ({
+							...prev,
+							prestigePipletMultPerLevel: d.prestigePipletMultPerLevel,
+						}))
 					}
 				>
 					<NumInput
-						value={draft.prestigeGoldMultPerLevel}
+						value={draft.prestigePipletMultPerLevel}
 						onCommit={n =>
-							setDraft(prev => ({ ...prev, prestigeGoldMultPerLevel: Math.max(0, n) }))
+							setDraft(prev => ({ ...prev, prestigePipletMultPerLevel: Math.max(0, n) }))
 						}
 						w='100%'
 					/>
@@ -389,7 +392,7 @@ export function BalanceConfigSections({
 				}
 			>
 				<ScalarRow
-					label='Gold streak: 1 + √streak × slope'
+					label='Piplet streak: 1 + √streak × slope'
 					onReset={() => setDraft(prev => ({ ...prev, streakMultSlope: d.streakMultSlope }))}
 				>
 					<NumInput

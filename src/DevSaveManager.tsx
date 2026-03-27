@@ -131,7 +131,7 @@ export function DevSaveManager({
 						style={{
 							fontSize: 14,
 							fontWeight: 700,
-							color: '#ffdd33',
+							color: '#efae38',
 							letterSpacing: 1,
 						}}
 					>

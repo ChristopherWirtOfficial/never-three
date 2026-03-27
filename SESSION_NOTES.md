@@ -17,7 +17,7 @@ danger probability and trivialized the game.
 
 Instead of just 3, ALL multiples of 3 are dangerous. This means on any
 size die, roughly 1/3 of outcomes are dangerous. Bigger dice no longer
-cheese the risk — they give higher gold per safe roll but the danger
+cheese the risk — they yield more piplets per safe roll but the danger
 ratio stays constant.
 
 This created the need for a new upgrade path that isn't "buy bigger die."
@@ -41,7 +41,7 @@ and makes every reforge a considered decision.
 
 ## The Two-Resource System
 
-**Gold** = earned from safe rolls. Spent on speed, auto-roll, multipliers.
+**Piplets** = earned from safe rolls. Spent on speed, auto-roll, multipliers.
 Traditional incremental progression.
 
 **Hex** = earned from dangerous rolls. Spent on reforging (the core
@@ -50,18 +50,18 @@ strategic mechanic). This was the critical design decision — making the
 
 ### Why Hex Works
 - Early game: danger is just punishment, hex accumulates passively
-- Mid game: you've reforged away danger, gold flows, but hex dries up
+- Mid game: you've reforged away danger, piplets flow, but hex dries up
 - Late game: you NEED hex and must deliberately court danger to get it
 - This creates the "farming inversion" — the emotional relationship
   with danger flips over the course of a run
 
 ## The Two-Streak System
 
-Gold streak builds on consecutive safe rolls. Hex streak builds on
+Piplet streak builds on consecutive safe rolls. Hex streak builds on
 consecutive dangerous rolls. Each breaks the other.
 
 This means a bad luck streak isn't wasted — it's GOOD for hex farming.
-And a good luck streak is great for gold. There are no dead rolls.
+And a good luck streak is great for piplets. There are no dead rolls.
 
 ## Auto-Roll Design
 
@@ -79,7 +79,7 @@ This feels more responsive and never wastes a cycle.
 ## Balance Philosophy
 
 The game was intentionally undertuned during prototyping. Early upgrades
-are very cheap (×2 multi costs 5g — about 2 taps) so the player feels
+are very cheap (×2 multi costs about 5 piplets — roughly 2 taps) so the player feels
 immediate progression. The philosophy: make it too easy first, then
 tighten. The player should never feel stuck in the first 30 seconds.
 
@@ -102,12 +102,12 @@ you're getting stunned every ~3 rolls and a 5s stun felt miserable.
 
 5. **Contrast**: went through multiple rounds of brightness increases.
    Dark theme on mobile screens requires higher contrast than expected.
-   Ended up with #44ffbb green, #ffdd33 gold, #bb88ff purple.
+   Ended up with #44ffbb green, #efae38 piplet accent (warm amber), #bb88ff purple.
 
 ## Future Design Ideas Discussed
 
 ### Multiple Dice + Sum Rule
-Buy additional dice. Gold = sum of all dice. But if ANY individual die
+Buy additional dice. Piplets = sum of all dice. But if ANY individual die
 shows a multiple of 3, OR the sum is a multiple of 3, the entire roll
 is dangerous. This means you can never fully engineer away danger with
 multiple dice — the sum rule creates irreducible combinatorial risk.
@@ -120,7 +120,7 @@ Hex buys not just reforging but also meta-upgrades:
 
 ### Prestige
 Requires Hex threshold to access (not spent, just reached). Resets
-gold, upgrades, reforges, dice. Keeps hex shop upgrades. Awards
+piplets, upgrades, reforges, dice. Keeps hex shop upgrades. Awards
 prestige currency.
 
 ### The Sum Rule and Reforging Interaction

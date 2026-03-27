@@ -270,7 +270,7 @@ export function BalanceTab() {
 			{dirty && (
 				<Text
 					fontSize='10px'
-					color='app.goldMuted'
+					color='app.pipletMuted'
 					mb='6px'
 				>
 					● Unapplied edits (not in the live game yet)

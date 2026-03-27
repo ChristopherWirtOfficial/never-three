@@ -16,9 +16,9 @@ type RollSnap = {
 	currentDie: number[]
 	totalRollCount: number
 	pendingSafeFirstRoll: boolean
-	goldMultiplier: number
+	pipletMultiplier: number
 	streakRetentionPct: number
-	prestigeGoldMultiplier: number
+	prestigePipletMultiplier: number
 	rollCooldownMs: number
 	stunMs: number
 	stunTierName: string
@@ -58,9 +58,9 @@ export function useDiceRoll(): () => void {
 		currentDie,
 		totalRollCount,
 		pendingSafeFirstRoll,
-		goldMultiplier: balance.multi[mLv].x,
+		pipletMultiplier: balance.multi[mLv].x,
 		streakRetentionPct: balance.streakRetention[rLv].pct,
-		prestigeGoldMultiplier: 1 + prestige * balance.prestigeGoldMultPerLevel,
+		prestigePipletMultiplier: 1 + prestige * balance.prestigePipletMultPerLevel,
 		rollCooldownMs: balance.speed[sLv].ms,
 		stunMs: balance.stun[tLv].ms,
 		stunTierName: balance.stun[tLv].name,
@@ -72,9 +72,9 @@ export function useDiceRoll(): () => void {
 		currentDie,
 		totalRollCount,
 		pendingSafeFirstRoll,
-		goldMultiplier: balance.multi[mLv].x,
+		pipletMultiplier: balance.multi[mLv].x,
 		streakRetentionPct: balance.streakRetention[rLv].pct,
-		prestigeGoldMultiplier: 1 + prestige * balance.prestigeGoldMultPerLevel,
+		prestigePipletMultiplier: 1 + prestige * balance.prestigePipletMultPerLevel,
 		rollCooldownMs: balance.speed[sLv].ms,
 		stunMs: balance.stun[tLv].ms,
 		stunTierName: balance.stun[tLv].name,
@@ -88,14 +88,14 @@ export function useDiceRoll(): () => void {
 	const setLastRolledFace = useSetAtom(P.lastRolledFaceAtom)
 	const setTotalRollCount = useSetAtom(P.totalRollCountAtom)
 	const setHexRewardStreak = useSetAtom(P.hexRewardStreakAtom)
-	const setGoldStreak = useSetAtom(P.goldStreakAtom)
-	const setGold = useSetAtom(P.goldAtom)
-	const setLifetimeGoldEarned = useSetAtom(P.lifetimeGoldEarnedAtom)
+	const setPipletStreak = useSetAtom(P.pipletStreakAtom)
+	const setPiplets = useSetAtom(P.pipletsAtom)
+	const setLifetimePipletsEarned = useSetAtom(P.lifetimePipletsEarnedAtom)
 	const setDieShakeActive = useSetAtom(P.dieShakeActiveAtom)
 	const setMultipleOfThreeRollCount = useSetAtom(P.multipleOfThreeRollCountAtom)
 	const setHexBalance = useSetAtom(P.hexBalanceAtom)
 	const setBestHexRewardStreak = useSetAtom(P.bestHexRewardStreakAtom)
-	const setBestGoldStreak = useSetAtom(P.bestGoldStreakAtom)
+	const setBestPipletStreak = useSetAtom(P.bestPipletStreakAtom)
 	const setStunned = useSetAtom(P.isStunnedAtom)
 	const setActiveStunWindow = useSetAtom(P.activeStunWindowAtom)
 	const setGameEventLog = useSetAtom(P.gameEventLogAtom)
@@ -117,9 +117,9 @@ export function useDiceRoll(): () => void {
 				currentDie: dieFaces,
 				totalRollCount: rollsSoFar,
 				pendingSafeFirstRoll: prestigeSafePending,
-				goldMultiplier,
+				pipletMultiplier,
 				streakRetentionPct,
-				prestigeGoldMultiplier,
+				prestigePipletMultiplier,
 				stunMs,
 				stunTierName,
 				hexBase,
@@ -140,15 +140,15 @@ export function useDiceRoll(): () => void {
 			if (dangerous) {
 				setDieShakeActive(true)
 				setMultipleOfThreeRollCount((count: number) => count + 1)
-				setGoldStreak((priorGoldStreak: number) => {
-					const kept = Math.floor((priorGoldStreak * streakRetentionPct) / 100)
+				setPipletStreak((priorPipletStreak: number) => {
+					const kept = Math.floor((priorPipletStreak * streakRetentionPct) / 100)
 					let line: string
-					if (priorGoldStreak === 0) {
+					if (priorPipletStreak === 0) {
 						line = `💀 Rolled ${rolledValue}! Stunned ${stunTierName}`
-					} else if (kept >= priorGoldStreak) {
-						line = `💀 Rolled ${rolledValue}! Streak ${priorGoldStreak} held. Stunned ${stunTierName}`
+					} else if (kept >= priorPipletStreak) {
+						line = `💀 Rolled ${rolledValue}! Streak ${priorPipletStreak} held. Stunned ${stunTierName}`
 					} else if (streakRetentionPct > 0) {
-						line = `💀 Rolled ${rolledValue}! Streak ${priorGoldStreak} → ${kept} (${streakRetentionPct}% kept). Stunned ${stunTierName}`
+						line = `💀 Rolled ${rolledValue}! Streak ${priorPipletStreak} → ${kept} (${streakRetentionPct}% kept). Stunned ${stunTierName}`
 					} else {
 						line = `💀 Rolled ${rolledValue}! Streak gone. Stunned ${stunTierName}`
 					}
@@ -195,34 +195,34 @@ export function useDiceRoll(): () => void {
 				}, stunMs)
 			} else {
 				setHexRewardStreak(0)
-				setGoldStreak((priorGoldStreak: number) => {
-					const goldStreakMult = streakMultiplier(priorGoldStreak, balance)
-					const earnedGold = Math.floor(
-						rolledValue * goldStreakMult * goldMultiplier * prestigeGoldMultiplier
+				setPipletStreak((priorPipletStreak: number) => {
+					const pipletStreakMult = streakMultiplier(priorPipletStreak, balance)
+					const earnedPiplets = Math.floor(
+						rolledValue * pipletStreakMult * pipletMultiplier * prestigePipletMultiplier
 					)
 					setRollRewardPopups(prev =>
 						[
 							...prev,
 							{
 								id: `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`,
-								kind: 'gold' as const,
-								amount: earnedGold,
+								kind: 'piplet' as const,
+								amount: earnedPiplets,
 							},
 						].slice(-14)
 					)
-					setGold((gold: number) => gold + earnedGold)
-					setLifetimeGoldEarned((lifetimeTotal: number) => lifetimeTotal + earnedGold)
-					const nextGoldStreak = priorGoldStreak + 1
-					setBestGoldStreak((previousBest: number) => Math.max(previousBest, nextGoldStreak))
+					setPiplets((p: number) => p + earnedPiplets)
+					setLifetimePipletsEarned((lifetimeTotal: number) => lifetimeTotal + earnedPiplets)
+					const nextPipletStreak = priorPipletStreak + 1
+					setBestPipletStreak((previousBest: number) => Math.max(previousBest, nextPipletStreak))
 					setGameEventLog((prevLog: string[]) =>
 						[
-							`🎲 ${rolledValue} → +${formatCompactNumber(earnedGold)}g${
-								priorGoldStreak > 2 ? ` (×${goldStreakMult.toFixed(1)})` : ''
+							`🎲 ${rolledValue} → +${formatCompactNumber(earnedPiplets)} pl${
+								priorPipletStreak > 2 ? ` (×${pipletStreakMult.toFixed(1)})` : ''
 							}`,
 							...prevLog,
 						].slice(0, 60)
 					)
-					return nextGoldStreak
+					return nextPipletStreak
 				})
 				setRollCooldownActive(false)
 			}
@@ -234,14 +234,14 @@ export function useDiceRoll(): () => void {
 		setLastRolledFace,
 		setTotalRollCount,
 		setHexRewardStreak,
-		setGoldStreak,
-		setGold,
-		setLifetimeGoldEarned,
+		setPipletStreak,
+		setPiplets,
+		setLifetimePipletsEarned,
 		setDieShakeActive,
 		setMultipleOfThreeRollCount,
 		setHexBalance,
 		setBestHexRewardStreak,
-		setBestGoldStreak,
+		setBestPipletStreak,
 		setStunned,
 		setActiveStunWindow,
 		setGameEventLog,

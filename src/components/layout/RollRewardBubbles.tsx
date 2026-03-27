@@ -3,6 +3,7 @@ import { useAtomValue, useSetAtom } from 'jotai'
 import { useCallback, useEffect, useMemo, useState, type CSSProperties } from 'react'
 import { rollRewardPopupsAtom } from '../../game/atoms/primitives'
 import { formatCompactNumber } from '../../game/constants'
+import type { RollRewardPopup } from '../../game/types'
 
 /** Start above die center so text sits in open ring / tab area, not on the face. */
 const ANCHOR_OFFSET_Y = -58
@@ -36,7 +37,7 @@ function BubbleLine({
 	popup,
 	removeById,
 }: {
-	popup: { id: string; kind: 'gold' | 'hex'; amount: number }
+	popup: RollRewardPopup
 	removeById: (id: string) => void
 }) {
 	const drift = useMemo(() => driftFromId(popup.id), [popup.id])
@@ -82,13 +83,13 @@ function BubbleLine({
 	}, [popup.id, drift.dx, drift.dy, removeById])
 
 	const label =
-		popup.kind === 'gold'
-			? `+${formatCompactNumber(popup.amount)}g`
+		popup.kind === 'piplet'
+			? `+${formatCompactNumber(popup.amount)} pl`
 			: `+${formatCompactNumber(popup.amount)} hex`
 
 	const textShadow =
-		popup.kind === 'gold'
-			? '0 0 18px rgba(255, 221, 51, 0.45), 0 0 42px rgba(68, 255, 187, 0.2)'
+		popup.kind === 'piplet'
+			? '0 0 18px rgba(239, 174, 56, 0.48), 0 0 42px rgba(68, 255, 187, 0.2)'
 			: '0 0 20px rgba(187, 136, 255, 0.5), 0 0 48px rgba(153, 102, 204, 0.25)'
 
 	return (
@@ -103,10 +104,10 @@ function BubbleLine({
 				as='span'
 				display='block'
 				whiteSpace='nowrap'
-				fontSize={popup.kind === 'gold' ? '19px' : '17px'}
+				fontSize={popup.kind === 'piplet' ? '19px' : '17px'}
 				fontWeight={900}
-				letterSpacing={popup.kind === 'gold' ? '0.02em' : '0.04em'}
-				color={popup.kind === 'gold' ? 'app.gold' : 'app.hex'}
+				letterSpacing={popup.kind === 'piplet' ? '0.02em' : '0.04em'}
+				color={popup.kind === 'piplet' ? 'app.piplet' : 'app.hex'}
 				lineHeight={1}
 				style={
 					{

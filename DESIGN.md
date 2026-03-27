@@ -2,10 +2,10 @@
 
 ## Elevator Pitch
 
-An incremental idle dice game where you roll dice and earn gold — unless you
+An incremental idle dice game where you roll dice and earn **piplets** — unless you
 roll a multiple of 3, which stuns you. The twist: getting stunned earns you
 **Hex**, a second resource you spend to **reforge** your die faces. The entire
-game is about managing the tension between wanting safe rolls (gold) and
+game is about managing the tension between wanting safe rolls (piplets) and
 needing dangerous rolls (hex).
 
 ---
@@ -15,7 +15,7 @@ needing dangerous rolls (hex).
 ### Rolling
 - You have dice with customizable faces (start: 1d6 with {1,2,3,4,5,6})
 - Each roll picks a random face from your die
-- Safe rolls (face NOT a multiple of 3): earn gold, build gold streak
+- Safe rolls (face NOT a multiple of 3): earn piplets, build piplet streak
 - Dangerous rolls (face IS a multiple of 3): earn hex, build hex streak, get stunned
 
 ### Danger Rules (Current: Single Die)
@@ -26,25 +26,25 @@ A roll is dangerous if ANY of:
 - Any individual die shows a multiple of 3
 - The SUM of all dice is a multiple of 3
 
-If dangerous: zero gold, entire roll is a loss. Stun applies.
+If dangerous: zero piplets, entire roll is a loss. Stun applies.
 
 ### Two Streaks
-| | Gold Streak | Hex Streak |
+| | Piplet Streak | Hex Streak |
 |---|---|---|
 | Built by | Safe rolls | Dangerous rolls |
 | Broken by | Dangerous rolls | Safe rolls |
-| Multiplies | Gold income | Hex income |
+| Multiplies | Piplet income | Hex income |
 | Scaling | 1 + √(streak) × 0.25 | 1 + √(streak) × 0.3 |
 
-There is no wasted roll. Bad luck farms Hex. Good luck farms Gold.
+There is no wasted roll. Bad luck farms Hex. Good luck farms piplets.
 
 ---
 
 ## Resources
 
-### Gold
-- Earned from safe rolls: face_value × streak_mult × gold_multi × prestige_mult
-- Spent in the **Shop** on speed, auto-roll, gold multi, armor, stun recovery
+### Piplets
+- Earned from safe rolls: face_value × streak_mult × piplet_multi × prestige_mult
+- Spent in the **Shop** on speed, auto-roll, piplet multi, armor, stun recovery
 
 ### Hex
 - Earned from dangerous rolls: HEX_BASE × hex_streak_mult
@@ -88,7 +88,7 @@ This means reforging is a strategic commitment, not just "buy upgrade."
 This is the soul of the game:
 
 1. **Early game**: Multiples of 3 are terrifying. You reforge away from them ASAP.
-2. **Mid game**: You're safe, printing gold, but Hex-starved.
+2. **Mid game**: You're safe, printing piplets, but Hex-starved.
 3. **Late game**: You NEED Hex for more reforges / prestige. You deliberately:
    - Stop reforging new dice (keep them dangerous)
    - Add MORE dice (more hex sources)
@@ -101,10 +101,10 @@ This is the soul of the game:
 
 ## Upgrade Paths
 
-### Gold Shop (resets on prestige)
+### Shop — piplets (resets on prestige)
 | Upgrade | Tiers | Range | Notes |
 |---|---|---|---|
-| Gold Multi | 7 | ×1 → ×100 | First and cheapest buy |
+| Piplet Multi | 7 | ×1 → ×100 | First and cheapest buy |
 | Roll Speed | 6 | 2.0s → 0.35s | Manual tap cooldown |
 | Auto-Roll | 7 | Off → Instant | Chains after cooldown ends |
 | Stun Recovery | 6 | 3.0s → 0.3s | Time locked after danger |
@@ -123,7 +123,7 @@ This is the soul of the game:
 
 ### Future: Prestige
 - Requires Hex threshold to access
-- Resets: gold, gold upgrades, reforges, dice
+- Resets: piplets, shop upgrades, reforges, dice
 - Keeps: Hex shop upgrades
 - Awards: prestige currency (scaled by total Hex)
 
@@ -131,11 +131,11 @@ This is the soul of the game:
 
 ## Multiple Dice (Future — Phase 5)
 
-- Unlocked as late pre-prestige gold upgrade
+- Unlocked as late pre-prestige shop upgrade
 - Each new die starts as stock {1,2,3,4,5,6}
-- Gold = sum of ALL dice (if safe) × streak × multi
-- If ANY die is dangerous OR sum is multiple of 3: zero gold, full stun
-- More dice = higher gold ceiling but exponentially more danger
+- Piplets = sum of ALL dice (if safe) × streak × multi
+- If ANY die is dangerous OR sum is multiple of 3: zero piplets, full stun
+- More dice = higher piplet ceiling but exponentially more danger
 - Each new die needs its own reforge investment
 - First run: max 2-3 dice. More via prestige.
 

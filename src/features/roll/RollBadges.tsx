@@ -8,7 +8,7 @@ interface RollBadgesProps {
 	currentDie: Die
 	autoRollUpgradeLevel: number
 	speedUpgradeLevel: number
-	goldMultiplier: number
+	pipletMultiplier: number
 	streakRetentionPct: number
 }
 
@@ -16,7 +16,7 @@ export function RollBadges({
 	currentDie,
 	autoRollUpgradeLevel,
 	speedUpgradeLevel,
-	goldMultiplier,
+	pipletMultiplier,
 	streakRetentionPct,
 }: RollBadgesProps) {
 	const balance = useBalanceConfig()
@@ -60,7 +60,7 @@ export function RollBadges({
 				<>{autoRollUpgradeLevel > 0 ? `AUTO ${autoName}` : `TAP ${speedName}`}</>,
 				autoRollUpgradeLevel > 0 ? 'app.autoTeal' : 'app.subtle'
 			)}
-			{badge(<>×{goldMultiplier}</>, 'app.multi')}
+			{badge(<>×{pipletMultiplier}</>, 'app.multi')}
 			{streakRetentionPct > 0 && badge(<>🔒{streakRetentionPct}% streak</>, 'app.armorBlue')}
 		</Flex>
 	)

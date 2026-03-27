@@ -16,9 +16,9 @@ export function usePrestige(): () => void {
 	snapRef.current = { canPrestige, prestige, balance }
 
 	const setPrestige = useSetAtom(P.prestigeAtom)
-	const setGold = useSetAtom(P.goldAtom)
-	const setLifetimeGoldEarned = useSetAtom(P.lifetimeGoldEarnedAtom)
-	const setGoldStreak = useSetAtom(P.goldStreakAtom)
+	const setPiplets = useSetAtom(P.pipletsAtom)
+	const setLifetimePipletsEarned = useSetAtom(P.lifetimePipletsEarnedAtom)
+	const setPipletStreak = useSetAtom(P.pipletStreakAtom)
 	const setLastRolledFace = useSetAtom(P.lastRolledFaceAtom)
 	const setHexBalance = useSetAtom(P.hexBalanceAtom)
 	const setHexRewardStreak = useSetAtom(P.hexRewardStreakAtom)
@@ -35,11 +35,11 @@ export function usePrestige(): () => void {
 	return useCallback(() => {
 		if (!snapRef.current.canPrestige) return
 		const prestigeBefore = snapRef.current.prestige
-		const multPer = snapRef.current.balance.prestigeGoldMultPerLevel
+		const multPer = snapRef.current.balance.prestigePipletMultPerLevel
 		setPrestige((level: number) => level + 1)
-		setGold(0)
-		setLifetimeGoldEarned(0)
-		setGoldStreak(0)
+		setPiplets(0)
+		setLifetimePipletsEarned(0)
+		setPipletStreak(0)
 		setLastRolledFace(null)
 		setHexBalance(0)
 		setHexRewardStreak(0)
@@ -56,9 +56,9 @@ export function usePrestige(): () => void {
 		])
 	}, [
 		setPrestige,
-		setGold,
-		setLifetimeGoldEarned,
-		setGoldStreak,
+		setPiplets,
+		setLifetimePipletsEarned,
+		setPipletStreak,
 		setLastRolledFace,
 		setHexBalance,
 		setHexRewardStreak,

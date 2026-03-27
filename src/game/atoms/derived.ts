@@ -5,12 +5,12 @@ import {
 	autoRollUpgradeLevelAtom,
 	balanceConfigAtom,
 	diceAtom,
-	goldStreakAtom,
+	pipletStreakAtom,
 	hexRewardStreakAtom,
 	isRollCooldownActiveAtom,
 	isRollingAtom,
 	isStunnedAtom,
-	lifetimeGoldEarnedAtom,
+	lifetimePipletsEarnedAtom,
 	multiplierUpgradeLevelAtom,
 	prestigeAtom,
 	speedUpgradeLevelAtom,
@@ -33,7 +33,7 @@ export const gameLockedAtom = atom(get => get(rollPhaseAtom) !== 'idle')
 
 export const currentDieAtom = atom(get => get(diceAtom)[0] ?? makeDefaultDie())
 
-export const goldMultiplierAtom = atom(get => {
+export const pipletMultiplierAtom = atom(get => {
 	const cfg = get(balanceConfigAtom)
 	const lv = clampUpgradeLevel(get(multiplierUpgradeLevelAtom), cfg.multi.length)
 	return cfg.multi[lv].x
@@ -45,14 +45,14 @@ export const streakRetentionPctAtom = atom(get => {
 	return cfg.streakRetention[lv].pct
 })
 
-export const prestigeGoldMultiplierAtom = atom(
-	get => 1 + get(prestigeAtom) * get(balanceConfigAtom).prestigeGoldMultPerLevel
+export const prestigePipletMultiplierAtom = atom(
+	get => 1 + get(prestigeAtom) * get(balanceConfigAtom).prestigePipletMultPerLevel
 )
 
-/** Multiplier applied on the next safe roll from the current gold streak (matches `useDiceRoll`). */
-export const goldStreakMultAtom = atom(get => {
+/** Multiplier applied on the next safe roll from the current piplet streak (matches `useDiceRoll`). */
+export const pipletStreakMultAtom = atom(get => {
 	const cfg = get(balanceConfigAtom)
-	return streakMultiplier(get(goldStreakAtom), cfg)
+	return streakMultiplier(get(pipletStreakAtom), cfg)
 })
 
 /** Multiplier applied on the next dangerous roll from the current hex streak (matches `useDiceRoll`). */
@@ -83,4 +83,4 @@ export const prestigeReqAtom = atom(
 	get => get(balanceConfigAtom).prestigeBase * Math.pow(2.5, get(prestigeAtom))
 )
 
-export const canPrestigeAtom = atom(get => get(lifetimeGoldEarnedAtom) >= get(prestigeReqAtom))
+export const canPrestigeAtom = atom(get => get(lifetimePipletsEarnedAtom) >= get(prestigeReqAtom))

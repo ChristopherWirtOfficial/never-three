@@ -2,24 +2,24 @@ import { Text, VStack } from '@chakra-ui/react'
 import { RollFeedback } from './RollFeedback'
 
 interface RollTabProps {
-	prestigeGoldMultiplier: number
+	prestigePipletMultiplier: number
 	lastRolledFace: number | null
 	isRolling: boolean
-	goldStreak: number
+	pipletStreak: number
 	isStunned: boolean
-	goldMultiplier: number
+	pipletMultiplier: number
 	totalRollCount: number
 	multipleOfThreeRollCount: number
 	runStarted: boolean
 }
 
 export function RollTab({
-	prestigeGoldMultiplier,
+	prestigePipletMultiplier,
 	lastRolledFace,
 	isRolling,
-	goldStreak,
+	pipletStreak,
 	isStunned,
-	goldMultiplier,
+	pipletMultiplier,
 	totalRollCount,
 	multipleOfThreeRollCount,
 	runStarted,
@@ -36,9 +36,9 @@ export function RollTab({
 				lastRolledFace={lastRolledFace}
 				isRolling={isRolling}
 				isStunned={isStunned}
-				goldStreak={goldStreak}
-				goldMultiplier={goldMultiplier}
-				prestigeGoldMultiplier={prestigeGoldMultiplier}
+				pipletStreak={pipletStreak}
+				pipletMultiplier={pipletMultiplier}
+				prestigePipletMultiplier={prestigePipletMultiplier}
 			/>
 
 			{!runStarted && (
@@ -50,7 +50,7 @@ export function RollTab({
 					maxW='260px'
 					mt='8px'
 				>
-					Roll dice. Earn gold.
+					Roll dice. Earn piplets.
 					<br />
 					Don&apos;t roll a{' '}
 					<Text

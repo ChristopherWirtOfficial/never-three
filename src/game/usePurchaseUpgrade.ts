@@ -5,10 +5,10 @@ import type { UpgradeType } from './types'
 import * as P from './atoms/primitives'
 
 /**
- * Spend gold on the next tier of a shop upgrade (speed, auto, multi, streak retention, stun).
+ * Spend piplets on the next tier of a shop upgrade (speed, auto, multi, streak retention, stun).
  */
 export function usePurchaseUpgrade(): (type: UpgradeType) => void {
-	const gold = useAtomValue(P.goldAtom)
+	const piplets = useAtomValue(P.pipletsAtom)
 	const balance = useAtomValue(P.balanceConfigAtom)
 	const speedUpgradeLevel = useAtomValue(P.speedUpgradeLevelAtom)
 	const autoRollUpgradeLevel = useAtomValue(P.autoRollUpgradeLevelAtom)
@@ -17,7 +17,7 @@ export function usePurchaseUpgrade(): (type: UpgradeType) => void {
 	const stunUpgradeLevel = useAtomValue(P.stunUpgradeLevelAtom)
 
 	const snapRef = useRef({
-		gold,
+		piplets,
 		balance,
 		speedUpgradeLevel,
 		autoRollUpgradeLevel,
@@ -26,7 +26,7 @@ export function usePurchaseUpgrade(): (type: UpgradeType) => void {
 		stunUpgradeLevel,
 	})
 	snapRef.current = {
-		gold,
+		piplets,
 		balance,
 		speedUpgradeLevel,
 		autoRollUpgradeLevel,
@@ -35,7 +35,7 @@ export function usePurchaseUpgrade(): (type: UpgradeType) => void {
 		stunUpgradeLevel,
 	}
 
-	const setGold = useSetAtom(P.goldAtom)
+	const setPiplets = useSetAtom(P.pipletsAtom)
 	const setSpeedUpgradeLevel = useSetAtom(P.speedUpgradeLevelAtom)
 	const setAutoRollUpgradeLevel = useSetAtom(P.autoRollUpgradeLevelAtom)
 	const setMultiplierUpgradeLevel = useSetAtom(P.multiplierUpgradeLevelAtom)
@@ -54,8 +54,8 @@ export function usePurchaseUpgrade(): (type: UpgradeType) => void {
 			) => {
 				if (currentTierIndex >= tiers.length - 1) return
 				const cost = tiers[currentTierIndex + 1].cost
-				if (snapshot.gold < cost) return
-				setGold((gold: number) => gold - cost)
+				if (snapshot.piplets < cost) return
+				setPiplets((p: number) => p - cost)
 				setTier((level: number) => level + 1)
 			}
 
@@ -82,7 +82,7 @@ export function usePurchaseUpgrade(): (type: UpgradeType) => void {
 			}
 		},
 		[
-			setGold,
+			setPiplets,
 			setSpeedUpgradeLevel,
 			setAutoRollUpgradeLevel,
 			setMultiplierUpgradeLevel,

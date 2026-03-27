@@ -1,19 +1,19 @@
 import { Box, Flex, Text, chakra } from '@chakra-ui/react'
-import { formatGold } from '../../game/format-gold'
+import { formatPiplets } from '../../game/format-piplets'
 
 interface TopBarProps {
-	gold: number
+	piplets: number
 	hexBalance: number
 	prestige: number
-	prestigeGoldMultiplier: number
+	prestigePipletMultiplier: number
 	onOpenSaves?: () => void
 }
 
 export function TopBar({
-	gold,
+	piplets,
 	hexBalance,
 	prestige,
-	prestigeGoldMultiplier,
+	prestigePipletMultiplier,
 	onOpenSaves,
 }: TopBarProps) {
 	return (
@@ -33,20 +33,20 @@ export function TopBar({
 				<Box>
 					<Text
 						fontSize='9px'
-						color='app.goldMuted'
+						color='app.pipletMuted'
 						letterSpacing='2px'
 						fontWeight={700}
 					>
-						GOLD
+						PIPLETS
 					</Text>
 					<Text
 						fontSize='26px'
 						fontWeight={900}
-						color='app.gold'
-						textShadow='0 0 16px rgba(255, 221, 51, 0.27)'
+						color='app.piplet'
+						textShadow='0 0 16px rgba(239, 174, 56, 0.3)'
 						lineHeight={1.1}
 					>
-						{formatGold(gold)}
+						{formatPiplets(piplets)}
 					</Text>
 				</Box>
 				<Box>
@@ -105,7 +105,7 @@ export function TopBar({
 							as='span'
 							color='app.prestige'
 						>
-							★{prestige} ×{prestigeGoldMultiplier.toFixed(1)}
+							★{prestige} ×{prestigePipletMultiplier.toFixed(1)}
 						</Text>
 					</Text>
 				)}

@@ -7,18 +7,18 @@ interface RollFeedbackProps {
 	lastRolledFace: number | null
 	isRolling: boolean
 	isStunned: boolean
-	goldStreak: number
-	goldMultiplier: number
-	prestigeGoldMultiplier: number
+	pipletStreak: number
+	pipletMultiplier: number
+	prestigePipletMultiplier: number
 }
 
 export function RollFeedback({
 	lastRolledFace,
 	isRolling,
 	isStunned,
-	goldStreak,
-	goldMultiplier,
-	prestigeGoldMultiplier,
+	pipletStreak,
+	pipletMultiplier,
+	prestigePipletMultiplier,
 }: RollFeedbackProps) {
 	const balance = useBalanceConfig()
 	const dangerous = lastRolledFace !== null && lastRolledFace % 3 === 0
@@ -54,22 +54,22 @@ export function RollFeedback({
 					{formatCompactNumber(
 						Math.floor(
 							lastRolledFace *
-								streakMultiplier(Math.max(0, goldStreak - 1), balance) *
-								goldMultiplier *
-								prestigeGoldMultiplier
+								streakMultiplier(Math.max(0, pipletStreak - 1), balance) *
+								pipletMultiplier *
+								prestigePipletMultiplier
 						)
 					)}
-					g
+					pl
 				</Text>
 			)}
 
-			{safe && !isRolling && goldStreak > 2 && (
+			{safe && !isRolling && pipletStreak > 2 && (
 				<Text
 					color='app.streakMuted'
 					fontSize='12px'
 					mt='2px'
 				>
-					streak ×{streakMultiplier(goldStreak - 1, balance).toFixed(2)}
+					streak ×{streakMultiplier(pipletStreak - 1, balance).toFixed(2)}
 				</Text>
 			)}
 		</VStack>

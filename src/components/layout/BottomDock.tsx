@@ -20,11 +20,11 @@ interface BottomDockProps {
 	autoRollProgress: number
 	autoMs: number | null
 	runStarted: boolean
-	goldStreak: number
-	goldStreakMult: number
+	pipletStreak: number
+	pipletStreakMult: number
 	hexRewardStreak: number
 	hexStreakMult: number
-	bestGoldStreak: number
+	bestPipletStreak: number
 	bestHexRewardStreak: number
 	activeGameTab: TabId
 	onRoll: () => void

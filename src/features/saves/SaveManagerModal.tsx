@@ -90,7 +90,7 @@ export function SaveManagerModal() {
 					<Text
 						fontSize='14px'
 						fontWeight={800}
-						color='app.gold'
+						color='app.piplet'
 						letterSpacing='0.08em'
 					>
 						SAVES

@@ -13,10 +13,10 @@ export function useGameSurface() {
 	const rollDice = useDiceRoll()
 	useGameLoop(rollDice)
 
-	const gold = useAtomValue(P.goldAtom)
-	const lifetimeGoldEarned = useAtomValue(P.lifetimeGoldEarnedAtom)
-	const goldStreak = useAtomValue(P.goldStreakAtom)
-	const bestGoldStreak = useAtomValue(P.bestGoldStreakAtom)
+	const piplets = useAtomValue(P.pipletsAtom)
+	const lifetimePipletsEarned = useAtomValue(P.lifetimePipletsEarnedAtom)
+	const pipletStreak = useAtomValue(P.pipletStreakAtom)
+	const bestPipletStreak = useAtomValue(P.bestPipletStreakAtom)
 	const hexBalance = useAtomValue(P.hexBalanceAtom)
 	const hexRewardStreak = useAtomValue(P.hexRewardStreakAtom)
 	const bestHexRewardStreak = useAtomValue(P.bestHexRewardStreakAtom)
@@ -45,11 +45,11 @@ export function useGameSurface() {
 	const maxReforgeFaceValue = useAtomValue(P.maxReforgeFaceValueAtom)
 
 	const currentDie = useAtomValue(D.currentDieAtom)
-	const goldMultiplier = useAtomValue(D.goldMultiplierAtom)
-	const goldStreakMult = useAtomValue(D.goldStreakMultAtom)
+	const pipletMultiplier = useAtomValue(D.pipletMultiplierAtom)
+	const pipletStreakMult = useAtomValue(D.pipletStreakMultAtom)
 	const hexStreakMult = useAtomValue(D.hexStreakMultAtom)
 	const streakRetentionPct = useAtomValue(D.streakRetentionPctAtom)
-	const prestigeGoldMultiplier = useAtomValue(D.prestigeGoldMultiplierAtom)
+	const prestigePipletMultiplier = useAtomValue(D.prestigePipletMultiplierAtom)
 	const cdMs = useAtomValue(D.cdMsAtom)
 	const stunMs = useAtomValue(D.stunMsAtom)
 	const stunActiveDurationMs = activeStunWindow?.durationMs ?? stunMs
@@ -66,10 +66,10 @@ export function useGameSurface() {
 	const decrementDieFace = useDecrementDieFace()
 
 	return {
-		gold,
-		lifetimeGoldEarned,
-		goldStreak,
-		bestGoldStreak,
+		piplets,
+		lifetimePipletsEarned,
+		pipletStreak,
+		bestPipletStreak,
 		hexBalance,
 		hexRewardStreak,
 		bestHexRewardStreak,
@@ -96,11 +96,11 @@ export function useGameSurface() {
 		totalDieReforgeCount,
 		maxReforgeFaceValue,
 		currentDie,
-		goldMultiplier,
-		goldStreakMult,
+		pipletMultiplier,
+		pipletStreakMult,
 		hexStreakMult,
 		streakRetentionPct,
-		prestigeGoldMultiplier,
+		prestigePipletMultiplier,
 		cdMs,
 		stunMs,
 		stunActiveDurationMs,

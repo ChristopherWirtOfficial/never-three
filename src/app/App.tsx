@@ -29,10 +29,10 @@ export default function NeverThree() {
 				animation={game.dieShakeActive ? 'appShake 0.3s ease' : undefined}
 			>
 				<TopBar
-					gold={game.gold}
+					piplets={game.piplets}
 					hexBalance={game.hexBalance}
 					prestige={game.prestige}
-					prestigeGoldMultiplier={game.prestigeGoldMultiplier}
+					prestigePipletMultiplier={game.prestigePipletMultiplier}
 					onOpenSaves={openSaveManager}
 				/>
 
@@ -43,12 +43,12 @@ export default function NeverThree() {
 				>
 					{game.activeGameTab === 'roll' && (
 						<RollTab
-							prestigeGoldMultiplier={game.prestigeGoldMultiplier}
+							prestigePipletMultiplier={game.prestigePipletMultiplier}
 							lastRolledFace={game.lastRolledFace}
 							isRolling={game.isRolling}
-							goldStreak={game.goldStreak}
+							pipletStreak={game.pipletStreak}
 							isStunned={game.isStunned}
-							goldMultiplier={game.goldMultiplier}
+							pipletMultiplier={game.pipletMultiplier}
 							totalRollCount={game.totalRollCount}
 							multipleOfThreeRollCount={game.multipleOfThreeRollCount}
 							runStarted={game.runStarted}
@@ -56,8 +56,8 @@ export default function NeverThree() {
 					)}
 					{game.activeGameTab === 'shop' && (
 						<ShopTab
-							gold={game.gold}
-							lifetimeGoldEarned={game.lifetimeGoldEarned}
+							piplets={game.piplets}
+							lifetimePipletsEarned={game.lifetimePipletsEarned}
 							speedUpgradeLevel={game.speedUpgradeLevel}
 							autoRollUpgradeLevel={game.autoRollUpgradeLevel}
 							multiplierUpgradeLevel={game.multiplierUpgradeLevel}
@@ -100,11 +100,11 @@ export default function NeverThree() {
 					autoRollProgress={game.autoRollProgress}
 					autoMs={game.autoMs}
 					runStarted={game.runStarted}
-					goldStreak={game.goldStreak}
-					goldStreakMult={game.goldStreakMult}
+					pipletStreak={game.pipletStreak}
+					pipletStreakMult={game.pipletStreakMult}
 					hexRewardStreak={game.hexRewardStreak}
 					hexStreakMult={game.hexStreakMult}
-					bestGoldStreak={game.bestGoldStreak}
+					bestPipletStreak={game.bestPipletStreak}
 					bestHexRewardStreak={game.bestHexRewardStreak}
 					activeGameTab={game.activeGameTab}
 					onRoll={() => {

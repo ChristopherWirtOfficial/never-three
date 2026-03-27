@@ -8,7 +8,7 @@ interface UpgradeButtonProps {
 	next: string
 	cost: number
 	maxed: boolean
-	gold: number
+	piplets: number
 	onBuy: () => void
 }
 
@@ -19,10 +19,10 @@ export function UpgradeButton({
 	next,
 	cost,
 	maxed,
-	gold,
+	piplets,
 	onBuy,
 }: UpgradeButtonProps) {
-	const affordable = gold >= cost
+	const affordable = piplets >= cost
 	return (
 		<chakra.button
 			type='button'
@@ -95,7 +95,7 @@ export function UpgradeButton({
 					fontSize='13px'
 					fontWeight={700}
 					whiteSpace='nowrap'
-					color={affordable ? 'app.gold' : 'app.subtle'}
+					color={affordable ? 'app.piplet' : 'app.subtle'}
 					opacity={affordable ? 1 : 0.7}
 				>
 					{formatCompactNumber(cost)}g

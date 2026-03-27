@@ -6,8 +6,8 @@ import { useBalanceConfig } from '../../game/useBalanceConfig'
 import { UpgradeButton } from './UpgradeButton'
 
 interface ShopTabProps {
-	gold: number
-	lifetimeGoldEarned: number
+	piplets: number
+	lifetimePipletsEarned: number
 	speedUpgradeLevel: number
 	autoRollUpgradeLevel: number
 	multiplierUpgradeLevel: number
@@ -36,8 +36,8 @@ interface UpgradeConfig {
 }
 
 export function ShopTab({
-	gold,
-	lifetimeGoldEarned,
+	piplets,
+	lifetimePipletsEarned,
 	speedUpgradeLevel,
 	autoRollUpgradeLevel,
 	multiplierUpgradeLevel,
@@ -56,7 +56,7 @@ export function ShopTab({
 		{
 			type: 'multi',
 			icon: '💰',
-			label: 'GOLD MULTI',
+			label: 'PIPLET MULTI',
 			lv: clampUpgradeLevel(multiplierUpgradeLevel, balance.multi.length),
 			arr: balance.multi,
 			display: tier => `×${tier.x}`,
@@ -95,7 +95,7 @@ export function ShopTab({
 		},
 	]
 
-	const prestigeMultNext = 1 + (prestige + 1) * balance.prestigeGoldMultPerLevel
+	const prestigeMultNext = 1 + (prestige + 1) * balance.prestigePipletMultPerLevel
 
 	return (
 		<VStack
@@ -114,7 +114,7 @@ export function ShopTab({
 						next={maxed ? '' : upgrade.display(upgrade.arr[upgrade.lv + 1])}
 						cost={maxed ? 0 : upgrade.arr[upgrade.lv + 1].cost}
 						maxed={maxed}
-						gold={gold}
+						piplets={piplets}
 						onBuy={() => purchaseUpgrade(upgrade.type)}
 					/>
 				)
@@ -156,14 +156,14 @@ export function ShopTab({
 								as='span'
 								color='app.dim'
 							>
-								{formatCompactNumber(lifetimeGoldEarned)}
+								{formatCompactNumber(lifetimePipletsEarned)}
 							</Text>{' '}
 							/{' '}
 							<Text
 								as='span'
 								color='app.prestigeMuted'
 							>
-								{formatCompactNumber(prestigeReq)}g
+								{formatCompactNumber(prestigeReq)} pl
 							</Text>
 						</>
 					)}
